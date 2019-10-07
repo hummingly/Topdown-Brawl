@@ -1,0 +1,71 @@
+{
+    "name": "PlayerControlTest",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "1e716631-bec0-4085-bd8e-6a03ca068cee",
+            "actions": [
+                {
+                    "name": "A",
+                    "type": "Button",
+                    "id": "c4c36d34-f648-4c55-a0da-6d2161986b3b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "0666bd50-0e54-4c0f-904c-b8f6a6a2b22e",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "0cdb0d89-2d34-41f6-b150-8e8690a9912b",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "964634c9-3299-47bb-8f6b-8c0066e51513",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "A",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b211f9b5-b4d9-47be-a0c9-e1571c7a072b",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ab7f95c-072e-4e3a-b342-aa4596892502",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
