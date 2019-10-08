@@ -12,22 +12,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 velocity;
     private Vector2 acc;
 
-    [SerializeField]
-    private float maxVelocity;
-
-    [SerializeField]
-    // speed of acc going to maxAcc
-    private float accSpeed;
-
-    [SerializeField]
-    private float maxAcc;
-
-    [SerializeField]
-    // speed of acc going back to 0
-    private float nAccSpeed;
-
-    [SerializeField]
-    private float drag;
+    [SerializeField] private float maxVelocity;
+    [SerializeField] private float accSpeed;     // speed of acc going to maxAcc
+    [SerializeField] private float maxAcc;
+    [SerializeField] private float nAccSpeed;    // speed of acc going back to 0
+    [SerializeField] private float drag;
 
     void Awake()
     {
@@ -55,8 +44,6 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = value.Get<Vector2>();
     }
-
-
 
     /*private float doAcceleration(float input, float acc)
     {

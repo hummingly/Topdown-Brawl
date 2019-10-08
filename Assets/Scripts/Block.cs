@@ -8,6 +8,7 @@ public class Block : MonoBehaviour // need mono?
     private bool doesMove;
     //[SerializeField] LevelManager.BlockType blockType; // NEEDED?
 
+
     public void init(Vector2 scale, bool moveable, float weight, bool destructible, Color color)
     {
         //gameObject.AddComponent<SpriteRenderer>().sprite = sprite;
@@ -17,6 +18,7 @@ public class Block : MonoBehaviour // need mono?
         if (moveable)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0;
             rb.mass = weight;
         }
     }
