@@ -498,10 +498,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b6cf88c4e97e547bcf3c85150f1bb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
+  seed: 1
+  useSeed: 0
   levelSize: 10
-  randObjs: 10
-  randSym: 1
+  randObjs: 20
+  symm: 1
+  minMaxScaleMult: {x: 0.1, y: 0.5}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   rect: {fileID: 8605777914489846402, guid: c2722bfe7b9b2bd4094458b6958060d4, type: 3}
   circ: {fileID: 8605777914489846402, guid: 4a5fb41bfb5916f499b0fc90b8894f30, type: 3}

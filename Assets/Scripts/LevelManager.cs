@@ -9,10 +9,12 @@ public class LevelManager : MonoBehaviour
 
     [Header("Generation parameters")]
     [SerializeField] private int seed;
+    [SerializeField] private bool useSeed;
     [SerializeField] private float levelSize = 10;
     [SerializeField] private int randObjs = 10;
-    [SerializeField] private Symmetry randSym = Symmetry.none;
-    [SerializeField] private Color defaultColor;
+    [SerializeField] private Symmetry symm = Symmetry.none;
+    [SerializeField] private Vector2 minMaxScaleMult = new Vector2(0.25f, 1f);
+    [SerializeField] private Color defaultColor = Color.white;
 
     [Space]
 
@@ -38,46 +40,59 @@ public class LevelManager : MonoBehaviour
         botLeft = Camera.main.ViewportToWorldPoint(new Vector2(0,0));
         topRight = Camera.main.ViewportToWorldPoint(new Vector2(1,1));
 
+        Transform map = new GameObject("Map").transform;
+        Transform solid = new GameObject("Bounds").transform;
+        Transform bounds = new GameObject("Bounds").transform;
+        Transform moveable = new GameObject("Bounds").transform;
+        solid.transform.parent = map;
+        bounds.transform.parent = map;
+        moveable.transform.parent = map;
+        
+        if(useSeed)
+            Random.InitState(seed);
 
         // Generate map bounds
-        placeBlock(BlockType.Rect, new Vector2( topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, false, 10, false, defaultColor);
-        placeBlock(BlockType.Rect, new Vector2(-topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, false, 10, false, defaultColor);
-        placeBlock(BlockType.Rect, new Vector2(0,  topRight.y), new Vector2(halfLevelWidth * 2, 1), Quaternion.identity, false, 10, false, defaultColor);
-        placeBlock(BlockType.Rect, new Vector2(0, -topRight.y), new Vector2(halfLevelWidth * 2, 1), Quaternion.identity, false, 10, false, defaultColor);
+        placeBlock(BlockType.Rect, new Vector2( topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, false, 10, false, defaultColor, bounds);
+        placeBlock(BlockType.Rect, new Vector2(-topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, false, 10, false, defaultColor, bounds);
+        placeBlock(BlockType.Rect, new Vector2(0,  topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, false, 10, false, defaultColor, bounds);
+        placeBlock(BlockType.Rect, new Vector2(0, -topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, false, 10, false, defaultColor, bounds);
 
 
-        // Actually generate map
-        // Random ammount of blocks at random pos, with random scale but factored in with levelScale and mirrored accordingly
+        // Actually generate map pieces
 
-        if (randSym == Symmetry.none)
+        // Random ammount of solid blocks at random pos, with random scale but factored in with levelScale and mirrored accordingly
+        if (symm == Symmetry.none)
         {
             for (int i = 0; i < randObjs; i++)
             {
                 Vector2 randPos = new Vector2(Random.Range(-halfLevelWidth, halfLevelWidth), Random.Range(-halfLevelHeight, halfLevelHeight));
+                Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
+                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
             }
         }
-        if (randSym == Symmetry.x)
+        if (symm == Symmetry.x)
         {
             for (int i = 0; i < randObjs / 2; i++)
             {
                 Vector2 randPos = new Vector2(Random.Range(0, halfLevelWidth), Random.Range(-halfLevelHeight, halfLevelHeight));
+                Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
+                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
+                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
             }
         }
-        if (randSym == Symmetry.xy)
+        if (symm == Symmetry.xy)
         {
             for (int i = 0; i < randObjs / 4; i++)
             {
                 Vector2 randPos = new Vector2(Random.Range(0, halfLevelWidth), Random.Range(0, halfLevelHeight));
+                Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x, -randPos.y), Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
-                placeBlock(BlockType.Rect, new Vector2(randPos.x, -randPos.y), Vector2.one, Quaternion.identity, false, 10, false, defaultColor);
+                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
+                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
+                placeBlock(BlockType.Rect, new Vector2(-randPos.x,-randPos.y), randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
+                placeBlock(BlockType.Rect, new Vector2(randPos.x, -randPos.y), randScale, Quaternion.identity, false, 0, false, defaultColor, solid);
             }
         }
     }
@@ -88,7 +103,7 @@ public class LevelManager : MonoBehaviour
         
     }
 
-    private void placeBlock(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, bool moveable, float weight, bool destructible, Color color)
+    private void placeBlock(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, bool moveable, float weight, bool destructible, Color color, Transform parent)
     {
         GameObject block = null;
         if (type == BlockType.Rect) block = rect;
@@ -99,5 +114,6 @@ public class LevelManager : MonoBehaviour
 
         Block b = Instantiate(block, pos, Quaternion.identity).GetComponent<Block>();
         b.init(scale, moveable, weight, destructible, color);
+        b.transform.parent = parent;
     }
 }
