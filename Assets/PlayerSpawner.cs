@@ -29,10 +29,7 @@ public class PlayerSpawner : MonoBehaviour
         int team = getPlayerTeam();
 
         // Spawn in one of the premade points in the right spawn zone
-        if (team == 0)
-            return spawnAreas[0].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
-        else
-            return spawnAreas[1].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
+        return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
     }
 
     private int getPlayerTeam() // 0 or 1 for now
