@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 velocity;
     private Vector2 acc;
 
+    [SerializeField] private float accForce;
+
     [SerializeField] private float maxVelocity;
     [SerializeField] private float accSpeed;     // speed of acc going to maxAcc
     [SerializeField] private float maxAcc;
@@ -25,11 +27,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //TODO: addforce? smooth and restrict diagonal
         velocity = rb.velocity;
-        rb.velocity = getVelocity(); // = new Vector2(moveInput.x, moveInput.y) * 10; //TODO: addforce? smooth and restrict diagonal
+        //rb.velocity = getVelocity(); // = new Vector2(moveInput.x, moveInput.y) * 10; 
+        rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
 
+        // TODO: instead add torque for physics! and smooth visually
         if (rotInput != Vector2.zero)
-            transform.up = rotInput; // TODO: instead add torque for physics! and smooth visually
+            transform.up = rotInput; 
+            //rb.MoveRotation(rb.rotation * Quaternion.Euler(new Vector3(0, 0, 1) * Time.deltaTime));
+            //rb.AddTorque(Vector2.Angle(transform.forward, rotInput)); 
+            //rb.AddTorque(Vector2.Angle(transform.forward, rotInput)); 
+            //transform.localRotation.eulerAngles = Vector3.Slerp(transform.forward, rotInput, 1 * Time.deltaTime);
     }
 
     private void OnA()
@@ -45,24 +54,11 @@ public class PlayerMovement : MonoBehaviour
         rotInput = value.Get<Vector2>();
     }
 
-    /*private float doAcceleration(float input, float acc)
-    {
-        // wegen Ungenauigkeiten bei meinem Controller... kA, wie das bei euch ist??
-        if (Math.Abs(input) > 0.1f)
-        {
-            return acc + accSpeed;
-        }
-        else
-        {
-            //return approachZero(acc, nAccSpeed);
-            return 0;
-        }
-    }*/
+
 
 
     private Vector2 getVelocity()
     {
-
         // Nachteil: auch bei kleinem input (oder wenig tweak des sticks des controllers) beschleunigt man auf maxVelocity (zwar langsamer, aber trotzdem)
         //      --> Lösung: beschleunigung nur bei "full-throttle" anwenden
 
@@ -90,9 +86,34 @@ public class PlayerMovement : MonoBehaviour
         return newVelocity;
     }
 
+    /*private float doAcceleration(float input, float acc)
+    {
+        // wegen Ungenauigkeiten bei meinem Controller... kA, wie das bei euch ist??
+        if (Math.Abs(input) > 0.1f)
+        {
+            return acc + accSpeed;
+        }
+        else
+        {
+            //return approachZero(acc, nAccSpeed);
+            return 0;
+        }
+    }*/
+
 
     //https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html#started-performed-and-canceled-callbacks
     //https://www.youtube.com/watch?v=D8nUI88POU8&t=4s
 
     //TODO: implement deviceLost -> pause game ?
+    /*private void OnDeviceLost()
+    {
+        print("lost");
+        velocity = Vector2.zero;
+    }
+    private void OnDeviceRegained()
+    {
+        print("regained");
+        velocity = Vector2.zero;
+    }*/
+
 }
