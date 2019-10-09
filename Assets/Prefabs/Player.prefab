@@ -364,6 +364,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb3da93c2998b0248896d2a292ea5428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  torquePID:
+    pFactor: 0.5
+    iFactor: 0.01
+    dFactor: 0.1
   accForce: 8
   maxVelocity: 8
   accSpeed: 0.8
