@@ -365,9 +365,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   torquePID:
-    pFactor: 0.5
+    pFactor: 2
     iFactor: 0.01
-    dFactor: 0.1
+    dFactor: 0.5
   accForce: 8
   maxVelocity: 8
   accSpeed: 0.8

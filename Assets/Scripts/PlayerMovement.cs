@@ -37,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
         // TODO: instead add torque for physics! OR smooth visually
         if (rotInput != Vector2.zero)
             rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
+
+        // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
 
     private void OnA()
@@ -69,14 +71,11 @@ public class PlayerMovement : MonoBehaviour
         float actualRot = transform.eulerAngles.z; // 0 to 360, but should be 180 to -180 like desiredRot
         actualRot -= 180;
 
-        //refactor: actualRot = (actualRot > 0) ? actualRot + 90 : actualRot - 90;
         if (actualRot < -90 && actualRot > -180) actualRot += 270;
         else actualRot -= 90;
 
         // Look how far needs to rotate
         float dist = Mathf.Abs(actualRot - desiredRot); //distance between desired and actual rotation
-        float rotDir = Mathf.Sign(actualRot - desiredRot);
-
 
 
         //if (dist >= 360)
@@ -90,32 +89,18 @@ public class PlayerMovement : MonoBehaviour
 
             // Account for jump from 180 to -180
             if ((desiredRot > 90 && actualRot < -90) || (desiredRot < -90 && actualRot > 90)) 
-            {
-                //rotDir = -rotDir;
-                dist -= 180;
-            }
-            //print(dist);
+                dist -= 180; 
         }
 
 
-        if (dist <= 0)
-        {
-            print(dist); //TODO: fix the jump on looking left
-        }
-
-
-        //float correction = torquePID.Update(desiredRot, actualRot, Time.deltaTime);
         float correction = torquePID.Update(0, dist, Time.deltaTime);
-        //print(desiredRot);
-        //print(actualRot);
-        //print(correction);
-        rb.AddTorque(correction * rotDir);
-
+        rb.AddTorque(correction * Mathf.Sign(actualRot - desiredRot));
 
         //Debug.DrawRay(transform.position, rotInput * 10f, Color.blue); //Desired look dir
         Debug.DrawRay(transform.position, Quaternion.AngleAxis(desiredRot, Vector3.forward) * transform.up * 5f, Color.red); //Desired look dir (the same as above, but using float instead of vector)
         Debug.DrawRay(transform.position, Quaternion.AngleAxis(correction, Vector3.forward) * transform.up * 5f, Color.yellow); //Correction
     }
+
 
     private Vector2 getVelocity()
     {
