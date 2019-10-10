@@ -6,43 +6,44 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] private RectTransform guiTransform;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private RectTransform statsUi;
+    [SerializeField] private int maxHealthPoints = 100;
+
     private readonly Quaternion guiRotation = Quaternion.identity;
 
-    // Health Points
-    public int healthPoints;
-    public int maxHealthPoints = 100;
-    [SerializeField] private Slider healthpointsUi;
+    private int healthPoints;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         healthPoints = maxHealthPoints;
-        healthpointsUi.maxValue = maxHealthPoints;
+        healthSlider.maxValue = maxHealthPoints;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        healthpointsUi.value = healthPoints;
-        guiTransform.rotation = guiRotation;
+        healthSlider.value = healthPoints;
+        statsUi.rotation = guiRotation;
     }
+
+
 
     void IncreaseHealth(int amount)
     {
         healthPoints = Math.Min(maxHealthPoints, healthPoints + amount);
-        healthpointsUi.value = healthPoints;
+        healthSlider.value = healthPoints;
     }
 
     void ReduceHealth(int amount)
     {
         healthPoints = Math.Max(0, healthPoints - amount);
-        healthpointsUi.value = healthPoints;
+        healthSlider.value = healthPoints;
     }
 
     void SetMaxHealth(int maxHealth)
     {
         maxHealth = Math.Max(1, maxHealth);
-        healthpointsUi.maxValue = maxHealthPoints;
+        healthSlider.maxValue = maxHealthPoints;
     }
 }
