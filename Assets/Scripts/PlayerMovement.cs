@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 velocity;
     private Vector2 acc;
 
+    [SerializeField] private PIDController torquePID;
+
     [SerializeField] private float accForce;
 
     [SerializeField] private float maxVelocity;
@@ -32,13 +34,11 @@ public class PlayerMovement : MonoBehaviour
         //rb.velocity = getVelocity(); // = new Vector2(moveInput.x, moveInput.y) * 10; 
         rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
 
-        // TODO: instead add torque for physics! and smooth visually
+        // TODO: instead add torque for physics! OR smooth visually
         if (rotInput != Vector2.zero)
-            transform.up = rotInput; 
-            //rb.MoveRotation(rb.rotation * Quaternion.Euler(new Vector3(0, 0, 1) * Time.deltaTime));
-            //rb.AddTorque(Vector2.Angle(transform.forward, rotInput)); 
-            //rb.AddTorque(Vector2.Angle(transform.forward, rotInput)); 
-            //transform.localRotation.eulerAngles = Vector3.Slerp(transform.forward, rotInput, 1 * Time.deltaTime);
+            rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
+
+        // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
 
     private void OnA()
@@ -55,6 +55,51 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+
+
+    private void rotateToRightStick()
+    {
+        // Works, but not physically accurate
+        //transform.up = rotInput; 
+
+        // Works the same
+        //float desiredRot = Mathf.Atan2(rotInput.y, rotInput.x) * Mathf.Rad2Deg - 90f; 
+        //transform.rotation = Quaternion.AngleAxis(desiredRot, Vector3.forward);
+        
+        // Better physicallity by changing rigidbody torque
+        float desiredRot = Mathf.Atan2(rotInput.y, rotInput.x) * Mathf.Rad2Deg;// - 90f;
+        float actualRot = transform.eulerAngles.z; // 0 to 360, but should be 180 to -180 like desiredRot
+        actualRot -= 180;
+
+        if (actualRot < -90 && actualRot > -180) actualRot += 270;
+        else actualRot -= 90;
+
+        // Look how far needs to rotate
+        float dist = Mathf.Abs(actualRot - desiredRot); //distance between desired and actual rotation
+
+
+        //if (dist >= 360)
+        //    print("err 2"); // TODO: fix weird start error
+
+
+        // Always rotate around the fastest side
+        if (dist > 180)
+        {
+            dist -= 180;
+
+            // Account for jump from 180 to -180
+            if ((desiredRot > 90 && actualRot < -90) || (desiredRot < -90 && actualRot > 90)) 
+                dist -= 180; 
+        }
+
+
+        float correction = torquePID.Update(0, dist, Time.deltaTime);
+        rb.AddTorque(correction * Mathf.Sign(actualRot - desiredRot));
+
+        //Debug.DrawRay(transform.position, rotInput * 10f, Color.blue); //Desired look dir
+        Debug.DrawRay(transform.position, Quaternion.AngleAxis(desiredRot, Vector3.forward) * transform.up * 5f, Color.red); //Desired look dir (the same as above, but using float instead of vector)
+        Debug.DrawRay(transform.position, Quaternion.AngleAxis(correction, Vector3.forward) * transform.up * 5f, Color.yellow); //Correction
+    }
 
 
     private Vector2 getVelocity()
