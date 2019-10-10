@@ -11,6 +11,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 velocity;
     private Vector2 acc;
 
+    private Vector2 lastRotInput;
+
+
+    //[SerializeField] private float maxRotSpd = 1000;
+    [SerializeField] private Vector2 startRot;
+    [SerializeField] private float inputStartRotThresh;
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private Launcher launcher;
@@ -29,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
         launcher = GetComponent<Launcher>();
+
+        // Set init rotation
+        lastRotInput = startRot;
+        transform.up = startRot;
     }
 
     private void FixedUpdate()
@@ -39,8 +49,8 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
 
         // TODO: instead add torque for physics! OR smooth visually
-        if (rotInput != Vector2.zero)
-            rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
+        rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
+            
 
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
@@ -61,35 +71,26 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRightTrigger()
     {
-        launcher.shoot();
+        launcher.shoot(lastRotInput);
     }
 
 
 
     private void rotateToRightStick()
     {
-        // Works, but not physically accurate
-        //transform.up = rotInput; 
+        // Always rotate to last input dir
+        if (rotInput.magnitude > inputStartRotThresh) // 0 is immediety input, but weird cause snaps to L/R/U/D
+            lastRotInput = rotInput;
 
-        // Works the same
-        //float desiredRot = Mathf.Atan2(rotInput.y, rotInput.x) * Mathf.Rad2Deg - 90f; 
-        //transform.rotation = Quaternion.AngleAxis(desiredRot, Vector3.forward);
-        
-        // Better physicallity by changing rigidbody torque
-        float desiredRot = Mathf.Atan2(rotInput.y, rotInput.x) * Mathf.Rad2Deg;// - 90f;
+        float desiredRot = Mathf.Atan2(lastRotInput.y, lastRotInput.x) * Mathf.Rad2Deg + 90f; // 90 to convert the transform rot to the input rot
         float actualRot = transform.eulerAngles.z; // 0 to 360, but should be 180 to -180 like desiredRot
         actualRot -= 180;
 
-        if (actualRot < -90 && actualRot > -180) actualRot += 270;
-        else actualRot -= 90;
+        if (desiredRot > 180)
+            desiredRot -= 360;
 
-        // Look how far needs to rotate
-        float dist = Mathf.Abs(actualRot - desiredRot); //distance between desired and actual rotation
-
-
-        //if (dist >= 360)
-        //    print("err 2"); // TODO: fix weird start error
-
+        // Look how far needs to rotate for ideal pos
+        float dist = Mathf.Abs(actualRot - desiredRot);
 
         // Always rotate around the fastest side
         if (dist > 180)
@@ -97,17 +98,23 @@ public class PlayerMovement : MonoBehaviour
             dist -= 180;
 
             // Account for jump from 180 to -180
-            if ((desiredRot > 90 && actualRot < -90) || (desiredRot < -90 && actualRot > 90)) 
-                dist -= 180; 
+            if ((desiredRot > 90 && actualRot < -90) || (desiredRot < -90 && actualRot > 90))
+                dist -= 180;
         }
 
 
+        // Always apply rotation so that player looks to last direction that was input
         float correction = torquePID.Update(0, dist, Time.deltaTime);
+        //correction = Mathf.Clamp(correction, 0, maxRotSpd);
         rb.AddTorque(correction * Mathf.Sign(actualRot - desiredRot));
 
-        //Debug.DrawRay(transform.position, rotInput * 10f, Color.blue); //Desired look dir
-        Debug.DrawRay(transform.position, Quaternion.AngleAxis(desiredRot, Vector3.forward) * transform.up * 5f, Color.red); //Desired look dir (the same as above, but using float instead of vector)
-        Debug.DrawRay(transform.position, Quaternion.AngleAxis(correction, Vector3.forward) * transform.up * 5f, Color.yellow); //Correction
+
+
+        //probably outdated:
+        Debug.DrawRay(transform.position, rotInput * 10f, Color.blue); //Desired look dir
+        Debug.DrawRay(transform.position, Quaternion.AngleAxis(desiredRot, Vector3.forward) * Vector2.up * 5f, Color.red); //Desired look dir (the same as above, but using float instead of vector)
+        Debug.DrawRay(transform.position, Quaternion.AngleAxis(correction, Vector3.forward) * Vector2.up * 5f, Color.yellow); //Correction
+        //print(correction);
     }
 
 

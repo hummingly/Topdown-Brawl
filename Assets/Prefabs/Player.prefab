@@ -486,10 +486,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb3da93c2998b0248896d2a292ea5428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startRot: {x: 0, y: 1}
+  inputStartRotThresh: 0.1
   torquePID:
     pFactor: 2
-    iFactor: 0.01
-    dFactor: 0.5
+    iFactor: 0.001
+    dFactor: 0.25
   accForce: 8
   maxVelocity: 8
   accSpeed: 0.8
