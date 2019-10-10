@@ -42,7 +42,7 @@ public class PlayerControlTest : IInputActionCollection
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Right Trigger"",
+                    ""name"": ""RightTrigger"",
                     ""type"": ""Button"",
                     ""id"": ""5778ed5d-4d78-4a57-8f7b-878166599f97"",
                     ""expectedControlType"": """",
@@ -91,7 +91,7 @@ public class PlayerControlTest : IInputActionCollection
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Right Trigger"",
+                    ""action"": ""RightTrigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -105,7 +105,7 @@ public class PlayerControlTest : IInputActionCollection
         m_Gameplay_A = m_Gameplay.FindAction("A", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
-        m_Gameplay_RightTrigger = m_Gameplay.FindAction("Right Trigger", throwIfNotFound: true);
+        m_Gameplay_RightTrigger = m_Gameplay.FindAction("RightTrigger", throwIfNotFound: true);
     }
 
     ~PlayerControlTest()
