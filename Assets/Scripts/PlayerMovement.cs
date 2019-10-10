@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 acc;
 
     [SerializeField] private PIDController torquePID;
+    private Launcher launcher;
 
     [SerializeField] private float accForce;
 
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        launcher = GetComponent<Launcher>();
     }
 
     private void FixedUpdate()
@@ -41,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
 
+
+    // TODO: refactor out into input script
     private void OnA()
     {
         print("hit a");
@@ -53,7 +57,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = value.Get<Vector2>();
     }
-
+    private void OnRightTrigger()
+    {
+        launcher.shoot();
+    }
 
 
 

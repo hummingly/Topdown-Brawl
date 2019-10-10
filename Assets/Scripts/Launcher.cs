@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Launcher : MonoBehaviour
 {
-    public Rigidbody2D projectile;
-    public float speed = 4;
+    [SerializeField] private GameObject projectile;
+    [SerializeField] private float speed = 4;
 
     // Use this for initialization
     void Start()
@@ -18,10 +18,10 @@ public class Launcher : MonoBehaviour
 
     }
 
-    private void OnA()
+    public void shoot()
     {
-        Debug.Log("SHOOT!");
-        Rigidbody2D p = Instantiate(projectile, transform.position, transform.rotation);
-        p.velocity = transform.forward * speed;
+        GameObject p = Instantiate(projectile, transform.position, transform.rotation);
+        p.GetComponent<Rigidbody2D>().AddForce(transform.up * speed, ForceMode2D.Impulse);
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
     }
 }
