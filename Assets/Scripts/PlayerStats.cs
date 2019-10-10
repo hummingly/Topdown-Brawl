@@ -29,13 +29,13 @@ public class PlayerStats : MonoBehaviour
 
 
 
-    void IncreaseHealth(int amount)
+    public void IncreaseHealth(int amount)
     {
         healthPoints = Math.Min(maxHealthPoints, healthPoints + amount);
         healthSlider.value = healthPoints;
     }
 
-    void ReduceHealth(int amount)
+    public void ReduceHealth(int amount)
     {
         healthPoints = Math.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;

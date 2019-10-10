@@ -8,12 +8,13 @@ public class PlayerMovement : MonoBehaviour
 {
     private Vector2 moveInput;
     private Vector2 rotInput;
-    private Rigidbody2D rb;
     private Vector2 velocity;
     private Vector2 acc;
 
     [SerializeField] private PIDController torquePID;
+    private Rigidbody2D rb;
     private Launcher launcher;
+    private PlayerStats stats;
 
     [SerializeField] private float accForce;
 
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<PlayerStats>();
         launcher = GetComponent<Launcher>();
     }
 
@@ -168,4 +170,15 @@ public class PlayerMovement : MonoBehaviour
         velocity = Vector2.zero;
     }*/
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var dmgObj = collision.GetComponent<DamagingObject>();
+        if (dmgObj)
+        {
+            stats.ReduceHealth(dmgObj.damage);
+            Vector2 pushDir = (Vector2)transform.position - collision.ClosestPoint(transform.position); // maybe instead solid collider? so that I can get hit point... but then player  can't really go "into" spikes
+            rb.AddForce(pushDir * dmgObj.knockback, ForceMode2D.Impulse);
+        }
+    }
 }
