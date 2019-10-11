@@ -130,7 +130,7 @@ public class LevelManager : MonoBehaviour
 
         //TODO: add exception for non existing blocktype?
 
-        Block b = Instantiate(block, pos, Quaternion.identity).GetComponent<Block>();
+        Block b = Instantiate(block, pos, rot).GetComponent<Block>();
         b.transform.localScale = scale;
         b.transform.parent = parent;
 

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] private int damage = 10;
 
     void Start()
     {
@@ -17,5 +18,11 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Destroy(gameObject);
+
+        var damageAble = collision.collider.GetComponent<IDamageable>();
+        if(damageAble)
+        {
+            damageAble.ReduceHealth(damage);
+        }
     }
 }

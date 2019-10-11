@@ -181,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var dmgObj = collision.GetComponent<DamagingObject>();
-        if (dmgObj)
+        if (dmgObj && dmgObj.damageOnContact)
         {
             stats.ReduceHealth(dmgObj.damage);
             Vector2 pushDir = (Vector2)transform.position - collision.ClosestPoint(transform.position); // maybe instead solid collider? so that I can get hit point... but then player  can't really go "into" spikes
