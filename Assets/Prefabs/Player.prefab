@@ -348,7 +348,6 @@ MonoBehaviour:
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
   maxHealthPoints: 100
-  alwaysShowHp: 1
 --- !u!114 &3493012201695741743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +395,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &4000924214873993295
 BoxCollider2D:
