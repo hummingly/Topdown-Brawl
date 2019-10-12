@@ -188,4 +188,30 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(pushDir * dmgObj.knockback, ForceMode2D.Impulse);
         }
     }
+
+    /*
+     * // crusher worked ok, but didn't kill when fully closed
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        DamagingObject dmgObj = collision.gameObject.GetComponent<DamagingObject>();
+        if (dmgObj && dmgObj.damageOnSqueeze)
+        {
+            // Wait until other collider also overlaps with player (apart from the crushing box) !!! MAY cause problems with colliding bullets etc, so can add (solid) mask
+            Collider2D[] hitColls = Physics2D.OverlapBoxAll(transform.position, transform.localScale / 2, transform.localRotation.z);
+
+            for (int i = 0; i < hitColls.Length; i++)
+            {
+                //    Debug.Log("Hit : " + hitColls[i].name + i);
+                //if(collision == solid)
+                if (hitColls[i] != dmgObj.GetComponent<Collider2D>() && hitColls[i] != GetComponent<Collider2D>())
+                {
+                    stats.ReduceHealth(dmgObj.damage);
+                    break;
+                }
+            }
+
+
+        }
+    }
+    */
 }

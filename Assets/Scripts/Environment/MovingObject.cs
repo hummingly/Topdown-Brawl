@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class MovingObject : MonoBehaviour
 {
-    private enum MoveType { PingPong, Circle };
+    private enum MoveType { PingPong, PingPongBounce, Circle };
     private enum AnimationTypes { None, Rotate, RotateAndScale };
 
     [SerializeField] private MoveType movement = MoveType.PingPong;
@@ -34,6 +34,26 @@ public class MovingObject : MonoBehaviour
 
         //if(anim == AnimationTypes.Rotate)
         //    transform.DORotate(new Vector3(0, 0, transform.rotation.z + 180), rotateSpeed).SetEase(Ease.Linear).SetLoops(-1); // StartCoroutine(startRotAnim());
+
+        /*if(movement == MoveType.PingPong)
+        {
+            Sequence seq = DOTween.Sequence().SetLoops(-1);
+            seq.Append(rb.DOMove(transform.position + direction * distance, speed));
+            seq.AppendInterval(0.5f);
+            seq.Append(rb.DOMove(transform.position - direction * distance, speed));
+            seq.AppendInterval(0.5f);
+            seq.Append(rb.DOMove(transform.position - direction * distance / 2, speed));
+        }
+        
+        if (movement == MoveType.PingPongBounce)
+        {
+            Sequence seq = DOTween.Sequence().SetLoops(-1);
+            seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutBounce));
+            seq.AppendInterval(0.5f);
+            seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutBounce));
+            seq.AppendInterval(0.5f);
+        }
+        */
     }
 
 
@@ -50,8 +70,9 @@ public class MovingObject : MonoBehaviour
         {
             direction = -direction;
             rb.MovePosition(transform.position + direction * Time.deltaTime * speed);
-        }
+        }/**/
     }
+
 
     public void Reset()
     {
@@ -74,26 +95,30 @@ public class MovingObject : MonoBehaviour
         //   layers[i].transform.Rotate(new Vector3(0, 0, (rotateSpeed /* + Random.Range(0, rotateSpeedRandMore)*/) * Time.deltaTime));
     }
 
-    private IEnumerator startRotAnim()
-    {
-        yield return null;
 
+    /*private IEnumerator startRotAnim()
+    {
         //visuals.transform.DORotate(new Vector3(0,0,transform.rotation.z + 1), rotateSpeed).SetLoops(-1);
         //visuals.transform.DOShakeScale(scaleDur, scaleStr, scaleVib, scaleRand); //SetLoops(-1)
         //visuals.transform.DOPunchScale(punchVec, scaleDur, scaleVib, scaleElast).SetLoops(-1);
 
 
         // for multiple rot layers:
-        /*for (int i = 0; i < layers.Length; i++)
-        {
+        //for (int i = 0; i < layers.Length; i++)
+        //{
+            //Sequence seq = DOTween.Sequence().SetLoops(-1);
+            //seq.Append(layers[i].transform.DOScale(layers[i].transform.localScale * scaleDivider, scaleShrinkDur).SetEase(Ease.InOutSine));
+            //seq.Append(layers[i].transform.DOScale(layers[i].transform.localScale, expandDur).SetEase(Ease.Linear));
 
-            Sequence seq = DOTween.Sequence().SetLoops(-1);
-            seq.Append(layers[i].transform.DOScale(layers[i].transform.localScale * scaleDivider, scaleShrinkDur).SetEase(Ease.InOutSine));
-            seq.Append(layers[i].transform.DOScale(layers[i].transform.localScale, expandDur).SetEase(Ease.Linear));
+            //yield return new WaitForSeconds(scaleOffset);
+        //}
+    }*/
 
-            yield return new WaitForSeconds(scaleOffset);
-        }*/
+
+    public Vector2 getMoveDir()
+    {
+        //return rb.velocity; won't work since using movePosition
+
+        return direction;
     }
-
-
 }
