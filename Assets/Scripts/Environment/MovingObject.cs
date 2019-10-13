@@ -35,25 +35,31 @@ public class MovingObject : MonoBehaviour
         //if(anim == AnimationTypes.Rotate)
         //    transform.DORotate(new Vector3(0, 0, transform.rotation.z + 180), rotateSpeed).SetEase(Ease.Linear).SetLoops(-1); // StartCoroutine(startRotAnim());
 
-        /*if(movement == MoveType.PingPong)
+        if(movement == MoveType.PingPong)
         {
-            Sequence seq = DOTween.Sequence().SetLoops(-1);
+            Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Yoyo);
             seq.Append(rb.DOMove(transform.position + direction * distance, speed));
             seq.AppendInterval(0.5f);
             seq.Append(rb.DOMove(transform.position - direction * distance, speed));
             seq.AppendInterval(0.5f);
-            seq.Append(rb.DOMove(transform.position - direction * distance / 2, speed));
+            //seq.Append(rb.DOMove(transform.position - direction * distance / 2, speed));
         }
         
         if (movement == MoveType.PingPongBounce)
         {
-            Sequence seq = DOTween.Sequence().SetLoops(-1);
-            seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutBounce));
+            transform.position = transform.position - direction * distance;
+            Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Restart);
+            seq.Append(rb.DOMove(transform.position + direction * distance * 2, speed).SetEase(Ease.OutBounce));
             seq.AppendInterval(0.5f);
-            seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutBounce));
+            seq.Append(rb.DOMove(transform.position, speed).SetEase(Ease.OutBounce));
             seq.AppendInterval(0.5f);
+            //seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutBounce));
+            //seq.AppendInterval(0.5f);
+            //seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutBounce));
+            //seq.AppendInterval(0.5f);
+            //seq.Goto(0.5f, true);
         }
-        */
+        /**/
     }
 
 
@@ -62,7 +68,7 @@ public class MovingObject : MonoBehaviour
         //float dist = Vector3.Distance(startPos, transform.position);
 
         //transform.position += direction * Time.deltaTime * speed; //* (distance-dist);
-        rb.MovePosition(transform.position + direction * Time.deltaTime * speed); //* (distance-dist);
+        /*rb.MovePosition(transform.position + direction * Time.deltaTime * speed); //* (distance-dist);
 
         float dist = Vector3.Distance(startPos, transform.position);
 
@@ -70,7 +76,7 @@ public class MovingObject : MonoBehaviour
         {
             direction = -direction;
             rb.MovePosition(transform.position + direction * Time.deltaTime * speed);
-        }/**/
+        }*/
     }
 
 
