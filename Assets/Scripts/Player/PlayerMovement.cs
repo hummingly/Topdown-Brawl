@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private Vector2 moveInput;
     private Vector2 rotInput;
-    private Vector2 velocity;
-    private Vector2 acc;
+    private float velocity;
+    //private Vector2 acc;
 
     private Vector2 lastRotInput;
 
@@ -24,11 +24,17 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float accForce;
 
-    [SerializeField] private float maxVelocity;
-    [SerializeField] private float accSpeed;     // speed of acc going to maxAcc
-    [SerializeField] private float maxAcc;
-    [SerializeField] private float nAccSpeed;    // speed of acc going back to 0
-    [SerializeField] private float drag;
+    //[SerializeField] private float maxVelocity;
+    //[SerializeField] private float accSpeed;     // speed of acc going to maxAcc
+    //[SerializeField] private float maxAcc;
+    //[SerializeField] private float nAccSpeed;    // speed of acc going back to 0
+    //[SerializeField] private float drag;
+
+    // used fields just for debugging purposes
+    private float breathing;
+    private int counter;
+    private int breathSpeed;
+    private float correction;
 
     void Awake()
     {
@@ -43,16 +49,68 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //TODO: addforce? smooth and restrict diagonal
-        velocity = rb.velocity;
-        //rb.velocity = getVelocity(); // = new Vector2(moveInput.x, moveInput.y) * 10; 
-        rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
+        velocity = rb.velocity.magnitude;
+        float div1 = Vector2.Dot(lastRotInput, moveInput);
+        float div2 = lastRotInput.magnitude * moveInput.magnitude;
+        float cos = div1 / div2;
+        float rad = Mathf.Acos(cos);
+        //a = rad * Mathf.Rad2Deg;
 
+        //float acc = (a > 120) ? (backVelocity) : accForce;
+        float acc = accForce - rad;
+        rb.AddForce(moveInput * acc, ForceMode2D.Impulse);
+
+        
         // TODO: instead add torque for physics! OR smooth visually
         rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
-            
+
+        breathSpeed = getBreathSpeed();
+        counter = (counter + 1) % breathSpeed;
 
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
+    }
+
+    private int getBreathSpeed()
+    {
+        if (velocity < 4)
+        {
+            return 25;
+        }
+        else
+        {
+            return 15;
+        }
+        //return Mathf.RoundToInt(velocity * 4f);
+    }
+
+    private float getBreathStrength()
+    {
+        if (velocity < 1)
+        {
+            return 0;
+        }
+        else if (velocity < 4)
+        {
+            return 100;
+        }
+        else
+        {
+            return 200;
+        }
+        //return velocity * 3;
+    }
+
+    private float addBreathing(float desiredRot)
+    {
+        if (counter == 0)
+        {
+            if (breathing > 0)
+                breathing = getBreathStrength() * -1;
+            else
+                breathing = getBreathStrength()*5;
+            return desiredRot + breathing;
+        }
+        return desiredRot;
     }
 
 
@@ -83,6 +141,8 @@ public class PlayerMovement : MonoBehaviour
             lastRotInput = rotInput;
 
         float desiredRot = Mathf.Atan2(lastRotInput.y, lastRotInput.x) * Mathf.Rad2Deg + 90f; // 90 to convert the transform rot to the input rot
+        //desiredRot = addBreathing(desiredRot);
+        
         float actualRot = transform.eulerAngles.z; // 0 to 360, but should be 180 to -180 like desiredRot
         actualRot -= 180;
 
@@ -102,13 +162,11 @@ public class PlayerMovement : MonoBehaviour
                 dist -= 180;
         }
 
-
         // Always apply rotation so that player looks to last direction that was input
-        float correction = torquePID.Update(0, dist, Time.deltaTime);
+        correction = torquePID.Update(0, dist, Time.deltaTime);
+        //correction = addBreathing(correction);
         //correction = Mathf.Clamp(correction, 0, maxRotSpd);
         rb.AddTorque(correction * Mathf.Sign(actualRot - desiredRot));
-
-
 
         //probably outdated:
         Debug.DrawRay(transform.position, rotInput * 10f, Color.blue); //Desired look dir
@@ -117,7 +175,7 @@ public class PlayerMovement : MonoBehaviour
         //print(correction);
     }
 
-
+    /*
     private Vector2 getVelocity()
     {
         // Nachteil: auch bei kleinem input (oder wenig tweak des sticks des controllers) beschleunigt man auf maxVelocity (zwar langsamer, aber trotzdem)
@@ -125,29 +183,66 @@ public class PlayerMovement : MonoBehaviour
 
         // x und y beschleunigung ist getrennt, deswegen ist es etwas schwieriger zu steuern
 
-        acc.x = Math.Abs(moveInput.x) + acc.x;//doAcceleration(moveInput.x, acc.x);
-        acc.y = Math.Abs(moveInput.y) + acc.y;//doAcceleration(moveInput.y, acc.y);
+        acc.x = doAcceleration(moveInput.x, acc.x);
+        acc.y = doAcceleration(moveInput.y, acc.y);
 
         // clamp max speed
         acc.x = Mathf.Clamp(acc.x, -maxAcc, maxAcc);
         acc.y = Mathf.Clamp(acc.y, -maxAcc, maxAcc);
 
-
+        
         // apply drag
-        velocity.x *= drag;
-        velocity.y *= drag;
+        if (velocity.x < 0)
+        {
+            velocity.x += drag;
+            if (velocity.x > 0)
+            {
+                velocity.x = 0;
+            }
+        }
+        else if (velocity.x > 0)
+        {
+            velocity.x -= drag;
+            if (velocity.x < 0)
+            {
+                velocity.x = 0;
+            }
+        }
+        if (velocity.y < 0)
+        {
+            velocity.y += drag;
+            if (velocity.y > 0)
+            {
+                velocity.y = 0;
+            }
+        }
+        else if (velocity.y > 0)
+        {
+            velocity.y -= drag;
+            if (velocity.y < 0)
+            {
+                velocity.y = 0;
+            }
+        }
 
         Vector2 newVelocity = velocity + (moveInput * acc);
 
-        // clamp diagonal movement
+        // clamp max velocity (incl. diagonal movement)
         Vector2 normVelocity = newVelocity.normalized;
         float absVelocity = newVelocity.magnitude;
-        newVelocity = (absVelocity > maxVelocity) ? (normVelocity * maxVelocity) : newVelocity;
 
+        float div1 = Vector2.Dot(lastRotInput, moveInput);
+        float div2 = lastRotInput.magnitude * moveInput.magnitude;
+        float cos = div1 / div2;
+        float a = Mathf.Acos(cos);
+        a *= Mathf.Rad2Deg;
+        
+        newVelocity = (a > 120) ? (normVelocity * backVelocity) : newVelocity;
+        newVelocity = (absVelocity > maxVelocity) ? (normVelocity * maxVelocity) : newVelocity;
         return newVelocity;
     }
 
-    /*private float doAcceleration(float input, float acc)
+    private float doAcceleration(float input, float acc)
     {
         // wegen Ungenauigkeiten bei meinem Controller... kA, wie das bei euch ist??
         if (Math.Abs(input) > 0.1f)

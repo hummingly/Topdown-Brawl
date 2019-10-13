@@ -327,12 +327,12 @@ MonoBehaviour:
     pFactor: 2
     iFactor: 0.001
     dFactor: 0.25
-  accForce: 8
+  accForce: 6
   maxVelocity: 8
-  accSpeed: 0.8
+  accSpeed: 0.1
   maxAcc: 1
   nAccSpeed: 0.3
-  drag: 0.85
+  drag: 0.5
 --- !u!114 &2380627806415850663
 MonoBehaviour:
   m_ObjectHideFlags: 0
