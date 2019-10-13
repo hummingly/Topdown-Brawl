@@ -13,6 +13,7 @@ public class MovingObject : MonoBehaviour
     //[SerializeField] private float startDist = 0.5f; //TODO: implement start at the middle of ping pong time, or at one end
     [SerializeField] private float speed = 1f;
     [SerializeField] private float distance; //before turn around
+    [SerializeField] private AnimationCurve crusherBounceEase;
 
     [Space]
     [Header("Anim")]
@@ -22,6 +23,9 @@ public class MovingObject : MonoBehaviour
 
     private Rigidbody2D rb;    // TODO: Rather use dotween? Can work with rb too!!!
     private Vector3 startPos;
+
+    private Vector3 lastPos;
+    private Vector2 lastDir;
 
 
     void Start()
@@ -38,26 +42,37 @@ public class MovingObject : MonoBehaviour
         if(movement == MoveType.PingPong)
         {
             Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Yoyo);
-            seq.Append(rb.DOMove(transform.position + direction * distance, speed));
-            seq.AppendInterval(0.5f);
-            seq.Append(rb.DOMove(transform.position - direction * distance, speed));
-            seq.AppendInterval(0.5f);
+            seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutSine));
+            seq.AppendInterval(0.25f);
+            seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutSine));
+            seq.AppendInterval(0.25f);
             //seq.Append(rb.DOMove(transform.position - direction * distance / 2, speed));
         }
         
         if (movement == MoveType.PingPongBounce)
         {
+            //transform.position = transform.position - direction * distance;
+            //Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Restart);
+            //seq.Append(rb.DOMove(transform.position + direction * distance * 2, speed).SetEase(Ease.InQuint)); //InBack
+            //seq.Insert(speed * 0.75f, rb.DOMove(transform.position + direction * distance * 2, speed * 0.25f).SetEase(Ease.OutBounce));
+            //seq.AppendInterval(0.5f);
+            //seq.Append(rb.DOMove(transform.position, speed).SetEase(Ease.InQuint)); //InBack
+            //seq.Insert(speed + 0.5f + speed * 0.75f, rb.DOMove(transform.position, speed * 0.25f).SetEase(Ease.OutBounce));
+            //seq.AppendInterval(0.5f);
+
+            //transform.position = transform.position - direction * distance;
+            //Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Restart);
+            //seq.Append(rb.DOMove(transform.position + direction * distance * 2, speed).SetEase(crusherBounceEase));
+            //seq.AppendInterval(0.5f);
+            //seq.Append(rb.DOMove(transform.position, speed).SetEase(crusherBounceEase));
+            //seq.AppendInterval(0.5f);
+
             transform.position = transform.position - direction * distance;
             Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Restart);
             seq.Append(rb.DOMove(transform.position + direction * distance * 2, speed).SetEase(Ease.OutBounce));
             seq.AppendInterval(0.5f);
             seq.Append(rb.DOMove(transform.position, speed).SetEase(Ease.OutBounce));
             seq.AppendInterval(0.5f);
-            //seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutBounce));
-            //seq.AppendInterval(0.5f);
-            //seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutBounce));
-            //seq.AppendInterval(0.5f);
-            //seq.Goto(0.5f, true);
         }
         /**/
     }
@@ -77,6 +92,8 @@ public class MovingObject : MonoBehaviour
             direction = -direction;
             rb.MovePosition(transform.position + direction * Time.deltaTime * speed);
         }*/
+        lastDir = transform.position - lastPos;
+        lastPos = transform.position;
     }
 
 
@@ -125,6 +142,8 @@ public class MovingObject : MonoBehaviour
     {
         //return rb.velocity; won't work since using movePosition
 
-        return direction;
+        //return direction;
+
+        return lastDir;
     }
 }

@@ -17,6 +17,7 @@ public class DamagingObject : MonoBehaviour
     public bool damageOnPush;
     public float pushForce;
     public float pushForceSide;
+    public float damageSpeedThresh = 0.25f;
 
     private MovingObject movement;
     private Collider2D myColl;
@@ -35,34 +36,39 @@ public class DamagingObject : MonoBehaviour
             // Raycast in moving dir
             var moveDir = movement.getMoveDir();
 
-            for(int j = -ammountOfRays + 1; j < ammountOfRays; j++)
+            if (moveDir.magnitude >= damageSpeedThresh)
             {
-                var pointA = ((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2);
+                moveDir = moveDir.normalized;
 
-                RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, moveDir, squeezeSafetyRoom);
-
-                Debug.DrawLine(pointA, pointA + moveDir * squeezeSafetyRoom, Color.white);
-
-                bool closeEnough = false;
-
-                // if one of the rays is very close to a block, check if player is between, then kill
-                for (int i = 0; i < rayHit.Length; i++)
+                for (int j = -ammountOfRays + 1; j < ammountOfRays; j++)
                 {
-                    // neither player nor this block
-                    if (rayHit[i].collider != myColl && !rayHit[i].collider.GetComponent<IDamageable>())
-                    {
-                        closeEnough = true;
-                        break;
-                    }
-                }
+                    var pointA = ((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2);
 
-                if (closeEnough)
-                {
+                    RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, moveDir, squeezeSafetyRoom);
+
+                    Debug.DrawLine(pointA, pointA + moveDir * squeezeSafetyRoom, Color.white);
+
+                    bool closeEnough = false;
+
+                    // if one of the rays is very close to a block, check if player is between, then kill
                     for (int i = 0; i < rayHit.Length; i++)
                     {
-                        // TODO: add certain regulations like no squashing on triggers?
-                        if (rayHit[i].collider.GetComponent<IDamageable>())
-                            rayHit[i].collider.GetComponent<IDamageable>().ReduceHealth(int.MaxValue);
+                        // neither player nor this block
+                        if (rayHit[i].collider != myColl && !rayHit[i].collider.GetComponent<IDamageable>())
+                        {
+                            closeEnough = true;
+                            break;
+                        }
+                    }
+
+                    if (closeEnough)
+                    {
+                        for (int i = 0; i < rayHit.Length; i++)
+                        {
+                            // TODO: add certain regulations like no squashing on triggers?
+                            if (rayHit[i].collider.GetComponent<IDamageable>())
+                                rayHit[i].collider.GetComponent<IDamageable>().ReduceHealth(int.MaxValue);
+                        }
                     }
                 }
             }
@@ -78,18 +84,23 @@ public class DamagingObject : MonoBehaviour
             {
                 var moveDir = movement.getMoveDir();
 
-                for (int j = -ammountOfRays + 1; j < ammountOfRays; j++)
+                if (moveDir.magnitude >= damageSpeedThresh)
                 {
-                    RaycastHit2D[] rayHit = Physics2D.RaycastAll(((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2), moveDir, squeezeSafetyRoom);
+                    moveDir = moveDir.normalized;
 
-                    for (int i = 0; i < rayHit.Length; i++)
+                    for (int j = -ammountOfRays + 1; j < ammountOfRays; j++)
                     {
-                        if (rayHit[i].collider != myColl && rayHit[i].collider.GetComponent<IDamageable>() == damageable)
+                        RaycastHit2D[] rayHit = Physics2D.RaycastAll(((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2), moveDir, squeezeSafetyRoom);
+
+                        for (int i = 0; i < rayHit.Length; i++)
                         {
-                            damageable.ReduceHealth(damage);
-                            var rb = damageable.GetComponent<Rigidbody2D>();
-                            if (rb)
-                                rb.AddForce(moveDir * pushForce + new Vector2(moveDir.y * ExtensionMethods.randNegPos(), moveDir.x * ExtensionMethods.randNegPos()) * pushForceSide, ForceMode2D.Impulse);
+                            if (rayHit[i].collider != myColl && rayHit[i].collider.GetComponent<IDamageable>() == damageable)
+                            {
+                                damageable.ReduceHealth(damage);
+                                var rb = damageable.GetComponent<Rigidbody2D>();
+                                if (rb)
+                                    rb.AddForce(moveDir * pushForce + new Vector2(moveDir.y * ExtensionMethods.randNegPos(), moveDir.x * ExtensionMethods.randNegPos()) * pushForceSide, ForceMode2D.Impulse);
+                            }
                         }
                     }
                 }
