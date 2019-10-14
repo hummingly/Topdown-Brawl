@@ -64,6 +64,9 @@ public class BotTest : MonoBehaviour
         }
         else
         {
+            if(playerToChase && !playerToChase.GetComponent<PlayerStats>().enabled)
+                isChasing = false;
+            
             if (gotHitAndNotInRange && (playerToChase && Vector2.Distance(playerToChase.position, transform.position) < stopChaseDist))
                 gotHitAndNotInRange = false;
 
