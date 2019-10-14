@@ -165,9 +165,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &32490122
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -289,9 +296,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 500
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &101854788
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -413,9 +427,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &101862934
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -636,9 +657,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &121779199
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -760,9 +788,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &160008120
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1105,9 +1140,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 500
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &324081954
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1321,6 +1363,7 @@ MonoBehaviour:
   spawnAreas:
   - {fileID: 2083652789}
   - {fileID: 1620976003}
+  respawnTimer: 3
 --- !u!1 &372307342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1885,9 +1928,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &567927949
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2115,9 +2165,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &643121576
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2305,9 +2362,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &673427862
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2716,9 +2780,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &833223189
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3018,16 +3089,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3037,6 +3098,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2d95be72cf5d8b409239b6793845645, type: 3}
@@ -3231,9 +3302,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &945507455
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3385,9 +3463,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1059032511
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3834,9 +3919,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1233184282
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4129,9 +4221,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1300451411
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4253,9 +4352,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1339027856
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4377,9 +4483,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1339248480
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4510,6 +4623,12 @@ MonoBehaviour:
   direction: {x: -1, y: 0, z: 0}
   speed: 3
   distance: 15
+  crusherBounceEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   anim: 1
   rotateSpeed: 180
 --- !u!114 &1458918215
@@ -4524,9 +4643,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!58 &1458918216
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4657,9 +4783,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1476599985
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4781,9 +4914,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1483961687
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -4905,9 +5045,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1516331194
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5029,9 +5176,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1536865150
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5153,9 +5307,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1578292177
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5232,6 +5393,90 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
+--- !u!1001 &1609304578
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4000924214873993329, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_Name
+      value: Bot Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032545265659443728, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032545265659443728, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6566428458231614679, guid: 9fc340f7de9dbd44599c858af6c49732,
+        type: 3}
+      propertyPath: lookAgroFallow
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9fc340f7de9dbd44599c858af6c49732, type: 3}
 --- !u!1 &1616977402
 GameObject:
   m_ObjectHideFlags: 0
@@ -5277,9 +5522,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1616977405
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5510,9 +5762,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1655846443
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5936,6 +6195,12 @@ MonoBehaviour:
   direction: {x: 1, y: 0, z: 0}
   speed: 3
   distance: 15
+  crusherBounceEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   anim: 1
   rotateSpeed: 180
 --- !u!114 &1718690546
@@ -5950,9 +6215,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!58 &1718690547
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6464,9 +6736,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1852846349
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -6979,9 +7258,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1925076053
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -7103,9 +7389,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 500
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1925584555
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -7259,9 +7552,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 400
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &1986458645
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -7415,9 +7715,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130bdf67b0891824db00a9ffa8ff0106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageOnContact: 1
   damage: 30
   knockback: 500
+  damageOnContact: 1
+  damageOnSqueeze: 0
+  squeezeSafetyRoom: 0.1
+  ammountOfRays: 2
+  damageOnPush: 0
+  pushForce: 0
+  pushForceSide: 0
+  damageSpeedThresh: 0.25
 --- !u!60 &2063480956
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -133,6 +133,16 @@ public class PlayerMovement : MonoBehaviour
             launcher.shoot(lastRotInput);
     }
 
+    // bot setters
+    public void setMove(Vector2 val)
+    {
+        moveInput = val;
+    }
+    public void setRot(Vector2 val)
+    {
+        rotInput = val;
+    }
+
 
 
     private void rotateToRightStick()
