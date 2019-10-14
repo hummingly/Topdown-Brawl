@@ -129,7 +129,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnRightTrigger()
     {
-        launcher.shoot(lastRotInput);
+        if(launcher.enabled)
+            launcher.shoot(lastRotInput);
     }
 
 

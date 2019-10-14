@@ -5,6 +5,7 @@ public class Launcher : MonoBehaviour
 {
     [SerializeField] private GameObject projectile;
     [SerializeField] private float speed = 4;
+    //[SerializeField] private float cooldown = 0.2f;
     [SerializeField] private float spawnPosFromCenter = 0.5f;
 
 
