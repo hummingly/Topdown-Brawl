@@ -31,7 +31,7 @@
                 },
                 {
                     "name": "RightTrigger",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5778ed5d-4d78-4a57-8f7b-878166599f97",
                     "expectedControlType": "",
                     "processors": "",

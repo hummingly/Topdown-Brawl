@@ -5,6 +5,7 @@ using UnityEngine;
 public class BotTest : MonoBehaviour
 {
     private PlayerMovement playerMovement;
+    private Launcher launcher;
 
     [SerializeField] private float chasingSpeed = 0.75f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderSpeed = 0.5f; //percentage of maxSpeed in PlayerMovement
@@ -35,6 +36,7 @@ public class BotTest : MonoBehaviour
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        launcher = GetComponent<Launcher>();
     }
 
     void Update()
@@ -47,6 +49,8 @@ public class BotTest : MonoBehaviour
             {
                 moveDir += Random.insideUnitCircle * wanderDeviation;
                 moveDir.Normalize();
+
+                launcher.setShooting(false);
 
                 lookDir = moveDir;
                 playerMovement.setRot(lookDir);
@@ -67,6 +71,8 @@ public class BotTest : MonoBehaviour
             {
                 moveDir = playerToChase.position - transform.position;
                 moveDir.Normalize();
+
+                launcher.setShooting(true);
 
                 lookDir = moveDir;
                 playerMovement.setRot(lookDir);

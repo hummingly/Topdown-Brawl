@@ -58,7 +58,8 @@ public class PlayerMovement : MonoBehaviour
 
         //float acc = (a > 120) ? (backVelocity) : accForce;
         float acc = accForce - rad;
-        rb.AddForce(moveInput * acc, ForceMode2D.Impulse);
+        //rb.AddForce(moveInput * acc, ForceMode2D.Impulse);
+        rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
 
         
         // TODO: instead add torque for physics! OR smooth visually
@@ -127,11 +128,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = value.Get<Vector2>();
     }
-    private void OnRightTrigger()
-    {
-        if(launcher.enabled)
-            launcher.shoot(lastRotInput);
-    }
+
 
     // bot setters
     public void setMove(Vector2 val)
@@ -142,7 +139,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = val;
     }
-
+    public Vector2 getLastRot()
+    {
+        return lastRotInput;
+    }
 
 
     private void rotateToRightStick()

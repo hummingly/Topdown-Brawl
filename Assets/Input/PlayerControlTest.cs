@@ -1,11 +1,12 @@
 // GENERATED AUTOMATICALLY FROM 'Assets/Input/PlayerControlTest.inputactions'
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class PlayerControlTest : IInputActionCollection
+public class PlayerControlTest : IInputActionCollection, IDisposable
 {
     private InputActionAsset asset;
     public PlayerControlTest()
@@ -43,7 +44,7 @@ public class PlayerControlTest : IInputActionCollection
                 },
                 {
                     ""name"": ""RightTrigger"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""5778ed5d-4d78-4a57-8f7b-878166599f97"",
                     ""expectedControlType"": """",
                     ""processors"": """",
@@ -108,7 +109,7 @@ public class PlayerControlTest : IInputActionCollection
         m_Gameplay_RightTrigger = m_Gameplay.FindAction("RightTrigger", throwIfNotFound: true);
     }
 
-    ~PlayerControlTest()
+    public void Dispose()
     {
         UnityEngine.Object.Destroy(asset);
     }
