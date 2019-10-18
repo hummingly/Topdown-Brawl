@@ -3928,7 +3928,7 @@ GameObject:
   - component: {fileID: 1097267978}
   - component: {fileID: 1097267977}
   m_Layer: 0
-  m_Name: Camera Fonfiner
+  m_Name: Camera Confiner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4238,7 +4238,7 @@ MonoBehaviour:
   m_MinimumFOV: 3
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 5
-  m_MaximumOrthoSize: 100
+  m_MaximumOrthoSize: 20
 --- !u!114 &1190896489
 MonoBehaviour:
   m_ObjectHideFlags: 3
