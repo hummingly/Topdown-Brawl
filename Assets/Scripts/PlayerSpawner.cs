@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnAreas;
     [SerializeField] private float respawnTimer = 3;
 
+    private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
 
     void Start()
     {
-        
+        camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
     }
 
     void Update()
@@ -30,6 +32,7 @@ public class PlayerSpawner : MonoBehaviour
     void OnPlayerJoined(PlayerInput player)
     {
         spawnPlayer(player.transform);
+        camTargetGroup.AddMember(player.transform, 1, 1);
     }
 
 

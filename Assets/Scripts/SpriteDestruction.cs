@@ -13,7 +13,7 @@ public class SpriteDestruction : MonoBehaviour
         spriteRend = GetComponent<SpriteRenderer>();
         sourcePolyCollider = GetComponent<PolygonCollider2D>();
 
-        copyInitialSprite();
+        copyInitialSprite(0,1,2);
         //copyInitialSpriteSplitBy(1);
     }
 
@@ -23,17 +23,23 @@ public class SpriteDestruction : MonoBehaviour
         /*var currVerts = sourcePolyCollider.GetPath(0).Length;
         var newTris = currVerts * splitPoints - (currVerts - 1); // 1 new point: 3 tris, 2 new points: 5 tris, 3 new points: 7 tris
 
-        for (int i = 0; i < newTris; i++)
+
+        List<Vector2> points = new List<Vector2>(sourcePolyCollider.GetPath(0));
+
+        // add middle point since we start with a triangle
+        points.Add((points[0] + points[1] + points[2]) / 3);
+
+        copyInitialSprite(0,1,3);
+        copyInitialSprite(0,2,3);
+        copyInitialSprite(1,2,3);*/
+
+        /*for (int i = 0; i < newTris; i++)
         {
-         put a random point somewhere between existing points
-         calculate the new 3 triangles points and create the 3 objects
+            //put a random point somewhere between existing points
+            //calculate the new 3 triangles points and create the 3 objects
         }*/
 
 
-        //List<Vector2> points = new List<Vector2>(sourcePolyCollider.GetPath(0));
-
-        // add middle point since we start with a triangle
-        //points.Add((points[0] + points[1] + points[2]) / 3);
 
         //for (int i = 0; i < extraPoints; i++)
         //    points.Add(new Vector2(Random.Range(rect.width / -2, rect.width / 2), Random.Range(rect.height / -2 + rect.center.y, rect.height / 2 + rect.center.y)));
@@ -57,8 +63,12 @@ public class SpriteDestruction : MonoBehaviour
     }
 
 
+    private void makeTri()
+    {
 
-    private void copyInitialSprite()
+    }
+
+    private void copyInitialSprite(int vertInd0, int vertInd1, int vertInd2)
     {
         GameObject newGO = new GameObject("Test Mesh");
 
@@ -69,7 +79,7 @@ public class SpriteDestruction : MonoBehaviour
         mf.mesh = SpriteToMesh(spriteRend.sprite);
 
         var coll = newGO.AddComponent<PolygonCollider2D>();
-        coll.SetPath(0, new Vector2[] { mf.mesh.vertices[0], mf.mesh.vertices[1], mf.mesh.vertices[2] });
+        coll.SetPath(0, new Vector2[] { mf.mesh.vertices[vertInd0], mf.mesh.vertices[vertInd1], mf.mesh.vertices[vertInd2] });
 
         //Graphics.DrawMeshNow(SpriteToMesh(spriteRend.sprite), Vector2.zero, Quaternion.identity, 0);
     }
