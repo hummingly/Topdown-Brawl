@@ -15,12 +15,13 @@ public class Projectile : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner
         Destroy(gameObject);
 
-        var damageAble = collision.collider.GetComponent<IDamageable>();
-        if(damageAble)
+        var damageAble = collision.GetComponent<IDamageable>();
+        if (damageAble)
         {
             damageAble.ReduceHealth(damage);
         }

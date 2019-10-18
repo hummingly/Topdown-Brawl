@@ -8,12 +8,15 @@ public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnAreas;
     [SerializeField] private float respawnTimer = 3;
+    [SerializeField] private float zoomBefore = 0.3f;
 
+    private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
 
     void Start()
     {
+        effectManager = FindObjectOfType<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
     }
 
@@ -32,7 +35,6 @@ public class PlayerSpawner : MonoBehaviour
     void OnPlayerJoined(PlayerInput player)
     {
         spawnPlayer(player.transform);
-        camTargetGroup.AddMember(player.transform, 1, 1);
     }
 
 
@@ -40,17 +42,34 @@ public class PlayerSpawner : MonoBehaviour
     {
         setPlayerActive(false, player);
         //player.GetComponent<Rigidbody2D>().reset(); // TODO: reset movement -> rb.velocity / angularVelocity and player inputDir(?)
+        camTargetGroup.RemoveMember(player.transform);
 
-        yield return new WaitForSeconds(respawnTimer);
+        // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
+        yield return new WaitForSeconds(respawnTimer * zoomBefore);
+        var spawnPos = getSpawnArea();
+        var placeholder = new GameObject().transform;
+        placeholder.position = spawnPos;
+        camTargetGroup.AddMember(placeholder, 1, 1);
+
+        yield return new WaitForSeconds(respawnTimer * (1 - respawnTimer));
+        camTargetGroup.RemoveMember(placeholder);
 
         setPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue);
-        spawnPlayer(player.transform);
+        spawnPlayer(player.transform, spawnPos);
     }
 
     private void spawnPlayer(Transform player)
     {
-        player.position = getSpawnArea();
+        spawnPlayer(player, getSpawnArea());
+    }
+
+    private void spawnPlayer(Transform player, Vector2 pos)
+    {
+        player.position = pos;
+        camTargetGroup.AddMember(player.transform, 1, 1);
+
+        effectManager.squareParticle(player.position);
     }
 
     private void setPlayerActive(bool b, PlayerStats player)

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6986386929887844039}
   - component: {fileID: 296698723850168997}
   - component: {fileID: 3289076920080764759}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e406050671c0447a6c2bd8589f0892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
 --- !u!61 &3289076920080764759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -78,7 +79,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -104,7 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 492984092660917872}
   - component: {fileID: 6812991975781863235}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals (Body)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6161477693177229173}
   - component: {fileID: 3434801969729907322}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Visuals (Nose tip)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

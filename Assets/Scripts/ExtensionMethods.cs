@@ -30,5 +30,17 @@ public static class ExtensionMethods
 
         return new Vector2(xnew, ynew);
     }
+
+    public static int[] shuffle(int[] array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            int tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
 }
 

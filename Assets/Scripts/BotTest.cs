@@ -10,6 +10,7 @@ public class BotTest : MonoBehaviour
     [SerializeField] private float chasingSpeed = 0.75f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderSpeed = 0.5f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderDeviation = 0.1f;
+    [SerializeField] private int wanderChangeMuch = 500;
     [Space]
     [SerializeField] private float lookAgroMaxDist = 10;
     [SerializeField] private float lookAgroFallow = 2.5f; // ray gets smaller to sides so can see less
@@ -47,8 +48,15 @@ public class BotTest : MonoBehaviour
             Transform playerSeen = playerInSight();
             if (!playerSeen)
             {
-                moveDir += Random.insideUnitCircle * wanderDeviation;
-                moveDir.Normalize();
+                if (Random.Range(0, wanderChangeMuch) == 1)
+                {
+                    moveDir = Random.insideUnitCircle.normalized;
+                }
+                else
+                {
+                    moveDir += Random.insideUnitCircle * wanderDeviation;
+                    moveDir.Normalize();
+                }
 
                 launcher.setShooting(false);
 
