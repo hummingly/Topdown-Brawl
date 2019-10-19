@@ -63,6 +63,9 @@ public class SpriteDestruction : MonoBehaviour
     }
 
 
+    //https://www.google.com/search?safe=active&rlz=1C1CHBF_deDE832DE832&sxsrf=ACYBGNSFRh7fqJnp7-h4lL-LAtxj8805BA%3A1571516804708&ei=hHGrXbbwKsnIwALEv7OAAw&q=unity+shatter+mesh&oq=unity+shatter+mesh&gs_l=psy-ab.3..0i203.4067.6745..6826...3.4..1.77.748.11......0....1..gws-wiz.......0i71j0i13j0i7i30j0i7i10i30j0i7i30i19j0i19j0i13i30i19j0i8i13i30i19.p30JUBtEeF8&ved=0ahUKEwi2wpynlKnlAhVJJFAKHcTfDDAQ4dUDCAs&uact=5
+
+
     private void makeTri()
     {
 
@@ -96,6 +99,7 @@ public class SpriteDestruction : MonoBehaviour
             points.Add(test[i]);
 
 
+        // TODO: make for n vertices?
         Vector3[] vertices = new Vector3[3];
         int[] triangles = new int[3];
 
@@ -106,8 +110,13 @@ public class SpriteDestruction : MonoBehaviour
         triangles[1] = 1;
         triangles[2] = 0;
 
-        mesh.vertices = vertices;//mesh.vertices = Array.ConvertAll(sprite.vertices, i => (Vector3)i);
-        mesh.triangles = triangles;//mesh.triangles = Array.ConvertAll(sprite.triangles, i => (int)i);
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;/**/
+
+
+        //mesh.vertices = Array.ConvertAll(sprite.vertices, i => (Vector3)i);
+        //mesh.triangles = Array.ConvertAll(sprite.triangles, i => (int)i);
+
         //mesh.uv = sprite.uv; //mf.mesh.uv = calcUV(vertices, spriteRend, transform); // TODO: if there is a texture also use uv
 
 

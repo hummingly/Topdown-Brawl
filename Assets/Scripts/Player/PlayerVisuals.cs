@@ -4,14 +4,37 @@ using UnityEngine;
 
 public class PlayerVisuals : MonoBehaviour
 {
+    [SerializeField] private float dashUsedBrigthness = 0.5f;
+
+    private Color mainColor;
+
     void Start()
     {
-        setColorAll(TeamManager.instance.getRandUnusedColor());
+        Color col = TeamManager.instance.getRandUnusedColor();
+        setColorAll(col);
+        mainColor = col;
     }
 
     void Update()
     {
         
+    }
+
+    public void setDashUsedColor()
+    {
+        var darkColor = mainColor;
+        float H;
+        float S;
+        float V;
+        Color.RGBToHSV(darkColor, out H, out S, out V);
+        V = dashUsedBrigthness;
+        darkColor = Color.HSVToRGB(H,S,V);
+        //print(darkColor);
+        setColorAll(darkColor);
+    }
+    public void setMainColor()
+    {
+        setColorAll(mainColor);
     }
 
     private void setColorAll(Color col)

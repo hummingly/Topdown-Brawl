@@ -15,14 +15,18 @@ public class PlayerMovement : MonoBehaviour
 
 
     //[SerializeField] private float maxRotSpd = 1000;
+
     [SerializeField] private Vector2 startRot;
     [SerializeField] private float inputStartRotThresh;
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private Launcher launcher;
     private PlayerStats stats;
+    private PlayerVisuals visuals;
 
     [SerializeField] private float accForce;
+    [SerializeField] private float dashForce = 2;
+    [SerializeField] private float dashCooldown = 0.5f;
 
     //[SerializeField] private float maxVelocity;
     //[SerializeField] private float accSpeed;     // speed of acc going to maxAcc
@@ -36,19 +40,30 @@ public class PlayerMovement : MonoBehaviour
     private int breathSpeed;
     private float correction;
 
+    private float dashTimer;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
         launcher = GetComponent<Launcher>();
+        visuals = GetComponentInChildren<PlayerVisuals>();
 
         // Set init rotation
         lastRotInput = startRot;
         transform.up = startRot;
     }
 
+    private void Update()
+    {
+        dashTimer -= Time.deltaTime;
+        if(dashTimer <= 0 && visuals)
+            visuals.setMainColor();
+    }
+
     private void FixedUpdate()
     {
+        // TODO: move a lot to update
         velocity = rb.velocity.magnitude;
         float div1 = Vector2.Dot(lastRotInput, moveInput);
         float div2 = lastRotInput.magnitude * moveInput.magnitude;
@@ -119,6 +134,26 @@ public class PlayerMovement : MonoBehaviour
     private void OnA()
     {
         print("hit a");
+    }
+    private void OnLeftTrigger()
+    {
+        if(dashTimer <= 0)
+        {
+            dashTimer = dashCooldown;
+            visuals.setDashUsedColor();
+
+            // if not using left stick to move, dash to look direction or right stick
+            Vector2 dashDir;
+            if (moveInput != Vector2.zero)
+                dashDir = moveInput;
+            else
+                dashDir = lastRotInput;
+
+            rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
+
+
+            EffectManager.instance.doDashPartic(transform.position, dashDir);
+        }
     }
     private void OnMove(InputValue value)
     {

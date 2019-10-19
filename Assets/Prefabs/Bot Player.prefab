@@ -359,7 +359,7 @@ MonoBehaviour:
     type: 3}
   speed: 40
   cooldown: 0.2
-  spawnPosFromCenter: 0.5
+  spawnPosFromCenter: 0.75
 --- !u!114 &4971230030713657587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,6 +434,7 @@ MonoBehaviour:
   chasingSpeed: 0.75
   wanderSpeed: 0.25
   wanderDeviation: 0.25
+  wanderChangeMuch: 500
   lookAgroMaxDist: 10
   lookAgroFallow: 2.5
   lookAgroFoV: 135

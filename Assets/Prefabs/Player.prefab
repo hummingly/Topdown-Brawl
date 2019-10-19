@@ -327,6 +327,8 @@ MonoBehaviour:
     iFactor: 0.001
     dFactor: 0.25
   accForce: 20
+  dashForce: 300
+  dashCooldown: 0.5
 --- !u!114 &2380627806415850663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,7 +360,7 @@ MonoBehaviour:
     type: 3}
   speed: 40
   cooldown: 0.125
-  spawnPosFromCenter: 0.5
+  spawnPosFromCenter: 0.75
 --- !u!114 &4971230030713657587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,6 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 281c26bc86bfc19479f20f33f2a93c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashUsedBrigthness: 0.8
 --- !u!1001 &4839267726822262482
 PrefabInstance:
   m_ObjectHideFlags: 0
