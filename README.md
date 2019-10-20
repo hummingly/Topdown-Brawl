@@ -16,6 +16,7 @@
 ### Win Conditions
 
 - win more rounds than the enemy team in a game
+- win rounds by achieving map objective
 
 ## Game Mechanics
 
@@ -30,3 +31,27 @@
 
 - blocky and simple
 - low resolution pixel game
+
+## Roadmap
+
+### Core Gameplay
+
+This is the initial plan to have a foundation on which more can be build and experiment.
+
+1. Finish Basic Map
+   - 1 Round
+   - shooter vs. shooter
+   - play until the first death
+   - show a victory/defeat screen
+2. Initial Role System
+   - add fighter role
+   - add role selection at the beginning
+   - add one special skill to shooter and fighter
+3. Map Objectives
+   - create new map with different goal (flag capturing?)
+   - add map selection
+   - experiment with map environment (e.g. walls, powerups)
+4. Player Input
+   - polish player movement
+   - revaluate camera (zoom, movement)
+   - test for 4 players
