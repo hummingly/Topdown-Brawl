@@ -943,7 +943,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 298774227}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1238,6 +1238,8 @@ GameObject:
   - component: {fileID: 362807573}
   - component: {fileID: 362807575}
   - component: {fileID: 362807576}
+  - component: {fileID: 362807577}
+  - component: {fileID: 362807578}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1323,6 +1325,7 @@ MonoBehaviour:
   - {fileID: 2083652789}
   - {fileID: 1620976003}
   respawnTimer: 3
+  zoomBefore: 0.3
 --- !u!114 &362807576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1335,6 +1338,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261472c5f48c84544becf229a40da179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &362807577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362807572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8730f9cb84db944b831c75dde0f26c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.9372549, b: 0, a: 1}
+  - {r: 0, g: 0.94509804, b: 1, a: 1}
+  - {r: 0.24705882, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.5529412, b: 0, a: 1}
+  - {r: 0.8117647, g: 0, b: 1, a: 1}
+--- !u!114 &362807578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362807572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06338c19a78fdfc4e81194b81564bcc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionTest: {fileID: 8590467141818954187, guid: 62182d8cff92ed54596c3d27e82451ef,
+    type: 3}
+  dashPartic: {fileID: 5282224505969515614, guid: 79c17ab750617fd47ae556387c491f47,
+    type: 3}
 --- !u!1 &364674675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,7 +1414,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 372307343}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spawns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1809,7 +1847,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 401385266}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4686,7 +4724,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 967330012}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5949,7 +5987,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1223118851}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6563,7 +6601,7 @@ GameObject:
   - component: {fileID: 1620976003}
   - component: {fileID: 1620976005}
   - component: {fileID: 1620976004}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Area (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6783,7 +6821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1656313044}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7963,7 +8001,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1922900027}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9125,7 +9163,7 @@ GameObject:
   - component: {fileID: 2083652789}
   - component: {fileID: 2083652791}
   - component: {fileID: 2083652790}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

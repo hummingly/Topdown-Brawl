@@ -18,7 +18,8 @@ public class BotTest : MonoBehaviour
     [SerializeField] private int rays = 10;
     [SerializeField] private float stopChaseDist = 8;
     [Space]
-    [SerializeField] private float reactionDelay; // time to wait until doing some actions
+    [SerializeField] private float reactionDelay; // TODO: time to wait until doing some actions
+    [SerializeField] private float maxRandAimOffset; 
 
 
     // CONCEPT 
@@ -85,7 +86,7 @@ public class BotTest : MonoBehaviour
 
                 launcher.setShooting(true);
 
-                lookDir = moveDir;
+                lookDir = playerToChase.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * chasingSpeed);
             }
