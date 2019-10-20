@@ -36,22 +36,24 @@
 
 ### Core Gameplay
 
-This is the initial plan to have a foundation on which more can be build and experiment.
+This is the initial plan to have a playable game and a foundation on which more can be build and experiment.
 
-1. Finish Basic Map
-   - 1 Round
-   - shooter vs. shooter
-   - play until the first death
-   - show a victory/defeat screen
+1. Finish Basic Game (Loop)
+   - [ ] scene transitions
+   - [ ] start menu with play button
+   - [x] shooter vs. shooter
+   - [ ] round ends after a player dies
+   - [ ] display ending screen after finishing 1 round
+   - [ ] ending screen shows score
 2. Initial Role System
-   - add fighter role
-   - add role selection at the beginning
-   - add one special skill to shooter and fighter
+   - [ ] add fighter role
+   - [ ] add role selection to start menu
+   - [ ] add one special skill to shooter and fighter
+   - [ ] add cooldowns for basic attacks and skills
 3. Map Objectives
-   - create new map with different goal (flag capturing?)
-   - add map selection
-   - experiment with map environment (e.g. walls, powerups)
+   - [ ] create new map with different goal (flag capturing?)
+   - [ ] add map selection to start menu
+   - [ ] experiment with map environment objects (e.g. walls, powerups) interactions
 4. Player Input
-   - polish player movement
-   - revaluate camera (zoom, movement)
-   - test for 4 players
+   - [ ] polish player and camera movement
+   - [ ] test for 4 players
