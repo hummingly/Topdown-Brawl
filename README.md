@@ -36,7 +36,7 @@
 
 ### Core Gameplay
 
-This is the initial plan to have a playable game and a foundation on which more can be build and experiment.
+This is the initial plan to have a playable game and a foundation on which more can be built and experimented.
 
 1. Finish Basic Game (Loop)
    - [ ] scene transitions
@@ -54,6 +54,8 @@ This is the initial plan to have a playable game and a foundation on which more 
    - [ ] create new map with different goal (flag capturing?)
    - [ ] add map selection to start menu
    - [ ] experiment with map environment objects (e.g. walls, powerups) interactions
-4. Player Input
-   - [ ] polish player and camera movement
-   - [ ] test for 4 players
+4. Teams
+   - [ ] 2 teams
+   - [ ] differentiate skills and basic attack between allies and enemies
+   - [ ] add team selection to start menu
+   - [ ] adjust player and camera movement
