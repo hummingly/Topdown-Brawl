@@ -6,19 +6,20 @@ public class GameLogic : MonoBehaviour
 {
     struct Team //or class?
     {
-        private GameObject[] players;
-        private int points;
+        public List<GameObject> players;
+        public int points;
     }
 
-    private Team[] teams;
+    private List<Team> teams = new List<Team>();
 
-    public GameMode gameMode;
+    public GameMode gameMode = new GameMode();
 
 
-    void Start()
+    void Awake()
     {
-        // fill teams
         // prepare gamemode (scritpable obj?)
+
+        gameMode.useTeams = true;
     }
 
     void Update()
@@ -30,5 +31,23 @@ public class GameLogic : MonoBehaviour
     {
         //find team that GO is in and add point
         //if bigger than gamemode max then won
+    }
+
+    public void addPlayer(GameObject player)
+    {
+        if(gameMode.useTeams)
+        {
+            // first just add all to a new team
+            Team newTeam = new Team();
+            newTeam.players.Add(player);
+            teams.Add(newTeam);
+            //TODO: random color
+        }
+    }
+
+    public int getTeamOf(GameObject player) //for now jsut 0 or 1
+    {
+        return Random.Range(0, 2);
+        //teams.FindIndex(player);
     }
 }
