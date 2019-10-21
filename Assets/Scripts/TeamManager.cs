@@ -79,13 +79,12 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         }
         else
         {
-            if (teams.Count <= 0) // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
-            {
-                // for testing add to new team each
-                newTeam(player.gameObject);
+            // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
-                FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
-            }
+            // for testing add to new team each
+            newTeam(player.gameObject);
+
+            FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
         }
     }
 
@@ -101,12 +100,18 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         //return Random.Range(0, 2);
 
-        foreach (Team team in teams)
+        for(int i = 0; i < teams.Count; i++)
         {
-            int i = team.players.FindIndex(o => o == player);
-            print(i);
+            //int i = team.players.FindIndex(o => o == player);
+            int index = teams[i].players.IndexOf(player);
+
+            print(index);
+
+            if (index != -1)
+                return i;
         }
-        return 0;
+
+        return -1; //error, maybe throw ex
     }
 
     public void increaseScore(GameObject player) //has to be called if a bullet made a kill (keep track which player shot bullet)
