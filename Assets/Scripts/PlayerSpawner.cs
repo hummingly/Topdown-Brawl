@@ -10,12 +10,14 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float respawnTimer = 3;
     [SerializeField] private float zoomBefore = 0.3f;
 
+    private GameLogic gameLogic;
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
 
     void Start()
     {
+        gameLogic = GetComponent<GameLogic>();
         effectManager = FindObjectOfType<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
     }
@@ -34,6 +36,7 @@ public class PlayerSpawner : MonoBehaviour
     }
     void OnPlayerJoined(PlayerInput player)
     {
+        GameObject.FindObjectOfType<GameLogic>().addPlayer(player.gameObject);
         spawnPlayer(player.transform);
     }
 
@@ -46,7 +49,7 @@ public class PlayerSpawner : MonoBehaviour
 
         // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
         yield return new WaitForSeconds(respawnTimer * zoomBefore);
-        var spawnPos = getSpawnArea();
+        var spawnPos = getSpawnArea(player.transform);
         var placeholder = new GameObject().transform;
         placeholder.position = spawnPos;
         camTargetGroup.AddMember(placeholder, 1, 1);
@@ -61,7 +64,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private void spawnPlayer(Transform player)
     {
-        spawnPlayer(player, getSpawnArea());
+        spawnPlayer(player, getSpawnArea(player));
     }
 
     private void spawnPlayer(Transform player, Vector2 pos)
@@ -90,16 +93,13 @@ public class PlayerSpawner : MonoBehaviour
     }
 
 
-    private Vector2 getSpawnArea()
+    private Vector2 getSpawnArea(Transform player)
     {
-        int team = getPlayerTeam();
+        int team = gameLogic.getTeamOf(player.gameObject);
 
         // Spawn in one of the premade points in the right spawn zone
         return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
     }
 
-    private int getPlayerTeam() // 0 or 1 for now
-    {
-        return Random.Range(0, 2);
-    }
+
 }

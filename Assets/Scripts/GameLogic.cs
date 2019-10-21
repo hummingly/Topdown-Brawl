@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class GameLogic : MonoBehaviour
 {
-    struct Team //or class?
+    class Team //or class?
     {
-        private GameObject[] players;
-        private int points;
+        public List<GameObject> players = new List<GameObject>();
+        public int points;
     }
 
-    private Team[] teams;
+    private List<Team> teams = new List<Team>();
 
-    public GameMode gameMode;
+    public GameMode gameMode = new GameMode();
+
+    private UIManager uiManager;
 
 
-    void Start()
+    void Awake()
     {
-        // fill teams
         // prepare gamemode (scritpable obj?)
+        gameMode.useTeams = true;
+        uiManager = GetComponent<UIManager>();
     }
 
     void Update()
@@ -26,9 +29,46 @@ public class GameLogic : MonoBehaviour
         
     }
 
-    public void increaseScore(GameObject scoredPoint) //has to be called if a bullet made a kill (keep track which player shot bullet)
+    public void increaseScore(GameObject player) //has to be called if a bullet made a kill (keep track which player shot bullet)
     {
-        //find team that GO is in and add point
+        int team = getTeamOf(player);
+        teams[team].points += 1;
+        // display new score in UI
+        uiManager.updateScore(team);
         //if bigger than gamemode max then won
+        if (teams[team].points >= gameMode.pointsToWin)
+        {
+            uiManager.setGameOver();
+        }
+    }
+
+    public int getScore(int team)
+    {
+        return teams[team].points;
+    }
+
+    public void addPlayer(GameObject player)
+    {
+        if(gameMode.useTeams)
+        {
+            // first just add all to a new team
+            Team newTeam = new Team();
+            newTeam.players.Add(player);
+            teams.Add(newTeam);
+            //TODO: random color
+        }
+    }
+
+    public int getTeamOf(GameObject player) //for now jsut 0 or 1
+    {
+
+        //return teams.player.FindIndex(o => o == player);
+        //return Random.Range(0, 2);
+        foreach (Team team in teams)
+        {
+            int i = team.players.FindIndex(o => o == player);
+            print(i);
+        }
+        return 0;
     }
 }
