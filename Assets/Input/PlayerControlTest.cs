@@ -116,6 +116,52 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menu"",
+            ""id"": ""e0170e8c-b2e6-42a6-9567-392bb1c8ba22"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Button"",
+                    ""id"": ""ce986f63-c136-400d-8c4f-411a324f1591"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""4d18909a-d327-402e-92a6-518aede8aff1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b36e0d51-60d0-47bf-b908-21a983f2d98a"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""380dd29e-cf4f-480c-95be-0a5980c6c664"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -127,6 +173,10 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
         m_Gameplay_RightTrigger = m_Gameplay.FindAction("RightTrigger", throwIfNotFound: true);
         m_Gameplay_LeftTrigger = m_Gameplay.FindAction("LeftTrigger", throwIfNotFound: true);
+        // Menu
+        m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
+        m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
+        m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -237,6 +287,47 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         }
     }
     public GameplayActions @Gameplay => new GameplayActions(this);
+
+    // Menu
+    private readonly InputActionMap m_Menu;
+    private IMenuActions m_MenuActionsCallbackInterface;
+    private readonly InputAction m_Menu_Move;
+    private readonly InputAction m_Menu_Select;
+    public struct MenuActions
+    {
+        private PlayerControlTest m_Wrapper;
+        public MenuActions(PlayerControlTest wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Menu_Move;
+        public InputAction @Select => m_Wrapper.m_Menu_Select;
+        public InputActionMap Get() { return m_Wrapper.m_Menu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
+        public void SetCallbacks(IMenuActions instance)
+        {
+            if (m_Wrapper.m_MenuActionsCallbackInterface != null)
+            {
+                Move.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
+                Move.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
+                Move.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
+                Select.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnSelect;
+                Select.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnSelect;
+                Select.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnSelect;
+            }
+            m_Wrapper.m_MenuActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                Move.started += instance.OnMove;
+                Move.performed += instance.OnMove;
+                Move.canceled += instance.OnMove;
+                Select.started += instance.OnSelect;
+                Select.performed += instance.OnSelect;
+                Select.canceled += instance.OnSelect;
+            }
+        }
+    }
+    public MenuActions @Menu => new MenuActions(this);
     public interface IGameplayActions
     {
         void OnA(InputAction.CallbackContext context);
@@ -244,5 +335,10 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         void OnRotate(InputAction.CallbackContext context);
         void OnRightTrigger(InputAction.CallbackContext context);
         void OnLeftTrigger(InputAction.CallbackContext context);
+    }
+    public interface IMenuActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnSelect(InputAction.CallbackContext context);
     }
 }
