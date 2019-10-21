@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameMode //rather scriptable object?
 {
     //public enum WinConditions { Kills, Objective };
-    public int pointsToWin;
+    public int pointsToWin = 8;
     public enum PointReward { OnKill, OnDestroy, OnOccupyTime, OnReturnFlag, OnGoal, None };
     public PointReward pointsFor = PointReward.None; //skirmish or sandbox per default
 
