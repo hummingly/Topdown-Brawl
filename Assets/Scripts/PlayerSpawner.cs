@@ -17,8 +17,8 @@ public class PlayerSpawner : MonoBehaviour
 
     void Start()
     {
-        gameLogic = GetComponent<GameLogic>();
-        effectManager = FindObjectOfType<EffectManager>();
+        gameLogic = FindObjectOfType<GameLogic>();
+        effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
     }
 
@@ -36,7 +36,7 @@ public class PlayerSpawner : MonoBehaviour
     }
     void OnPlayerJoined(PlayerInput player)
     {
-        GameObject.FindObjectOfType<GameLogic>().addPlayer(player.gameObject);
+        //GameObject.FindObjectOfType<GameLogic>().addPlayer(player.gameObject);
         spawnPlayer(player.transform);
     }
 
