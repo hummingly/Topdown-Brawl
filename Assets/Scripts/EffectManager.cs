@@ -5,17 +5,10 @@ using DG.Tweening;
 
 public class EffectManager : MonoBehaviour
 {
-    public static EffectManager instance = null;
-
     //[SerializeField] private Sprite rect;
     [SerializeField] private GameObject explosionTest;
     [SerializeField] private GameObject dashPartic;
 
-    void Awake()
-    {
-        instance = this;
-        DontDestroyOnLoad(this);
-    }
 
     public void doDashPartic(Vector2 pos, Vector2 playerRot)
     {

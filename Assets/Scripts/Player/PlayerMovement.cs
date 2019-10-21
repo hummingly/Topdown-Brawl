@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private Launcher launcher;
     private PlayerStats stats;
     private PlayerVisuals visuals;
+    private EffectManager effects;
 
     [SerializeField] private float accForce;
     [SerializeField] private float dashForce = 2;
@@ -48,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         stats = GetComponent<PlayerStats>();
         launcher = GetComponent<Launcher>();
         visuals = GetComponentInChildren<PlayerVisuals>();
+        effects = FindObjectOfType<EffectManager>();
 
         // Set init rotation
         lastRotInput = startRot;
@@ -152,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
 
 
-            EffectManager.instance.doDashPartic(transform.position, dashDir);
+            effects.doDashPartic(transform.position, dashDir);
         }
     }
     private void OnMove(InputValue value)

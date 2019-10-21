@@ -1,24 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameLogic : MonoBehaviour
 {
-    struct Team //or class?
+    private static GameLogic instance;
+    public static GameLogic Instance { get { return instance; } }
+
+
+
+    public GameMode gameMode = new GameMode();
+    private UIManager uiManager;
+    private PlayerSpawner playerSpawner;
+    private TeamManager teams;
+
+
+    private void Awake()
     {
-        private GameObject[] players;
-        private int points;
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+
+        teams = GetComponent<TeamManager>();
+
+        DontDestroyOnLoad(gameObject);
     }
 
-    private Team[] teams;
 
-    public GameMode gameMode;
 
 
     void Start()
     {
-        // fill teams
-        // prepare gamemode (scritpable obj?)
+        gameMode.useTeams = true;
+        gameMode.pointsToWin = 8;
+
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     void Update()
@@ -26,9 +49,25 @@ public class GameLogic : MonoBehaviour
         
     }
 
-    public void increaseScore(GameObject scoredPoint) //has to be called if a bullet made a kill (keep track which player shot bullet)
+    
+
+    
+
+
+
+    public int getPointsToWin()
     {
-        //find team that GO is in and add point
-        //if bigger than gamemode max then won
+        return gameMode.pointsToWin;
     }
+
+    public void gameOver()
+    {
+        uiManager.setGameOverUI();
+        Time.timeScale = 0;
+    }
+
+
+    
+
+
 }

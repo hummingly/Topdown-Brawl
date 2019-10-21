@@ -4,6 +4,7 @@ using System.Collections;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private int damage = 10;
+    private GameObject owner;
 
     void Start()
     {
@@ -15,6 +16,11 @@ public class Projectile : MonoBehaviour
 
     }
 
+    public void setOwner(GameObject owner)
+    {
+        this.owner = owner;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner
@@ -23,7 +29,11 @@ public class Projectile : MonoBehaviour
         var damageAble = collision.GetComponent<IDamageable>();
         if (damageAble)
         {
-            damageAble.ReduceHealth(damage);
+            bool playerKilled = damageAble.ReduceHealth(damage);
+            if (playerKilled)
+            {
+                FindObjectOfType<TeamManager>().increaseScore(owner);
+            }
         }
     }
 }

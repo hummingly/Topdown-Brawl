@@ -6,17 +6,21 @@ using Cinemachine;
 
 public class PlayerSpawner : MonoBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
+
     [SerializeField] private Transform[] spawnAreas;
     [SerializeField] private float respawnTimer = 3;
     [SerializeField] private float zoomBefore = 0.3f;
 
+    private GameLogic gameLogic;
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
 
-    void Start()
+    void Awake()
     {
-        effectManager = FindObjectOfType<EffectManager>();
+        gameLogic = FindObjectOfType<GameLogic>();
+        effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
     }
 
@@ -32,10 +36,28 @@ public class PlayerSpawner : MonoBehaviour
     {
         StartCoroutine(respawn(player));
     }
-    void OnPlayerJoined(PlayerInput player)
+
+    // For joining player manually from preselection
+    public GameObject joinPlayer()
+    {
+        var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
+
+        //GameObject.FindObjectOfType<TeamManager>().addPlayer(player.gameObject);
+        spawnPlayer(player.transform);
+
+        return player.gameObject;
+    }
+
+    // For normal debug playign from gameplay scene
+    public void playerJoined(Transform player)//void OnPlayerJoined(PlayerInput player)
     {
         spawnPlayer(player.transform);
     }
+
+    
+
+
+
 
 
     IEnumerator respawn(PlayerStats player)
@@ -92,7 +114,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private Vector2 getSpawnArea()
     {
-        int team = getPlayerTeam();
+        int team = 0;// gameLogic.getTeamOf(player.gameObject);
 
         // Spawn in one of the premade points in the right spawn zone
         return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
