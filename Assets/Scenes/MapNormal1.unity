@@ -1533,7 +1533,7 @@ GameObject:
   - component: {fileID: 195142459}
   - component: {fileID: 195142458}
   m_Layer: 5
-  m_Name: Score Text A
+  m_Name: Score Text 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2515,6 +2515,7 @@ GameObject:
   - component: {fileID: 362807577}
   - component: {fileID: 362807578}
   - component: {fileID: 362807579}
+  - component: {fileID: 362807580}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -2656,6 +2657,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1fe5f7cb946a74cab93499dea883e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &362807580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362807572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1097e80f20d2114cb2d3890429a5d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scores:
+  - {fileID: 195142456}
+  - {fileID: 1129356051}
+  time: {fileID: 1160719493}
 --- !u!1 &413043285
 GameObject:
   m_ObjectHideFlags: 0
@@ -6461,7 +6478,7 @@ GameObject:
   - component: {fileID: 1129356054}
   - component: {fileID: 1129356053}
   m_Layer: 5
-  m_Name: Score Text B
+  m_Name: Score Text 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6648,7 +6665,7 @@ GameObject:
   - component: {fileID: 1160719496}
   - component: {fileID: 1160719495}
   m_Layer: 5
-  m_Name: Score Text A
+  m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
