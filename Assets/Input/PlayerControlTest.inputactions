@@ -149,6 +149,52 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Keyboard Test",
+            "id": "2b3380d9-4089-48f9-b376-0a7ea7aab20f",
+            "actions": [
+                {
+                    "name": "Test ACtion",
+                    "type": "Button",
+                    "id": "f96e4d22-5088-4770-a475-8f220deb6d87",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightTrigger",
+                    "type": "Value",
+                    "id": "07cbd4f1-a9fa-41dd-b783-c0bb3d9e4410",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8fabc886-f1da-4697-9e4d-39ca538fd95d",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Test ACtion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5ab75009-017f-44ff-a2f2-19ef6879c5f4",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

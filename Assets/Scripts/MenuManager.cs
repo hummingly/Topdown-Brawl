@@ -35,13 +35,5 @@ public class MenuManager : MonoBehaviour
         scene = selection;
     }
 
-    void OnPlayerJoined(PlayerInput player)
-    {
-        player.transform.parent = cursorParent;
-        player.transform.localPosition = Vector3.zero;
 
-        GameObject.FindObjectOfType<GameLogic>().addPlayer(player.gameObject);
-        //TODO: check which player? write string P1 for example
-
-    }
 }

@@ -2509,11 +2509,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 362807574}
-  - component: {fileID: 362807573}
   - component: {fileID: 362807575}
   - component: {fileID: 362807576}
   - component: {fileID: 362807578}
-
+  - component: {fileID: 362807577}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -2521,50 +2520,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &362807573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 362807572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NotificationBehavior: 0
-  m_MaxPlayerCount: 6
-  m_AllowJoining: 1
-  m_JoinBehavior: 0
-  m_PlayerJoinedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_PlayerLeftEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_JoinAction:
-    m_UseReference: 0
-    m_Action:
-      m_Name: 
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-    m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
-    type: 3}
-  m_SplitScreen: 0
-  m_MaintainAspectRatioInSplitScreen: 0
-  m_FixedNumberOfSplitScreens: -1
-  m_SplitScreenRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!4 &362807574
 Transform:
   m_ObjectHideFlags: 0
@@ -2591,6 +2546,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b603bc7191a8da14fb3a4729639cb158, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+    type: 3}
   spawnAreas:
   - {fileID: 519620349}
   - {fileID: 1261764380}
@@ -2608,6 +2565,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261472c5f48c84544becf229a40da179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &362807577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362807572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1097e80f20d2114cb2d3890429a5d15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scores:
+  - {fileID: 195142456}
+  - {fileID: 1129356051}
+  time: {fileID: 1160719493}
+  gameOver: {fileID: 1982984541}
 --- !u!114 &362807578
 MonoBehaviour:
   m_ObjectHideFlags: 0

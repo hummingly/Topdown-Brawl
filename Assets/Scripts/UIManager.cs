@@ -9,10 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject gameOver;
 
+    private GameLogic gameLogic;
 
     void Start()
     {
-        
+        gameLogic = GetComponent<GameLogic>();
     }
 
     void Update()
@@ -31,5 +32,5 @@ public class UIManager : MonoBehaviour
     {
         gameOver.SetActive(true);
     }
-    
+
 }

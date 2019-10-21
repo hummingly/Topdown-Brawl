@@ -162,6 +162,52 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Keyboard Test"",
+            ""id"": ""2b3380d9-4089-48f9-b376-0a7ea7aab20f"",
+            ""actions"": [
+                {
+                    ""name"": ""Test ACtion"",
+                    ""type"": ""Button"",
+                    ""id"": ""f96e4d22-5088-4770-a475-8f220deb6d87"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RightTrigger"",
+                    ""type"": ""Value"",
+                    ""id"": ""07cbd4f1-a9fa-41dd-b783-c0bb3d9e4410"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8fabc886-f1da-4697-9e4d-39ca538fd95d"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Test ACtion"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ab75009-017f-44ff-a2f2-19ef6879c5f4"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightTrigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -177,6 +223,10 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
+        // Keyboard Test
+        m_KeyboardTest = asset.FindActionMap("Keyboard Test", throwIfNotFound: true);
+        m_KeyboardTest_TestACtion = m_KeyboardTest.FindAction("Test ACtion", throwIfNotFound: true);
+        m_KeyboardTest_RightTrigger = m_KeyboardTest.FindAction("RightTrigger", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -328,6 +378,47 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         }
     }
     public MenuActions @Menu => new MenuActions(this);
+
+    // Keyboard Test
+    private readonly InputActionMap m_KeyboardTest;
+    private IKeyboardTestActions m_KeyboardTestActionsCallbackInterface;
+    private readonly InputAction m_KeyboardTest_TestACtion;
+    private readonly InputAction m_KeyboardTest_RightTrigger;
+    public struct KeyboardTestActions
+    {
+        private PlayerControlTest m_Wrapper;
+        public KeyboardTestActions(PlayerControlTest wrapper) { m_Wrapper = wrapper; }
+        public InputAction @TestACtion => m_Wrapper.m_KeyboardTest_TestACtion;
+        public InputAction @RightTrigger => m_Wrapper.m_KeyboardTest_RightTrigger;
+        public InputActionMap Get() { return m_Wrapper.m_KeyboardTest; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(KeyboardTestActions set) { return set.Get(); }
+        public void SetCallbacks(IKeyboardTestActions instance)
+        {
+            if (m_Wrapper.m_KeyboardTestActionsCallbackInterface != null)
+            {
+                TestACtion.started -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnTestACtion;
+                TestACtion.performed -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnTestACtion;
+                TestACtion.canceled -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnTestACtion;
+                RightTrigger.started -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnRightTrigger;
+                RightTrigger.performed -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnRightTrigger;
+                RightTrigger.canceled -= m_Wrapper.m_KeyboardTestActionsCallbackInterface.OnRightTrigger;
+            }
+            m_Wrapper.m_KeyboardTestActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                TestACtion.started += instance.OnTestACtion;
+                TestACtion.performed += instance.OnTestACtion;
+                TestACtion.canceled += instance.OnTestACtion;
+                RightTrigger.started += instance.OnRightTrigger;
+                RightTrigger.performed += instance.OnRightTrigger;
+                RightTrigger.canceled += instance.OnRightTrigger;
+            }
+        }
+    }
+    public KeyboardTestActions @KeyboardTest => new KeyboardTestActions(this);
     public interface IGameplayActions
     {
         void OnA(InputAction.CallbackContext context);
@@ -340,5 +431,10 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+    }
+    public interface IKeyboardTestActions
+    {
+        void OnTestACtion(InputAction.CallbackContext context);
+        void OnRightTrigger(InputAction.CallbackContext context);
     }
 }

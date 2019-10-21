@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class GameLogic : MonoBehaviour
 {
-    class Team //struct
+    public static GameLogic instance = null;
+
+    [Serializable] class Team //or struct?
     {
         public List<GameObject> players = new List<GameObject>();
         public int points;
@@ -16,10 +22,10 @@ public class GameLogic : MonoBehaviour
 
     private List<Team> teams = new List<Team>();
 
+
     public GameMode gameMode = new GameMode();
-
     private UIManager uiManager;
-
+    private PlayerSpawner playerSpawner;
 
     void Awake()
     {
@@ -27,12 +33,27 @@ public class GameLogic : MonoBehaviour
         DontDestroyOnLoad(instance);
 
         // prepare gamemode (scritpable obj?)
+
         gameMode.useTeams = true;
 
         uiManager = GetComponent<UIManager>();
 
         usedColors = new bool[playerColors.Length];
+
+        SceneManager.sceneLoaded += SceneLoadeded;
     }
+
+    private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
+    {
+        if(scene.name == "MapNormal1")
+        {
+            playerSpawner = FindObjectOfType<PlayerSpawner>();
+            playerSpawner.joinplayer();
+        }
+    }
+     
+
+
 
     void Update()
     {
@@ -41,8 +62,9 @@ public class GameLogic : MonoBehaviour
 
     public void increaseScore(GameObject player) //has to be called if a bullet made a kill (keep track which player shot bullet)
     {
+        //find team that GO is in and add point
         int team = getTeamOf(player);
-        teams[team].points += 1;
+        teams[team].points++;
         // display new score in UI
         uiManager.updateScore(team);
         //if bigger than gamemode max then won
@@ -52,27 +74,33 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    public int getScore(int team)
-    {
-        return teams[team].points;
-    }
 
-    public void addPlayer(GameObject player)
+    void OnPlayerJoined(PlayerInput player)
     {
-        if(gameMode.useTeams)
+        //player.transform.parent = cursorParent;  //TODO 
+        player.transform.localPosition = Vector3.zero;
+
+        print("called");
+
+        //TODO: check if gameplay, no new team, instead just spawn prefab for exising players
+
+        if (gameMode.useTeams)
         {
             // first just add all to a new team
             Team newTeam = new Team();
-            newTeam.players.Add(player);
+            newTeam.players.Add(player.gameObject);
             teams.Add(newTeam);
             //TODO: random color
         }
+
+        //TODO: check which player? write string P1 for example
+
     }
+
 
     public int getTeamOf(GameObject player) //for now jsut 0 or 1
     {
-
-        //return teams.player.FindIndex(o => o == player);
+        print(teams.Count);
         //return Random.Range(0, 2);
         foreach (Team team in teams)
         {
@@ -82,6 +110,10 @@ public class GameLogic : MonoBehaviour
         return 0;
     }
 
+    public int getScore(int team)
+    {
+        return teams[team].points;
+    }
 
 
 

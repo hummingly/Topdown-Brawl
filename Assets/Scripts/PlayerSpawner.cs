@@ -6,6 +6,8 @@ using Cinemachine;
 
 public class PlayerSpawner : MonoBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
+
     [SerializeField] private Transform[] spawnAreas;
     [SerializeField] private float respawnTimer = 3;
     [SerializeField] private float zoomBefore = 0.3f;
@@ -15,11 +17,18 @@ public class PlayerSpawner : MonoBehaviour
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
 
-    void Start()
+    void Awake()
     {
         gameLogic = FindObjectOfType<GameLogic>();
         effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
+
+
+    }
+
+    void Start()
+    {
+
     }
 
     void Update()
@@ -34,8 +43,10 @@ public class PlayerSpawner : MonoBehaviour
     {
         StartCoroutine(respawn(player));
     }
-    void OnPlayerJoined(PlayerInput player)
+    public void joinplayer()//void OnPlayerJoined(PlayerInput player)
     {
+        var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
+
         //GameObject.FindObjectOfType<GameLogic>().addPlayer(player.gameObject);
         spawnPlayer(player.transform);
     }
@@ -95,7 +106,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private Vector2 getSpawnArea(Transform player)
     {
-        int team = gameLogic.getTeamOf(player.gameObject);
+        int team = 0;//gameLogic.getTeamOf(player.gameObject);
 
         // Spawn in one of the premade points in the right spawn zone
         return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
