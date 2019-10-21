@@ -46,7 +46,7 @@ public abstract class IDamageable : MonoBehaviour
         healthPoints = Mathf.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;
 
-        if (healthPoints <= 0) { }
+        if (healthPoints <= 0)
             OnDeath();
 
         return healthPoints <= 0;

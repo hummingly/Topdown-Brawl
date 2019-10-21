@@ -61,7 +61,14 @@ public class GameLogic : MonoBehaviour
 
     public int getTeamOf(GameObject player) //for now jsut 0 or 1
     {
-        return Random.Range(0, 2);
-        //teams.FindIndex(player);
+
+        //return teams.player.FindIndex(o => o == player);
+        //return Random.Range(0, 2);
+        foreach (Team team in teams)
+        {
+            int i = team.players.FindIndex(o => o == player);
+            print(i);
+        }
+        return 0;
     }
 }
