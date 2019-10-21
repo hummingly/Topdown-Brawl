@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class GameLogic : MonoBehaviour
 {
-    struct Team //or class?
+    public static GameLogic instance = null;
+
+    class Team //or struct?
     {
-        public List<GameObject> players;
+        public List<GameObject> players = new List<GameObject>();
         public int points;
     }
+
+    [SerializeField] private Color[] playerColors;
+
+    private bool[] usedColors;
 
     private List<Team> teams = new List<Team>();
 
@@ -17,9 +23,15 @@ public class GameLogic : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
+        DontDestroyOnLoad(instance);
+
         // prepare gamemode (scritpable obj?)
 
         gameMode.useTeams = true;
+
+
+        usedColors = new bool[playerColors.Length];
     }
 
     void Update()
@@ -49,5 +61,41 @@ public class GameLogic : MonoBehaviour
     {
         return Random.Range(0, 2);
         //teams.FindIndex(player);
+    }
+
+
+
+
+
+
+
+    public Color getRandUnusedColor()
+    {
+        var randInd = new int[usedColors.Length];
+        for (int i = 0; i < randInd.Length; i++)
+            randInd[i] = i;
+
+        randInd = ExtensionMethods.shuffle(randInd);
+
+        for (int i = 0; i < usedColors.Length; i++)
+            if (!usedColors[randInd[i]])
+            {
+                usedColors[randInd[i]] = true;
+                return playerColors[randInd[i]];
+            }
+
+        return Color.black;
+    }
+
+    public Color getUnusedColor()
+    {
+        for (int i = 0; i < usedColors.Length; i++)
+            if (!usedColors[i])
+            {
+                usedColors[i] = true;
+                return playerColors[i];
+            }
+
+        return Color.black;
     }
 }

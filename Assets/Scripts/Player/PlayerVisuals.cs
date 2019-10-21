@@ -10,7 +10,7 @@ public class PlayerVisuals : MonoBehaviour
 
     void Start()
     {
-        Color col = TeamManager.instance.getRandUnusedColor();
+        Color col = GameLogic.instance.getRandUnusedColor();
         setColorAll(col);
         mainColor = col;
     }
