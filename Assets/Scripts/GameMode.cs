@@ -14,5 +14,7 @@ public class GameMode //rather scriptable object?
     public bool doRespawn;
     public float startTime;
 
-
+    //public enum TeamMode { FFA, Teams };
+    //public TeamMode mode = TeamMode.Teams;
+    public bool useTeams;
 }
