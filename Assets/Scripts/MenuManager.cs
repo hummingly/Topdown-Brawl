@@ -42,9 +42,10 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    public void togglePlayerTeam(int playerSlot)
+    public void togglePlayerTeam(GameObject player)
     {
-        // TODO
+        teams.moveTeam(player);
+        toggleCharacter(player, 0);
     }
 
     public void toggleMap()

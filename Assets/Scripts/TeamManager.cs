@@ -8,14 +8,14 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 {
 
     [System.Serializable]
-    class Team //or struct?
+    public class Team //or struct?
     {
         public List<GameObject> players = new List<GameObject>();
         public int points;
     }
 
-    private List<Team> teams = new List<Team>();
-    private List<GameObject> playerIDs = new List<GameObject>();
+    public List<Team> teams = new List<Team>();
+    public List<GameObject> playerIDs = new List<GameObject>();
 
     [SerializeField] private Color[] teamColors;
 
@@ -47,18 +47,30 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // disable more joining
             GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
 
-
             //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
-            var existingPlayer = teams[0].players[0];
-            // GET ID OF CONTROLLER?
 
-            var newPlayer = FindObjectOfType<PlayerSpawner>().joinPlayer();
+            // TODO: for each player in each team spawn and assign team, controllerIDs, color
+
+            for (int t = 0; t < teams.Count; t++)
+            {
+                for (int p = 0; p < teams[t].players.Count; p++)
+                {
+                    // var existingPlayer = teams[0].players[0]; EMPTY, SO REPLACE (BUT WITH CORRECT CONTROLLER)
+
+                    var currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
+                    teams[t].players[p] = currPlayer;
+                    FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
+                    currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
+                }
+            }
+            
+
             //newPlayer.GetComponent<PlayerInput>().device
             // MANUALLY JOIN TO MANAGER?
             //FindObjectOfType<PlayerInputManager>().join(newPlayer);
 
-            newPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(newPlayer));
+
         }
     }
 
@@ -78,16 +90,16 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
                 //TODO: check which player? write string P1 for example
             }
-            else
+            /*else if (teams.Count <= 1)
             {
                 // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
-                // for testing add to new team each
+                // for testing add to a new team each new player                                        // FOR SOME REASON still got called even when coming from scene
                 newTeam(player.gameObject);
 
                 FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
                 player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
-            }
+            }*/
         }
     }
 
@@ -112,6 +124,23 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         }
 
         return -1; //error, maybe throw ex
+    }
+
+    public void moveTeam(GameObject player)
+    {
+        int i = getTeamOf(player);
+
+        teams[i].players.Remove(player);
+        print(i);
+        i++;
+
+        if (i > teams.Count)
+            newTeam(player);
+        else if (i > gameLogic.gameMode.maxTeams) // WRONG ?!
+        {
+            i = 0;
+            teams[i].players.Add(player);
+        }    
     }
 
     public Color getColorOf(GameObject player)

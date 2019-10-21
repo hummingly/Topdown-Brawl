@@ -58,6 +58,9 @@ public class MenuCursor : MonoBehaviour
 
                 if (result.gameObject.name == "Char Down")
                     FindObjectOfType<MenuManager>().toggleCharacter(gameObject, -1);
+
+                if (result.gameObject.name == "Change Team Button")
+                    FindObjectOfType<MenuManager>().togglePlayerTeam(gameObject);
             }
         }
 

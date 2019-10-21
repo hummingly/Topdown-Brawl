@@ -40,12 +40,9 @@ public class PlayerSpawner : MonoBehaviour
     }
 
     // For joining player manually from preselection
-    public GameObject joinPlayer()
+    public GameObject spawnPlayer()
     {
         var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
-
-        //GameObject.FindObjectOfType<TeamManager>().addPlayer(player.gameObject);
-        spawnPlayer(player.transform);
 
         return player.gameObject;
     }
