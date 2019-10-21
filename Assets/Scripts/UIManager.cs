@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] scores;
     [SerializeField] private GameObject time;
+    [SerializeField] private GameObject gameOver;
 
 
     void Start()
@@ -19,9 +20,16 @@ public class UIManager : MonoBehaviour
         
     }
 
-    void increaseScore(int team)
+    public void updateScore(int team)
     {
-        scores[team].GetComponent<TextMesh>
+        GameLogic gameLogic = GetComponent<GameLogic>();
+        TextMeshProUGUI text = scores[team].GetComponent<TextMeshProUGUI>();
+        text.SetText(gameLogic.getScore(team).ToString());
+    }
+
+    public void setGameOver()
+    {
+        gameOver.SetActive(true);
     }
     
 }

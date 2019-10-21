@@ -2673,6 +2673,7 @@ MonoBehaviour:
   - {fileID: 195142456}
   - {fileID: 1129356051}
   time: {fileID: 1160719493}
+  gameOver: {fileID: 1982984541}
 --- !u!1 &413043285
 GameObject:
   m_ObjectHideFlags: 0

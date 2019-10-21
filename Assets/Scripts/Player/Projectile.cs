@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
             bool playerKilled = damageAble.ReduceHealth(damage);
             if (playerKilled)
             {
-                GetComponent<GameLogic>().increaseScore(owner);
+                FindObjectOfType<GameLogic>().increaseScore(owner);
             }
         }
     }
