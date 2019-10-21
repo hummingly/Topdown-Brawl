@@ -42,5 +42,17 @@ public static class ExtensionMethods
         }
         return array;
     }
+
+    public static Color[] shuffle(Color[] array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            Color tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
 }
 

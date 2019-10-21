@@ -10,14 +10,18 @@ public class PlayerVisuals : MonoBehaviour
 
     void Start()
     {
-        Color col = FindObjectOfType<TeamManager>().getRandUnusedColor();
-        setColorAll(col);
-        mainColor = col;
+
     }
 
     void Update()
     {
         
+    }
+
+    public void initColor(Color col)
+    {
+        setColorAll(col);
+        mainColor = col;
     }
 
     public void setDashUsedColor()
