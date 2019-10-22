@@ -1819,8 +1819,9 @@ MonoBehaviour:
   spawnAreas:
   - {fileID: 519620349}
   - {fileID: 1261764380}
-  respawnTimer: 3
-  zoomBefore: 0.3
+  respawnTime: 3
+  zoomBefore: 0.5
+  stayAfterDeath: 0.5
 --- !u!114 &362807576
 MonoBehaviour:
   m_ObjectHideFlags: 0
