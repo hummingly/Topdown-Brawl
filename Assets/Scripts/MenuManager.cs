@@ -42,10 +42,16 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    public void togglePlayerTeam(GameObject player)
+    public void togglePlayerTeam(GameObject player, GameObject toggleButton)
     {
-        teams.moveTeam(player);
-        toggleCharacter(player, 0);
+        var displaySlot = toggleButton.transform.parent;
+
+        // only change on own button
+        if(displaySlot.GetSiblingIndex() == teams.getPlayerId(player))
+        {
+            teams.moveTeam(player);
+            toggleCharacter(player, 0);
+        }
     }
 
     public void toggleMap()

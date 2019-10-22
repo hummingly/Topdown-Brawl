@@ -30,6 +30,9 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         uiManager = FindObjectOfType<UIManager>();
 
         SceneManager.sceneLoaded += SceneLoadeded;
+
+        for(int i = 0; i < gameLogic.gameMode.maxTeams; i++)
+            teams.Add(new Team());
     }
 
 
@@ -39,10 +42,8 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         uiManager = FindObjectOfType<UIManager>();
 
-        //if (scene.name == "MapNormal1")
-
         // Regularly loaded into gameplay from character selection
-        if (teams.Count > 0)
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
         {
             // disable more joining
             GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
@@ -62,54 +63,98 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                     teams[t].players[p] = currPlayer;
                     FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
                     currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
+
+                    //newPlayer.GetComponent<PlayerInput>().device
+                    // MANUALLY JOIN TO MANAGER?
+                    //FindObjectOfType<PlayerInputManager>().join(newPlayer);
+
                 }
             }
-            
-
-            //newPlayer.GetComponent<PlayerInput>().device
-            // MANUALLY JOIN TO MANAGER?
-            //FindObjectOfType<PlayerInputManager>().join(newPlayer);
-
-
         }
     }
 
     private void OnPlayerJoined(PlayerInput player)
     {
-        if (gameLogic.gameMode.maxTeams > teams.Count)
+        //if (!gameLogic.gameMode.maxTeams > teams.Count) return;
+
+        //if in menu scene do new teams
+        //else if gameplay: no new teams, instead just spawn prefab for exising players
+
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Selection")
         {
-            //if in menu scene do new teams
-            //else if gameplay: no new teams, instead just spawn prefab for exising players
+            // first just add all to a new team
+            addToEmptyOrSmallestTeam(player.gameObject);
 
-            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Selection")
-            {
-                // first just add all to a new team
-                newTeam(player.gameObject);
+            FindObjectOfType<MenuManager>().playerJoined(player.transform);
 
-                FindObjectOfType<MenuManager>().playerJoined(player.transform);
+            //TODO: check which player? write string P1 for example
+        }
 
-                //TODO: check which player? write string P1 for example
-            }
-            /*else if (teams.Count <= 1)
-            {
-                // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
+        //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")
+        {
+            // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
+            print("Hallo");
+            // for testing add to a new team each new player
+            addToEmptyOrSmallestTeam(player.gameObject);
 
-                // for testing add to a new team each new player                                        // FOR SOME REASON still got called even when coming from scene
-                newTeam(player.gameObject);
-
-                FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
-                player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
-            }*/
+            FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
+            player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
         }
     }
 
-    public void newTeam(GameObject player)
+
+    public void addToTeam(GameObject player, int i)
     {
-        Team newTeam = new Team();
-        newTeam.players.Add(player);
-        teams.Add(newTeam);
+        teams[i].players.Add(player);
         playerIDs.Add(player);
-        //TODO: random color
+    }
+
+    public void addToEmptyOrSmallestTeam(GameObject player)
+    {
+        if (getEmptyTeam() != -1)
+            addToTeam(player, getEmptyTeam());
+        else
+            addToTeam(player, getSmallestTeam());
+    }
+
+    public void moveTeam(GameObject player) //can only cycle ion one dir through teams
+    {
+        int i = getTeamOf(player);
+
+        teams[i].players.Remove(player);
+        //print(i);
+        i++;
+
+        if (i >= teams.Count)
+            i = 0;
+
+        teams[i].players.Add(player);
+    }
+
+    private int getEmptyTeam()
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            if (teams[i].players.Count == 0)
+                return i;
+        }
+        return -1;
+    }
+
+    private int getSmallestTeam()
+    {
+        int smallestTeam = int.MaxValue;
+        int smallestTeamPlayers = int.MaxValue;
+        for (int i = 0; i < teams.Count; i++)
+        {
+            if (teams[i].players.Count < smallestTeamPlayers)
+            {
+                smallestTeam = i;
+                smallestTeamPlayers = teams[i].players.Count;
+            }
+        }
+        return smallestTeam;
     }
 
     public int getTeamOf(GameObject player) //for now jsut 0 or 1, limited teams
@@ -126,22 +171,6 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return -1; //error, maybe throw ex
     }
 
-    public void moveTeam(GameObject player)
-    {
-        int i = getTeamOf(player);
-
-        teams[i].players.Remove(player);
-        print(i);
-        i++;
-
-        if (i > teams.Count)
-            newTeam(player);
-        else if (i > gameLogic.gameMode.maxTeams) // WRONG ?!
-        {
-            i = 0;
-            teams[i].players.Add(player);
-        }    
-    }
 
     public Color getColorOf(GameObject player)
     {
