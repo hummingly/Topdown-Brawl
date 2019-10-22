@@ -9,8 +9,9 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     [SerializeField] private Transform[] spawnAreas;
-    [SerializeField] private float respawnTimer = 3;
+    [SerializeField] private float respawnTime = 3;
     [SerializeField] private float zoomBefore = 0.3f;
+    [SerializeField] private float stayAfterDeath = 0.3f;
 
     private GameLogic gameLogic;
     private TeamManager teams;
@@ -65,14 +66,27 @@ public class PlayerSpawner : MonoBehaviour
         //player.GetComponent<Rigidbody2D>().reset(); // TODO: reset movement -> rb.velocity / angularVelocity and player inputDir(?)
         camTargetGroup.RemoveMember(player.transform);
 
-        // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
-        yield return new WaitForSeconds(respawnTimer * zoomBefore);
-        var spawnPos = getSpawnArea(player.transform);
+
+        //after playering dying still keep a palceholder at that position, so that doesn't suddenly change
         var placeholder = new GameObject().transform;
+        placeholder.position = player.transform.position;
+        camTargetGroup.AddMember(placeholder, 1, 1);
+
+        yield return new WaitForSeconds(stayAfterDeath);
+        camTargetGroup.RemoveMember(placeholder);
+
+
+
+
+        // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
+        yield return new WaitForSeconds(respawnTime - stayAfterDeath - zoomBefore);
+        var spawnPos = getSpawnArea(player.transform);
+        placeholder = new GameObject().transform;
         placeholder.position = spawnPos;
         camTargetGroup.AddMember(placeholder, 1, 1);
 
-        yield return new WaitForSeconds(respawnTimer * (1 - respawnTimer));
+
+        yield return new WaitForSeconds(zoomBefore);
         camTargetGroup.RemoveMember(placeholder);
 
         setPlayerActive(true, player);
