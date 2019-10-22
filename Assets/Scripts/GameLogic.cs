@@ -11,9 +11,9 @@ public class GameLogic : MonoBehaviour
 
 
 
-    public GameMode gameMode = new GameMode();
+    public GameMode gameMode;
+
     private UIManager uiManager;
-    private PlayerSpawner playerSpawner;
     private TeamManager teams;
 
 
@@ -38,7 +38,7 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
-        gameMode.useTeams = true;
+        //gameMode.useTeams = true;
         gameMode.pointsToWin = 8;
 
         uiManager = FindObjectOfType<UIManager>();

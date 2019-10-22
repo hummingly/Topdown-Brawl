@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -8,34 +9,64 @@ public class MenuCursor : MonoBehaviour
 {
     [SerializeField] private float speed = 0.5f;
 
+    private Vector2 moveInput;
+
+    private GraphicRaycaster gr;
+    private PointerEventData pointerEventData = new PointerEventData(null);
+
+
     void Start()
     {
-
+        gr = FindObjectOfType<GraphicRaycaster>();
     }
 
 
     void Update()
     {
-
+        
     }
 
+
+    private void FixedUpdate()
+    {
+        transform.position += new Vector3(moveInput.x, moveInput.y, 0).normalized * speed;
+
+        // clamp to screen
+        //Vector3 world = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+
+        //transform.position =  new Vector3(Mathf.Clamp(transform.position.x, -world.x, world.x),
+        //                                 Mathf.Clamp(transform.position.y, -world.y, world.y), transform.position.z);
+    }
 
     private void OnSelect()
     {
-        // check if below is button
+        if (gr == null) return;
 
-        RaycastHit2D[] rayHit = Physics2D.RaycastAll(transform.position, Vector3.forward);
+        pointerEventData.position = transform.position;//Camera.main.WorldToScreenPoint(transform.position);
+        List<RaycastResult> results = new List<RaycastResult>();
+        gr.Raycast(pointerEventData, results);
 
-
-        for (int j = 0; j < rayHit.Length; j++)
+        if (results.Count > 0)
         {
-            if (rayHit[j].collider.GetComponent<Button>())
-                print("YES");
+            foreach(RaycastResult result in results)
+            {
+                if (result.gameObject.name == "Start Button") //TODO: bad practise via obj name?
+                    FindObjectOfType<MenuManager>().Play();
+
+                if (result.gameObject.name == "Char Up")
+                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, 1);
+
+                if (result.gameObject.name == "Char Down")
+                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, -1);
+
+                if (result.gameObject.name == "Change Team Button")
+                    FindObjectOfType<MenuManager>().togglePlayerTeam(gameObject, result.gameObject);
+            }
         }
+
     }
     private void OnMove(InputValue value)
     {
-        Vector2 moveInput = value.Get<Vector2>();
-        transform.position += (Vector3)moveInput.normalized * speed;
+        moveInput = value.Get<Vector2>();
     }
 }

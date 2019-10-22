@@ -39,6 +39,8 @@ public class BotTest : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         launcher = GetComponent<Launcher>();
+
+        FindObjectOfType<TeamManager>().addToEmptyOrSmallestTeam(gameObject);
     }
 
     void Update()
