@@ -9,14 +9,27 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
 
     public Image displaySprite;
 
+    public bool isBot;
 
 
-    public void setSlot(Character chara, Color col)
+    public void setSlot(Character character, Color col, bool bot)
     {
-        this.chara = chara;
+        setChar(character);
+        setCol(col);
+        isBot = bot;
+    }
+
+
+    public void setChar(Character character)
+    {
+        chara = character;
 
         displaySprite.sprite = chara.sprite;
+    }
+
+    public void setCol(Color col)
+    {
         displaySprite.color = col;
-}
+    }
 
 }

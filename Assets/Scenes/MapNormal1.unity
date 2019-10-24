@@ -1816,6 +1816,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
     type: 3}
+  botPrefab: {fileID: 4000924214873993329, guid: 9fc340f7de9dbd44599c858af6c49732,
+    type: 3}
   spawnAreas:
   - {fileID: 519620349}
   - {fileID: 1261764380}
