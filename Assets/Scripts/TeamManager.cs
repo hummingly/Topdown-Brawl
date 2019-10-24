@@ -57,20 +57,45 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             {
                 for (int p = 0; p < teams[t].players.Count; p++)
                 {
-                    // var existingPlayer = teams[0].players[0]; EMPTY, SO REPLACE (BUT WITH CORRECT CONTROLLER)
+                    GameObject currPlayer = null;
 
-                    var currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
+                    // Bot controller is not destroyed on scene load, so now destroy it and spawn a bot object, not a player object
+                    if (teams[t].players[p] != null)
+                    {
+                        Destroy(teams[t].players[p].gameObject);
+                    
+                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
+                    }
+                    else
+                    {
+                        // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
+
+                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
+                        //newPlayer.GetComponent<PlayerInput>().device
+                    }
+
                     teams[t].players[p] = currPlayer;
                     FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
                     currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
-
-                    //newPlayer.GetComponent<PlayerInput>().device
-                    // MANUALLY JOIN TO MANAGER?
-                    //FindObjectOfType<PlayerInputManager>().join(newPlayer);
-
                 }
             }
         }
+    }
+
+
+    public void addBot()
+    {
+        //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
+        // not needed since players will change everything for the bot?
+
+        GameObject bot = new GameObject("Empty Bot Cursor");
+
+        addToEmptyOrSmallestTeam(bot);
+
+        FindObjectOfType<MenuManager>().playerJoined(bot.transform, true);
+
+        bot.transform.parent = null;
+        DontDestroyOnLoad(bot);
     }
 
     private void OnPlayerJoined(PlayerInput player)
@@ -80,7 +105,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Selection")
+        if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
             addToEmptyOrSmallestTeam(player.gameObject);
@@ -91,10 +116,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         }
 
         //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")
+        if (SceneManager.GetActiveScene().name == "gameplayDEV")
         {
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
-            print("Hallo");
+
             // for testing add to a new team each new player
             addToEmptyOrSmallestTeam(player.gameObject);
 
@@ -178,6 +203,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return teamColors[i];
     }
 
+    public GameObject getPlayerByID(int i)
+    {
+        return playerIDs[i];
+    }
     public int getPlayerId(GameObject player)
     {
         return playerIDs.IndexOf(player);

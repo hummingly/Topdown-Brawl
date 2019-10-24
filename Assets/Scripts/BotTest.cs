@@ -35,12 +35,17 @@ public class BotTest : MonoBehaviour
     private Vector2 lookDir;
     private Transform playerToChase;
 
-    void Start()
+    void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         launcher = GetComponent<Launcher>();
 
-        FindObjectOfType<TeamManager>().addToEmptyOrSmallestTeam(gameObject);
+        // if hasn't been added bcz testing in dev scene
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
+        {
+            FindObjectOfType<TeamManager>().addToEmptyOrSmallestTeam(gameObject);
+            GetComponentInChildren<PlayerVisuals>().initColor(FindObjectOfType<TeamManager>().getColorOf(gameObject));
+        }
     }
 
     void Update()

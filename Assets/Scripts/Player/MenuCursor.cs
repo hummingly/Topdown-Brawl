@@ -48,20 +48,33 @@ public class MenuCursor : MonoBehaviour
 
         if (results.Count > 0)
         {
-            foreach(RaycastResult result in results)
+            var emptySlot = true;
+            var addBot = false;
+
+            foreach(RaycastResult hitObj in results)
             {
-                if (result.gameObject.name == "Start Button") //TODO: bad practise via obj name?
+                if (hitObj.gameObject.name == "Start Button") //TODO: bad practise via obj name?
                     FindObjectOfType<MenuManager>().Play();
 
-                if (result.gameObject.name == "Char Up")
-                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, 1);
+                if (hitObj.gameObject.name == "Char Up")
+                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, hitObj.gameObject, 1);
 
-                if (result.gameObject.name == "Char Down")
-                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, -1);
+                if (hitObj.gameObject.name == "Char Down")
+                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, hitObj.gameObject, - 1);
 
-                if (result.gameObject.name == "Change Team Button")
-                    FindObjectOfType<MenuManager>().togglePlayerTeam(gameObject, result.gameObject);
+
+                if (hitObj.gameObject.name == "Change Team Button")
+                {
+                    FindObjectOfType<MenuManager>().togglePlayerTeam(gameObject, hitObj.gameObject);
+                    emptySlot = false;
+                }
+
+                if (hitObj.gameObject.name == "Add Bot Button")
+                    addBot = true;
             }
+
+            if (addBot && emptySlot)
+                FindObjectOfType<TeamManager>().addBot();//FindObjectOfType<MenuManager>().addBot();
         }
 
     }

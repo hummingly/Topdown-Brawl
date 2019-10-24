@@ -7,6 +7,7 @@ using Cinemachine;
 public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject botPrefab;
 
     [SerializeField] private Transform[] spawnAreas;
     [SerializeField] private float respawnTime = 3;
@@ -44,6 +45,12 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject spawnPlayer()
     {
         var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
+
+        return player.gameObject;
+    }
+    public GameObject spawnBot()
+    {
+        var player = Instantiate(botPrefab, Vector2.zero, Quaternion.identity).transform;
 
         return player.gameObject;
     }
