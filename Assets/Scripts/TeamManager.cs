@@ -62,8 +62,9 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                     // Bot controller is not destroyed on scene load, so now destroy it and spawn a bot object, not a player object
                     if (teams[t].players[p] != null)
                     {
-                        Destroy(teams[t].players[p]);
-                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();    
+                        Destroy(teams[t].players[p].gameObject);
+                    
+                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
                     }
                     else
                     {
@@ -104,7 +105,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
 
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Selection")
+        if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
             addToEmptyOrSmallestTeam(player.gameObject);
@@ -115,10 +116,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         }
 
         //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")
+        if (SceneManager.GetActiveScene().name == "gameplayDEV")
         {
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
-            print("Hallo");
+
             // for testing add to a new team each new player
             addToEmptyOrSmallestTeam(player.gameObject);
 
