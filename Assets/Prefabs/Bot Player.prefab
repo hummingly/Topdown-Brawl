@@ -450,12 +450,16 @@ MonoBehaviour:
   wanderDeviation: 0.25
   wanderChangeMuch: 500
   lookAgroMaxDist: 10
-  lookAgroFallow: 2.5
+  lookAgroFalloff: 2.5
   lookAgroFoV: 135
   rays: 10
   stopChaseDist: 10
   reactionDelay: 0
   maxRandAimOffset: 0
+  obstacleLookMaxDistance: 5
+  obstacleLookFalloff: 2
+  obstaclelookAgroFoV: 135
+  obstacleRays: 5
 --- !u!1 &4427621900641901306
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +688,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6853780983398317250, guid: 09e1c46a1ea71ec4baea0c40caeab546,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6853780983398317250, guid: 09e1c46a1ea71ec4baea0c40caeab546,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09e1c46a1ea71ec4baea0c40caeab546, type: 3}

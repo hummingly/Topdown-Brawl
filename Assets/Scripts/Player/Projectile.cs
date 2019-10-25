@@ -35,13 +35,15 @@ public class Projectile : MonoBehaviour
         {
             // only damage enemys or neutrals
             var sameTeam = teams.getTeamOf(owner) == teams.getTeamOf(damageAble.gameObject);
-            //print(teams.getTeamOf(damageAble.gameObject));
-            //print(teams.getTeamOf(owner));
+
             if(!sameTeam)
             {
-                bool playerKilled = damageAble.ReduceHealth(damage);
+                bool didKill = damageAble.ReduceHealth(damage);
 
-                if (playerKilled)
+                if (damageAble.GetComponent<BotTest>())
+                    damageAble.GetComponent<BotTest>().gotHit(owner);
+
+                if (didKill)
                 {
                     teams.increaseScore(owner);
                 }

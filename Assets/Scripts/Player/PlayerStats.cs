@@ -20,6 +20,9 @@ public class PlayerStats : IDamageable
     {
         //Time.timeScale = 0; //just for testing, TODO: destroy or hide player until respawn
 
+        if(GetComponent<BotTest>())
+            GetComponent<BotTest>().stopChasing();
+
         playerSpawner.playerDied(this);
     }
 }

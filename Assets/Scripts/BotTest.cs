@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BotTest : MonoBehaviour
 {
+    private TeamManager teams;
     private PlayerMovement playerMovement;
     private Launcher launcher;
 
@@ -13,14 +15,20 @@ public class BotTest : MonoBehaviour
     [SerializeField] private int wanderChangeMuch = 500;
     [Space]
     [SerializeField] private float lookAgroMaxDist = 10;
-    [SerializeField] private float lookAgroFallow = 2.5f; // ray gets smaller to sides so can see less
+    [SerializeField] private float lookAgroFalloff = 2.5f; // ray gets smaller to sides so can see less
     [SerializeField] private float lookAgroFoV = 135;
     [SerializeField] private int rays = 10;
     [SerializeField] private float stopChaseDist = 8;
     [Space]
     [SerializeField] private float reactionDelay; // TODO: time to wait until doing some actions
-    [SerializeField] private float maxRandAimOffset; 
+    [SerializeField] private float maxRandAimOffset;
 
+    [Space]
+
+    [SerializeField] private float obstacleLookMaxDistance = 5;
+    [SerializeField] private float obstacleLookFalloff = 2;
+    [SerializeField] private float obstaclelookAgroFoV = 135;
+    [SerializeField] private int obstacleRays = 5;
 
     // CONCEPT 
     // simple wander, look in a direction too and check if player near in sight (or got shot)
@@ -33,12 +41,15 @@ public class BotTest : MonoBehaviour
     private bool gotHitAndNotInRange;
     private Vector2 moveDir;
     private Vector2 lookDir;
-    private Transform playerToChase;
+    private Transform target;
+    private List<GameObject> possibleTargets = new List<GameObject>();
 
     void Awake()
     {
+        teams = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
         launcher = GetComponent<Launcher>();
+
 
         // if hasn't been added bcz testing in dev scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
@@ -48,14 +59,30 @@ public class BotTest : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        var myTeam = teams.getTeamOf(gameObject);
+        var allEntities = FindObjectsOfType<PlayerMovement>();
+
+        foreach (PlayerMovement pm in allEntities)
+        {
+            if (teams.getTeamOf(pm.gameObject) != myTeam)
+                possibleTargets.Add(pm.gameObject);
+        }
+    }
+
     void Update()
     {
         // Is wandering (enum?)
         if (!isChasing)
         {
-            Transform playerSeen = playerInSight();
-            if (!playerSeen)
+            Transform enemySeen = enemyInSight();
+
+            // Wander around
+            if (!enemySeen)
             {
+                obstacleAhead();
+
                 if (Random.Range(0, wanderChangeMuch) == 1)
                 {
                     moveDir = Random.insideUnitCircle.normalized;
@@ -74,26 +101,26 @@ public class BotTest : MonoBehaviour
             }
             else // instead of wandering chase now
             {
-                playerToChase = playerSeen;
+                target = enemySeen;
                 isChasing = true;
             }
         }
-        else
+        else // Chase and shoot
         {
-            if(playerToChase && !playerToChase.GetComponent<PlayerStats>().enabled)
+            if(target && !target.GetComponent<PlayerMovement>().enabled)
                 isChasing = false;
             
-            if (gotHitAndNotInRange && (playerToChase && Vector2.Distance(playerToChase.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
                 gotHitAndNotInRange = false;
 
-            if (gotHitAndNotInRange ||(playerToChase && Vector2.Distance(playerToChase.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange ||(target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
             {
-                moveDir = playerToChase.position - transform.position;
+                moveDir = target.position - transform.position;
                 moveDir.Normalize();
 
                 launcher.setShooting(true);
 
-                lookDir = playerToChase.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
+                lookDir = target.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * chasingSpeed);
             }
@@ -105,32 +132,77 @@ public class BotTest : MonoBehaviour
     }
 
 
-    private Transform playerInSight()
+    private Transform enemyInSight()
     {
         Vector2 pointA = transform.position;
 
         for(int i = -rays/2; i < rays/2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (lookAgroFoV / 2) / (rays / 2));
-            float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFallow;
+            float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFalloff;
 
-            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist);
+            var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
 
-            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
+            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
 
-            // if one of the rays is very close to a block, check if player is between, then kill
+            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.red);
+
+            rayHit = rayHit.OrderBy(h => h.distance).ToArray();
+
+            // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
-                if (rayHit[j].collider.GetComponent<PlayerStats>() && !rayHit[j].collider.GetComponent<BotTest>())
-                    return rayHit[j].transform;
+                if(rayHit[j].transform != transform)
+                {
+                    print(rayHit[j].transform.name);
+                    var entityThere = rayHit[j].collider.GetComponent<PlayerMovement>();
+
+                    if (entityThere && possibleTargets.Contains(entityThere.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
+                        return rayHit[j].transform;
+
+                    break;
+                }
             }
         }
 
         return null;
     }
 
+    private int obstacleAhead()
+    {
+        var steerDir = 0;
 
-    public void gotHit()
+        Vector2 pointA = transform.position;
+        /*
+        for (int i = -obstacleRays / 2; i < obstacleRays / 2; i++)
+        {
+            Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));
+            float lookDist = obstacleLookMaxDistance - Mathf.Abs(i) * obstacleLookFalloff;
+
+            RaycastHit2D rayHit = Physics2D.Raycast(pointA, rayDir, lookDist);
+
+            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
+
+            var normal = rayHit.normal;
+            //steerDir += sideOfRay(rayHit, normal);
+        }*/
+
+        return Mathf.Clamp(steerDir, -1, 1); //TODO: more nuisance to how many obstacles in each dir and where to steer to
+    }
+
+    private int sideOfRay()
+    {
+        if (true)
+            return 1;
+        else if(false)
+            return -1;
+
+        return 0;
+    }
+
+
+
+    public void gotHit(GameObject hitBy)
     {
         if (!isChasing)
         {
@@ -138,13 +210,18 @@ public class BotTest : MonoBehaviour
 
             gotHitAndNotInRange = true; // if hit once only stop chasing when he was once in range
 
-            foreach (PlayerStats p in FindObjectsOfType<PlayerStats>())
-                if (!p.GetComponent<BotTest>())
-                    playerToChase = p.transform;
-
-            // TODO: find out who hit this bot (currently takes a random player)
+            target = hitBy.transform;
         }
     }
 
+    public void stopChasing()
+    {
+        isChasing = false;
+    }
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        moveDir = Random.insideUnitCircle.normalized;
+    }
 }
