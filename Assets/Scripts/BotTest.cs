@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BotTest : MonoBehaviour
 {
+    private TeamManager teams;
     private PlayerMovement playerMovement;
     private Launcher launcher;
 
@@ -19,7 +20,7 @@ public class BotTest : MonoBehaviour
     [SerializeField] private float stopChaseDist = 8;
     [Space]
     [SerializeField] private float reactionDelay; // TODO: time to wait until doing some actions
-    [SerializeField] private float maxRandAimOffset; 
+    [SerializeField] private float maxRandAimOffset;
 
 
     // CONCEPT 
@@ -33,12 +34,15 @@ public class BotTest : MonoBehaviour
     private bool gotHitAndNotInRange;
     private Vector2 moveDir;
     private Vector2 lookDir;
-    private Transform playerToChase;
+    private Transform target;
+    private List<GameObject> possibleTargets = new List<GameObject>();
 
     void Awake()
     {
+        teams = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
         launcher = GetComponent<Launcher>();
+
 
         // if hasn't been added bcz testing in dev scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
@@ -48,13 +52,26 @@ public class BotTest : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        var myTeam = teams.getTeamOf(gameObject);
+        var allEntities = FindObjectsOfType<PlayerMovement>();
+
+        foreach (PlayerMovement pm in allEntities)
+        {
+            if (teams.getTeamOf(pm.gameObject) != myTeam)
+                possibleTargets.Add(pm.gameObject);
+        }
+    }
+
     void Update()
     {
         // Is wandering (enum?)
         if (!isChasing)
         {
-            Transform playerSeen = playerInSight();
-            if (!playerSeen)
+            Transform enemySeen = enemyInSight();
+
+            if (!enemySeen)
             {
                 if (Random.Range(0, wanderChangeMuch) == 1)
                 {
@@ -74,26 +91,26 @@ public class BotTest : MonoBehaviour
             }
             else // instead of wandering chase now
             {
-                playerToChase = playerSeen;
+                target = enemySeen;
                 isChasing = true;
             }
         }
         else
         {
-            if(playerToChase && !playerToChase.GetComponent<PlayerStats>().enabled)
+            if(target && !target.GetComponent<PlayerMovement>().enabled)
                 isChasing = false;
             
-            if (gotHitAndNotInRange && (playerToChase && Vector2.Distance(playerToChase.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
                 gotHitAndNotInRange = false;
 
-            if (gotHitAndNotInRange ||(playerToChase && Vector2.Distance(playerToChase.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange ||(target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
             {
-                moveDir = playerToChase.position - transform.position;
+                moveDir = target.position - transform.position;
                 moveDir.Normalize();
 
                 launcher.setShooting(true);
 
-                lookDir = playerToChase.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
+                lookDir = target.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * chasingSpeed);
             }
@@ -105,7 +122,7 @@ public class BotTest : MonoBehaviour
     }
 
 
-    private Transform playerInSight()
+    private Transform enemyInSight()
     {
         Vector2 pointA = transform.position;
 
@@ -118,10 +135,11 @@ public class BotTest : MonoBehaviour
 
             Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
 
-            // if one of the rays is very close to a block, check if player is between, then kill
+            // if one of the rays is very close to a block, check if player is between, then chase that
             for (int j = 0; j < rayHit.Length; j++)
             {
-                if (rayHit[j].collider.GetComponent<PlayerStats>() && !rayHit[j].collider.GetComponent<BotTest>())
+                var movement = rayHit[j].collider.GetComponent<PlayerMovement>();
+                if (movement && possibleTargets.Contains(movement.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
                     return rayHit[j].transform;
             }
         }
@@ -130,7 +148,7 @@ public class BotTest : MonoBehaviour
     }
 
 
-    public void gotHit()
+    public void gotHit(GameObject hitBy)
     {
         if (!isChasing)
         {
@@ -138,13 +156,12 @@ public class BotTest : MonoBehaviour
 
             gotHitAndNotInRange = true; // if hit once only stop chasing when he was once in range
 
-            foreach (PlayerStats p in FindObjectsOfType<PlayerStats>())
-                if (!p.GetComponent<BotTest>())
-                    playerToChase = p.transform;
-
-            // TODO: find out who hit this bot (currently takes a random player)
+            target = hitBy.transform;
         }
     }
 
-
+    public void stopChasing()
+    {
+        isChasing = false;
+    }
 }

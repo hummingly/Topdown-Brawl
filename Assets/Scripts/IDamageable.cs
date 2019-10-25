@@ -40,9 +40,6 @@ public abstract class IDamageable : MonoBehaviour
         if (!healthSlider.gameObject.active)
             healthSlider.gameObject.SetActive(true);
 
-        if (GetComponent<BotTest>())
-            GetComponent<BotTest>().gotHit();
-
         healthPoints = Mathf.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;
 
