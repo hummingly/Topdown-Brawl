@@ -38,10 +38,10 @@ public class Projectile : MonoBehaviour
 
             if(!sameTeam)
             {
-                bool didKill = damageAble.ReduceHealth(damage);
-
                 if (damageAble.GetComponent<BotTest>())
-                    damageAble.GetComponent<BotTest>().gotHit(owner);
+                    damageAble.GetComponent<BotTest>().gotHit(owner); //order important so bot loses agro on death
+
+                bool didKill = damageAble.ReduceHealth(damage);
 
                 if (didKill)
                 {

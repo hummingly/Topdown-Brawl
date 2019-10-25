@@ -25,6 +25,7 @@ public class BotTest : MonoBehaviour
 
     [Space]
 
+    [SerializeField] private float avoidObstacleStrength = 90;
     [SerializeField] private float obstacleLookMaxDistance = 5;
     [SerializeField] private float obstacleLookFalloff = 2;
     [SerializeField] private float obstaclelookAgroFoV = 135;
@@ -73,6 +74,20 @@ public class BotTest : MonoBehaviour
 
     void Update()
     {
+        var moveAdjust = obstacleAhead();
+        var possibleMaxAdjust = (90 * rays) / 2; //not accurate???
+        moveAdjust = Mathf.Clamp(moveAdjust, -possibleMaxAdjust, possibleMaxAdjust);
+        // inverted, when big then small
+        if (moveAdjust > 0)
+            moveAdjust = possibleMaxAdjust - moveAdjust;
+        if (moveAdjust < 0)
+            moveAdjust =-possibleMaxAdjust + moveAdjust;
+        moveAdjust = ExtensionMethods.remap(moveAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
+        //print(moveAdjust);
+
+
+
+
         // Is wandering (enum?)
         if (!isChasing)
         {
@@ -81,8 +96,6 @@ public class BotTest : MonoBehaviour
             // Wander around
             if (!enemySeen)
             {
-                obstacleAhead();
-
                 if (Random.Range(0, wanderChangeMuch) == 1)
                 {
                     moveDir = Random.insideUnitCircle.normalized;
@@ -95,6 +108,7 @@ public class BotTest : MonoBehaviour
 
                 launcher.setShooting(false);
 
+                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
                 lookDir = moveDir;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * wanderSpeed);
@@ -144,17 +158,15 @@ public class BotTest : MonoBehaviour
             var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
 
             RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
-
-            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.red);
-
             rayHit = rayHit.OrderBy(h => h.distance).ToArray();
+
+            //Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.red);
 
             // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
                 if(rayHit[j].transform != transform)
                 {
-                    print(rayHit[j].transform.name);
                     var entityThere = rayHit[j].collider.GetComponent<PlayerMovement>();
 
                     if (entityThere && possibleTargets.Contains(entityThere.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
@@ -168,36 +180,38 @@ public class BotTest : MonoBehaviour
         return null;
     }
 
-    private int obstacleAhead()
+    private float obstacleAhead()
     {
-        var steerDir = 0;
+        float steerDir = 0;
 
         Vector2 pointA = transform.position;
-        /*
+        
         for (int i = -obstacleRays / 2; i < obstacleRays / 2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));
             float lookDist = obstacleLookMaxDistance - Mathf.Abs(i) * obstacleLookFalloff;
 
-            RaycastHit2D rayHit = Physics2D.Raycast(pointA, rayDir, lookDist);
+            var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
+
+            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
+            rayHit = rayHit.OrderBy(h => h.distance).ToArray();
 
             Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
 
-            var normal = rayHit.normal;
-            //steerDir += sideOfRay(rayHit, normal);
-        }*/
+            // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
+            for (int j = 0; j < rayHit.Length; j++)
+            {
+                if (rayHit[j].transform != transform)
+                {
+                    steerDir += Vector2.SignedAngle(lookDir, rayHit[j].normal);
 
-        return Mathf.Clamp(steerDir, -1, 1); //TODO: more nuisance to how many obstacles in each dir and where to steer to
-    }
+                    break;
+                }
+            }
+        }
 
-    private int sideOfRay()
-    {
-        if (true)
-            return 1;
-        else if(false)
-            return -1;
-
-        return 0;
+        return steerDir;
+        //return Mathf.Clamp(steerDir, -1, 1); //TODO: more nuisance to how many obstacles in each dir and where to steer to
     }
 
 
