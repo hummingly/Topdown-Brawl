@@ -10,7 +10,6 @@ public class GameLogic : MonoBehaviour
     public static GameLogic Instance { get { return instance; } }
 
 
-
     public GameMode gameMode;
 
     private UIManager uiManager;
@@ -20,21 +19,16 @@ public class GameLogic : MonoBehaviour
     private void Awake()
     {
         if (instance != null && instance != this)
-        {
-            Destroy(this.gameObject);
-        }
+            Destroy(this.gameObject);     
         else
-        {
-            instance = this;
-        }
+            instance = this; 
 
         teams = GetComponent<TeamManager>();
 
+        SceneManager.sceneLoaded += SceneLoadeded;
+
         DontDestroyOnLoad(gameObject);
     }
-
-
-
 
     void Start()
     {
@@ -42,30 +36,35 @@ public class GameLogic : MonoBehaviour
         gameMode.pointsToWin = 8;
     }
 
-    void Update()
+
+
+
+    private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
-        
+        // Regularly loaded into gameplay from character selection
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        {
+            uiManager = FindObjectOfType<UIManager>();
+        }
     }
 
-    
-
-    
-
-
-
-    public int getPointsToWin()
+    public void increaseScore(GameObject player)
     {
-        return gameMode.pointsToWin;
+        teams.increaseScore(player);
+
+        // display new score in UI
+        uiManager.updateScores();
+
+        //if bigger than gamemode max then won
+        if (teams.someTeamWon(gameMode.pointsToWin))
+        {
+            gameOver();
+        }
     }
 
     public void gameOver()
     {
-        FindObjectOfType<UIManager>().setGameOverUI();
+        uiManager.setGameOverUI();
         Time.timeScale = 0;
     }
-
-
-    
-
-
 }

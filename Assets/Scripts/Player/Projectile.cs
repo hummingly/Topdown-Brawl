@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
 
                 if (didKill)
                 {
-                    teams.increaseScore(owner);
+                    FindObjectOfType<GameLogic>().increaseScore(owner);
                 }
             }
         }

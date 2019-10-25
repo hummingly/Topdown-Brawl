@@ -19,19 +19,14 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
     [SerializeField] private Color[] teamColors;
 
-    private GameLogic gameLogic;
-    private UIManager uiManager;
 
     private void Awake()
     {
         teamColors = ExtensionMethods.shuffle(teamColors);
 
-        gameLogic = GetComponent<GameLogic>();
-        uiManager = FindObjectOfType<UIManager>();
-
         SceneManager.sceneLoaded += SceneLoadeded;
 
-        for(int i = 0; i < gameLogic.gameMode.maxTeams; i++)
+        for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
             teams.Add(new Team());
     }
 
@@ -40,8 +35,6 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1) 
     {
-        uiManager = FindObjectOfType<UIManager>();
-
         // Regularly loaded into gameplay from character selection
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
         {
@@ -212,23 +205,24 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return playerIDs.IndexOf(player);
     }
 
-    public void increaseScore(GameObject player) //has to be called if a bullet made a kill (keep track which player shot bullet)
+    public void increaseScore(GameObject player)
     {
         //find team that GO is in and add point
         int team = getTeamOf(player);
 
-        // if -1 then couldn't find a team/ bot did kill
-        if(team != -1)
-            teams[team].points++;
+        teams[team].points++;
+    }
 
-        // display new score in UI
-        uiManager.updateScore(team);
-
+    public bool someTeamWon(int pointsToWin)
+    {
         //if bigger than gamemode max then won
-        if (teams[team].points >= gameLogic.getPointsToWin())
+        foreach(Team t in teams)
         {
-            gameLogic.gameOver();
+            if (t.points >= pointsToWin)
+                return true;
         }
+
+        return false;
     }
 
     public int getScore(int team)
