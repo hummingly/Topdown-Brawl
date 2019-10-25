@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BotTest : MonoBehaviour
@@ -14,7 +15,7 @@ public class BotTest : MonoBehaviour
     [SerializeField] private int wanderChangeMuch = 500;
     [Space]
     [SerializeField] private float lookAgroMaxDist = 10;
-    [SerializeField] private float lookAgroFallow = 2.5f; // ray gets smaller to sides so can see less
+    [SerializeField] private float lookAgroFalloff = 2.5f; // ray gets smaller to sides so can see less
     [SerializeField] private float lookAgroFoV = 135;
     [SerializeField] private int rays = 10;
     [SerializeField] private float stopChaseDist = 8;
@@ -22,6 +23,12 @@ public class BotTest : MonoBehaviour
     [SerializeField] private float reactionDelay; // TODO: time to wait until doing some actions
     [SerializeField] private float maxRandAimOffset;
 
+    [Space]
+
+    [SerializeField] private float obstacleLookMaxDistance = 5;
+    [SerializeField] private float obstacleLookFalloff = 2;
+    [SerializeField] private float obstaclelookAgroFoV = 135;
+    [SerializeField] private int obstacleRays = 5;
 
     // CONCEPT 
     // simple wander, look in a direction too and check if player near in sight (or got shot)
@@ -71,8 +78,11 @@ public class BotTest : MonoBehaviour
         {
             Transform enemySeen = enemyInSight();
 
+            // Wander around
             if (!enemySeen)
             {
+                obstacleAhead();
+
                 if (Random.Range(0, wanderChangeMuch) == 1)
                 {
                     moveDir = Random.insideUnitCircle.normalized;
@@ -95,7 +105,7 @@ public class BotTest : MonoBehaviour
                 isChasing = true;
             }
         }
-        else
+        else // Chase and shoot
         {
             if(target && !target.GetComponent<PlayerMovement>().enabled)
                 isChasing = false;
@@ -129,23 +139,67 @@ public class BotTest : MonoBehaviour
         for(int i = -rays/2; i < rays/2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (lookAgroFoV / 2) / (rays / 2));
-            float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFallow;
+            float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFalloff;
 
-            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist);
+            var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
 
-            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
+            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
 
-            // if one of the rays is very close to a block, check if player is between, then chase that
+            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.red);
+
+            rayHit = rayHit.OrderBy(h => h.distance).ToArray();
+
+            // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
-                var movement = rayHit[j].collider.GetComponent<PlayerMovement>();
-                if (movement && possibleTargets.Contains(movement.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
-                    return rayHit[j].transform;
+                if(rayHit[j].transform != transform)
+                {
+                    print(rayHit[j].transform.name);
+                    var entityThere = rayHit[j].collider.GetComponent<PlayerMovement>();
+
+                    if (entityThere && possibleTargets.Contains(entityThere.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
+                        return rayHit[j].transform;
+
+                    break;
+                }
             }
         }
 
         return null;
     }
+
+    private int obstacleAhead()
+    {
+        var steerDir = 0;
+
+        Vector2 pointA = transform.position;
+        /*
+        for (int i = -obstacleRays / 2; i < obstacleRays / 2; i++)
+        {
+            Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));
+            float lookDist = obstacleLookMaxDistance - Mathf.Abs(i) * obstacleLookFalloff;
+
+            RaycastHit2D rayHit = Physics2D.Raycast(pointA, rayDir, lookDist);
+
+            Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
+
+            var normal = rayHit.normal;
+            //steerDir += sideOfRay(rayHit, normal);
+        }*/
+
+        return Mathf.Clamp(steerDir, -1, 1); //TODO: more nuisance to how many obstacles in each dir and where to steer to
+    }
+
+    private int sideOfRay()
+    {
+        if (true)
+            return 1;
+        else if(false)
+            return -1;
+
+        return 0;
+    }
+
 
 
     public void gotHit(GameObject hitBy)
@@ -163,5 +217,11 @@ public class BotTest : MonoBehaviour
     public void stopChasing()
     {
         isChasing = false;
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        moveDir = Random.insideUnitCircle.normalized;
     }
 }

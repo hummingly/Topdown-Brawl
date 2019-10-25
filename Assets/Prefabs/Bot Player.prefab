@@ -450,12 +450,16 @@ MonoBehaviour:
   wanderDeviation: 0.25
   wanderChangeMuch: 500
   lookAgroMaxDist: 10
-  lookAgroFallow: 2.5
+  lookAgroFalloff: 2.5
   lookAgroFoV: 135
   rays: 10
   stopChaseDist: 10
   reactionDelay: 0
   maxRandAimOffset: 0
+  obstacleLookMaxDistance: 5
+  obstacleLookFalloff: 2
+  obstaclelookAgroFoV: 135
+  obstacleRays: 5
 --- !u!1 &4427621900641901306
 GameObject:
   m_ObjectHideFlags: 0
