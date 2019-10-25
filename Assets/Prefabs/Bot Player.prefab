@@ -456,10 +456,11 @@ MonoBehaviour:
   stopChaseDist: 10
   reactionDelay: 0
   maxRandAimOffset: 0
-  obstacleLookMaxDistance: 5
-  obstacleLookFalloff: 2
+  avoidObstacleStrength: 90
+  obstacleLookMaxDistance: 3
+  obstacleLookFalloff: 1
   obstaclelookAgroFoV: 135
-  obstacleRays: 5
+  obstacleRays: 4
 --- !u!1 &4427621900641901306
 GameObject:
   m_ObjectHideFlags: 0

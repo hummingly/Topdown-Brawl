@@ -40,8 +40,6 @@ public class GameLogic : MonoBehaviour
     {
         //gameMode.useTeams = true;
         gameMode.pointsToWin = 8;
-
-        uiManager = FindObjectOfType<UIManager>();
     }
 
     void Update()
@@ -62,7 +60,7 @@ public class GameLogic : MonoBehaviour
 
     public void gameOver()
     {
-        uiManager.setGameOverUI();
+        FindObjectOfType<UIManager>().setGameOverUI();
         Time.timeScale = 0;
     }
 
