@@ -134,6 +134,8 @@ public class BotTest : MonoBehaviour
 
                 launcher.setShooting(true);
 
+                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
+
                 lookDir = target.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * chasingSpeed);
