@@ -26,6 +26,7 @@ public static class ExtensionMethods
         return Quaternion.Euler(angles) * (point - pivot) + pivot;
     }*/
 
+                                              //(float angle, Vector2 point, Vector2 pivot = new Vector2())
     public static Vector2 RotatePointAroundPivot(Vector2 point, Vector2 pivot, float angle) //https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
     {
         float s = Mathf.Sin(Mathf.Deg2Rad * angle);
