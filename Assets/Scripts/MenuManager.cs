@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    private string scene = "MapBig";
+    private string scene = "MapNormal1";
 
     private TeamManager teams;
 
