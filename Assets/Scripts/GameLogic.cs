@@ -42,7 +42,7 @@ public class GameLogic : MonoBehaviour
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapBig")
         {
             uiManager = FindObjectOfType<UIManager>();
         }
