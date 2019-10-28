@@ -4,9 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    private string scene = "MapNormal1";
-
     private TeamManager teams;
+    private GameStateManager gameState;
 
     [SerializeField] private List<Character> availableChars = new List<Character>();
     
@@ -19,6 +18,7 @@ public class MenuManager : MonoBehaviour
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
+        gameState = FindObjectOfType<GameStateManager>();
     }
 
 
@@ -75,7 +75,7 @@ public class MenuManager : MonoBehaviour
 
     public void toggleMap()
     {
-        // TODO
+        gameState.toggleMap();
     }
 
 
@@ -99,17 +99,13 @@ public class MenuManager : MonoBehaviour
 
     public void Play()
     {
+        gameState.state = GameStateManager.GameState.Ingame;
         LoadMap();
     }
 
     public void LoadMap()
     {
-        SceneManager.LoadScene(scene);
-    }
-
-    public void SelectMap(string selection)
-    {
-        scene = selection;
+        SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
     }
 
 }

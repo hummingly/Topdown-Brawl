@@ -36,7 +36,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1) 
     {
         // Regularly loaded into gameplay from character selection
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
+        if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame)//UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
         {
             // disable more joining
             GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;

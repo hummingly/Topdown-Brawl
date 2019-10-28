@@ -1399,7 +1399,6 @@ GameObject:
   - component: {fileID: 481324733}
   - component: {fileID: 481324736}
   - component: {fileID: 481324735}
-  - component: {fileID: 481324734}
   m_Layer: 5
   m_Name: Map Button Toggle
   m_TagString: Untagged
@@ -1429,51 +1428,6 @@ RectTransform:
   m_AnchoredPosition: {x: -50, y: -100}
   m_SizeDelta: {x: 200, y: 110}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &481324734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 481324732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 481324735}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &481324735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2475,6 +2429,7 @@ GameObject:
   - component: {fileID: 723236035}
   - component: {fileID: 723236034}
   - component: {fileID: 723236033}
+  - component: {fileID: 723236037}
   - component: {fileID: 723236036}
   m_Layer: 0
   m_Name: Game Logic (Static)
@@ -2579,6 +2534,24 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &723236037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723236032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentMapInd: 1
+  mapRange: {x: 1, y: 2}
+  mapSprites:
+  - {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
+  - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
+  mapImg: {fileID: 1689873875}
 --- !u!1 &765712798
 GameObject:
   m_ObjectHideFlags: 0
@@ -5472,7 +5445,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

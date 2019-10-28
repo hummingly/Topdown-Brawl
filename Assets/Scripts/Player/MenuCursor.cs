@@ -69,6 +69,10 @@ public class MenuCursor : MonoBehaviour
                     emptySlot = false;
                 }
 
+                if (hitObj.gameObject.name == "Map Button Toggle")
+                    FindObjectOfType<MenuManager>().toggleMap();
+
+
                 if (hitObj.gameObject.name == "Add Bot Button")
                     addBot = true;
             }
