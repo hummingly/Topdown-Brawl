@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "ZRightTrigger",
+                    "type": "Button",
+                    "id": "6e878fec-4e98-4b34-ad17-31264c54ad98",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
                     "name": "LeftTrigger",
                     "type": "Button",
                     "id": "c43ac115-d17f-469d-8c3e-0e85cee72f44",
@@ -99,6 +107,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeftTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "57943413-17c9-4d94-94b5-101d84e03dc0",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZRightTrigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

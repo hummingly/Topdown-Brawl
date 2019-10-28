@@ -32,8 +32,7 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
-        //gameMode.useTeams = true;
-        gameMode.pointsToWin = 8;
+
     }
 
 
@@ -41,11 +40,10 @@ public class GameLogic : MonoBehaviour
 
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
-        // Regularly loaded into gameplay from character selection
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
-        {
+        if (FindObjectOfType<UIManager>())
             uiManager = FindObjectOfType<UIManager>();
-        }
+        // Regularly loaded into gameplay from character selection
+        //if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
     }
 
     public void increaseScore(GameObject player)

@@ -37,14 +37,16 @@ public abstract class IDamageable : MonoBehaviour
 
     internal bool ReduceHealth(int amount)
     {
-        if (!healthSlider.gameObject.active)
-            healthSlider.gameObject.SetActive(true);
+        healthSlider.gameObject.SetActive(true);
 
         healthPoints = Mathf.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;
 
         if (healthPoints <= 0)
+        {
+            healthSlider.gameObject.SetActive(false);
             OnDeath();
+        }
 
         return healthPoints <= 0;
     }
@@ -55,6 +57,15 @@ public abstract class IDamageable : MonoBehaviour
         healthPoints = maxHealth;
         healthSlider.maxValue = maxHealthPoints;
         healthSlider.value = maxHealthPoints;
+    }
+
+
+    public void respawned()
+    {
+        IncreaseHealth(int.MaxValue);
+
+        if (!alwaysShowHp)
+            healthSlider.gameObject.SetActive(false);
     }
 
     public abstract void OnDeath();

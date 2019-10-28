@@ -97,7 +97,7 @@ public class PlayerSpawner : MonoBehaviour
         camTargetGroup.RemoveMember(placeholder);
 
         setPlayerActive(true, player);
-        player.IncreaseHealth(int.MaxValue);
+        player.respawned();
         spawnPlayer(player.transform, spawnPos);
     }
 

@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private DamagingArea melee;
+
+    // ATTEMPT FOR A CLSOE RANGE ATTACK
+
+    void Awake()
+    {
+        melee = GetComponentInChildren<DamagingArea>();
+    }
+
+    void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnZRightTrigger()
     {
-        
+        // first just use box collider, but later more accurate with polygon? or circle and check angle ??????
+        // OR rather raycast so can't go through wall
+        // based on velocity
+
+        melee.activate();
     }
 }
