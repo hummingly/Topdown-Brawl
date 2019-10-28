@@ -44,6 +44,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ZRightTrigger",
+                    "type": "Button",
+                    "id": "5755e339-7bbe-4bae-a1d7-1e582c4d1be9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -99,6 +107,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeftTrigger",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5310f545-f598-4b5c-b125-6c637405b145",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ZRightTrigger",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,26 +5,26 @@ using UnityEngine.UI;
 
 public class PlayerSlotMenuDisplay : MonoBehaviour
 {
-    public Character chara;
+    public Role role;
 
     public Image displaySprite;
 
     public bool isBot;
 
 
-    public void setSlot(Character character, Color col, bool bot)
+    public void setSlot(Role role, Color col, bool bot)
     {
-        setChar(character);
+        setChar(role);
         setCol(col);
         isBot = bot;
     }
 
 
-    public void setChar(Character character)
+    public void setChar(Role role)
     {
-        chara = character;
+        this.role = role;
 
-        displaySprite.sprite = chara.sprite;
+        displaySprite.sprite = this.role.sprite;
     }
 
     public void setCol(Color col)

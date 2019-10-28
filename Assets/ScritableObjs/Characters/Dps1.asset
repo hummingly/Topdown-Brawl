@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00c5cb7df18ab144adf09d9cad5f8a1, type: 3}
   m_Name: Dps1
   m_EditorClassIdentifier: 
-  name: Idk
-  description: 
+  name: RangeDPS
+  description: uses Snipe skill
   sprite: {fileID: 5105561115069631295, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
-  role: 0
+  genre: 1
   roleIcon: {fileID: 0}
+  basic: {fileID: 11400000, guid: c8c787497f4c11d499de7b816bc97083, type: 2}
+  secondary: {fileID: 11400000, guid: 483ff679005ac614f9031dd33990bdf8, type: 2}

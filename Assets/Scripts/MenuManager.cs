@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
 
     private TeamManager teams;
 
-    [SerializeField] private List<Character> availableChars = new List<Character>();
+    [SerializeField] private List<Role> availableRoles = new List<Role>();
     
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
@@ -38,11 +38,11 @@ public class MenuManager : MonoBehaviour
         if (slotGO.GetSiblingIndex() == teams.getPlayerId(player) || slot.isBot)
         {
             //var displaySlot = charSlotParent.GetChild(teams.getPlayerId(player)).GetComponent<PlayerSlotMenuDisplay>();
-            var lastIndex = availableChars.IndexOf(slot.chara);
+            var lastIndex = availableRoles.IndexOf(slot.role);
             lastIndex += dir;
-            if (lastIndex < 0) lastIndex = availableChars.Count - 1;
-            if (lastIndex >= availableChars.Count) lastIndex = 0;
-            slot.setChar(availableChars[lastIndex]);
+            if (lastIndex < 0) lastIndex = availableRoles.Count - 1;
+            if (lastIndex >= availableRoles.Count) lastIndex = 0;
+            slot.setChar(availableRoles[lastIndex]);
         }
 
 
@@ -94,7 +94,7 @@ public class MenuManager : MonoBehaviour
 
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
         slot.parent = charSlotParent;
-        slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
+        slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(availableRoles[0], teams.getColorOf(playerCursor.gameObject), isBot);
     }
 
     public void Play()

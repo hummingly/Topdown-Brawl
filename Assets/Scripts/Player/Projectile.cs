@@ -5,7 +5,7 @@ public class Projectile : MonoBehaviour
 {
     private TeamManager teams;
 
-    [SerializeField] private int damage = 10;
+    private int damage;
     private GameObject owner;
 
     void Start()
@@ -21,6 +21,11 @@ public class Projectile : MonoBehaviour
     public void setOwner(GameObject owner)
     {
         this.owner = owner;
+    }
+
+    public void setDamage(int damage)
+    {
+        this.damage = damage;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

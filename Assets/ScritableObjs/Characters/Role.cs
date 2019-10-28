@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Character", menuName = "Character")]
-public class Character : ScriptableObject
+public class Role : ScriptableObject
 {
     public new string name;
     public string description;
 
     public Sprite sprite;
 
-    public enum Role { Tank, Dps, etc };
-    public Role role;
+    public enum Genre { Tank, Dps, etc };
+    public Genre genre;
     public Sprite roleIcon;
 
-    //public Skill basic;
-    //public Skill secondary;
+    public BasicSkill basic;
+    public SecondarySkill secondary;
     //public Skill special;
 }

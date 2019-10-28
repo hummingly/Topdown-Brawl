@@ -57,6 +57,14 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ZRightTrigger"",
+                    ""type"": ""Button"",
+                    ""id"": ""5755e339-7bbe-4bae-a1d7-1e582c4d1be9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -112,6 +120,17 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""LeftTrigger"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5310f545-f598-4b5c-b125-6c637405b145"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZRightTrigger"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -173,6 +192,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
         m_Gameplay_RightTrigger = m_Gameplay.FindAction("RightTrigger", throwIfNotFound: true);
         m_Gameplay_LeftTrigger = m_Gameplay.FindAction("LeftTrigger", throwIfNotFound: true);
+        m_Gameplay_ZRightTrigger = m_Gameplay.FindAction("ZRightTrigger", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
@@ -231,6 +251,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     private readonly InputAction m_Gameplay_Rotate;
     private readonly InputAction m_Gameplay_RightTrigger;
     private readonly InputAction m_Gameplay_LeftTrigger;
+    private readonly InputAction m_Gameplay_ZRightTrigger;
     public struct GameplayActions
     {
         private PlayerControlTest m_Wrapper;
@@ -240,6 +261,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
         public InputAction @RightTrigger => m_Wrapper.m_Gameplay_RightTrigger;
         public InputAction @LeftTrigger => m_Wrapper.m_Gameplay_LeftTrigger;
+        public InputAction @ZRightTrigger => m_Wrapper.m_Gameplay_ZRightTrigger;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -264,6 +286,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 LeftTrigger.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftTrigger;
                 LeftTrigger.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftTrigger;
                 LeftTrigger.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLeftTrigger;
+                ZRightTrigger.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
+                ZRightTrigger.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
+                ZRightTrigger.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -283,6 +308,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 LeftTrigger.started += instance.OnLeftTrigger;
                 LeftTrigger.performed += instance.OnLeftTrigger;
                 LeftTrigger.canceled += instance.OnLeftTrigger;
+                ZRightTrigger.started += instance.OnZRightTrigger;
+                ZRightTrigger.performed += instance.OnZRightTrigger;
+                ZRightTrigger.canceled += instance.OnZRightTrigger;
             }
         }
     }
@@ -335,6 +363,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         void OnRotate(InputAction.CallbackContext context);
         void OnRightTrigger(InputAction.CallbackContext context);
         void OnLeftTrigger(InputAction.CallbackContext context);
+        void OnZRightTrigger(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
