@@ -9579,21 +9579,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Ui Block
       objectReference: {fileID: 0}
-    - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6025093002344493768, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9699,9 +9684,24 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -11492,7 +11492,7 @@ MonoBehaviour:
   m_MinimumFOV: 3
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 5
-  m_MaximumOrthoSize: 20
+  m_MaximumOrthoSize: 50
 --- !u!114 &1190896489
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -18914,16 +18914,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Ui Block
       objectReference: {fileID: 0}
-    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6025093002344493768, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -19028,6 +19018,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2d95be72cf5d8b409239b6793845645, type: 3}
