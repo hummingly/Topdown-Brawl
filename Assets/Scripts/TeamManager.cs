@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,12 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         public List<GameObject> players = new List<GameObject>();
         public int points;
+
+        public Team(int teamSize)
+        {
+            players = new List<GameObject>(teamSize);
+            points = 0;
+        }
     }
 
     public List<Team> teams = new List<Team>();
@@ -26,14 +33,16 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
         SceneManager.sceneLoaded += SceneLoadeded;
 
-        for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
-            teams.Add(new Team());
+        GameMode gameMode = GetComponent<GameLogic>().gameMode;
+        teams = new List<Team>(gameMode.maxTeams);
+        for (int i = 0; i < gameMode.maxTeams; i++)
+        {
+            teams.Add(new Team(gameMode.maxTeamSize));
+        }
     }
 
-
-
     // changed from one scene to another
-    private void SceneLoadeded(Scene scene, LoadSceneMode arg1) 
+    private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
@@ -56,7 +65,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                     if (teams[t].players[p] != null)
                     {
                         Destroy(teams[t].players[p].gameObject);
-                    
+
                         currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
                     }
                     else
@@ -83,12 +92,12 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
         GameObject bot = new GameObject("Empty Bot Cursor");
 
-        addToEmptyOrSmallestTeam(bot);
-
-        FindObjectOfType<MenuManager>().playerJoined(bot.transform, true);
-
-        bot.transform.parent = null;
-        DontDestroyOnLoad(bot);
+        if (addToEmptyOrSmallestTeam(bot))
+        {
+            FindObjectOfType<MenuManager>().playerJoined(bot.transform, true);
+            bot.transform.parent = null;
+            DontDestroyOnLoad(bot);
+        }
     }
 
     private void OnPlayerJoined(PlayerInput player)
@@ -101,10 +110,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
-            addToEmptyOrSmallestTeam(player.gameObject);
-
-            FindObjectOfType<MenuManager>().playerJoined(player.transform);
-
+            if (addToEmptyOrSmallestTeam(player.gameObject))
+            {
+                FindObjectOfType<MenuManager>().playerJoined(player.transform);
+            }
             //TODO: check which player? write string P1 for example
         }
 
@@ -114,40 +123,91 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
             // for testing add to a new team each new player
-            addToEmptyOrSmallestTeam(player.gameObject);
-
-            FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
-            player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
+            if (addToEmptyOrSmallestTeam(player.gameObject))
+            {
+                FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
+                player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
+            }
         }
     }
 
-
-    public void addToTeam(GameObject player, int i)
+    private void OnPlayerLeft(PlayerInput player)
     {
-        teams[i].players.Add(player);
-        playerIDs.Add(player);
+        int team = getTeamOf(player.gameObject);
+        if (team > -1)
+        {
+            teams[team].players.Remove(player.gameObject);
+        }
     }
 
-    public void addToEmptyOrSmallestTeam(GameObject player)
+    // Adds player and bots to the team.
+    //
+    // If a team is full and a player wants to join, a bot is kicked out
+    // automatically for this player if possible. Returns true when a bot or a
+    // player is added else false.
+    public bool addToTeam(GameObject player, int team)
+    {
+        // Checks whether the team is already full.
+        if (teams[team].players.Count >= teams[team].players.Capacity)
+        {
+            // Players are always added as long there is enough space.
+            if (player.GetComponent<BotTest>() == null)
+            {
+                // Search for bot to replace the player with.
+                int slot = teams[team].players.FindIndex(b => b.GetComponent<BotTest>() != null);
+                if (slot > -1)
+                {
+                    playerIDs.Remove(teams[team].players[slot]);
+                    teams[team].players[slot] = player;
+                    playerIDs.Add(player);
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            teams[team].players.Add(player);
+            playerIDs.Add(player);
+            return true;
+        }
+    }
+
+    public bool addToEmptyOrSmallestTeam(GameObject player)
     {
         if (getEmptyTeam() != -1)
-            addToTeam(player, getEmptyTeam());
+            return addToTeam(player, getEmptyTeam());
         else
-            addToTeam(player, getSmallestTeam());
+            return addToTeam(player, getSmallestTeam());
     }
 
-    public void moveTeam(GameObject player) //can only cycle ion one dir through teams
+    public void moveTeam(GameObject player) //can only cycle in one dir through teams
     {
-        int i = getTeamOf(player);
+        int currentTeam = getTeamOf(player);
 
-        teams[i].players.Remove(player);
-        //print(i);
-        i++;
+        if (currentTeam == -1)
+        {
+            addToEmptyOrSmallestTeam(player);
+            return;
+        }
 
-        if (i >= teams.Count)
-            i = 0;
-
-        teams[i].players.Add(player);
+        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Count, t => t.players.Count < t.players.Capacity);
+        if (nextTeam > -1)
+        {
+            teams[currentTeam].players.Remove(player);
+            teams[nextTeam].players.Add(player);
+            return;
+        }
+        else
+        {
+            // Look for empty slot in team before the current team.
+            int previousTeam = teams.FindIndex(0, currentTeam, t => t.players.Count < t.players.Capacity);
+            if (previousTeam > -1)
+            {
+                teams[currentTeam].players.Remove(player);
+                teams[previousTeam].players.Add(player);
+            }
+        }
     }
 
     private int getEmptyTeam()
@@ -175,18 +235,17 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return smallestTeam;
     }
 
+    // Returns the index of the player's team or -1 if the player has no team.
     public int getTeamOf(GameObject player) //for now jsut 0 or 1, limited teams
     {
-        for(int i = 0; i < teams.Count; i++)
+        for (int i = 0; i < teams.Count; i++)
         {
             int index = teams[i].players.IndexOf(player);
-            //print(index);
-
             if (index != -1)
                 return i;
         }
 
-        return -1; //error, maybe throw ex
+        return -1;
     }
 
 
@@ -216,7 +275,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public bool someTeamWon(int pointsToWin)
     {
         //if bigger than gamemode max then won
-        foreach(Team t in teams)
+        foreach (Team t in teams)
         {
             if (t.points >= pointsToWin)
                 return true;
