@@ -18,6 +18,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public List<GameObject> playerIDs = new List<GameObject>();
 
     [SerializeField] private Color[] teamColors;
+    private PlayerSpawner spawner;
 
 
     private void Awake()
@@ -34,6 +35,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         // disable more joining
         GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        spawner = FindObjectOfType<PlayerSpawner>();
 
         //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
@@ -51,18 +53,18 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 {
                     Destroy(teams[t].players[p].gameObject);
 
-                    currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
+                    currPlayer = spawner.createBot();
                 }
                 else
                 {
                     // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
 
-                    currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
+                    currPlayer = spawner.createPlayer();
                     //newPlayer.GetComponent<PlayerInput>().device
                 }
 
                 teams[t].players[p] = currPlayer;
-                FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
+                spawner.playerJoined(currPlayer.transform);
                 currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
             }
         }

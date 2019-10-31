@@ -13,12 +13,14 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float respawnTime = 3;
     [SerializeField] private float zoomBefore = 0.3f;
     [SerializeField] private float stayAfterDeath = 0.3f;
+    [SerializeField] private float spawnPosBlockTime = 0.3f;
 
     private GameLogic gameLogic;
     private TeamManager teams;
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
+    [SerializeField] private List<List<float>> spawnPosTimers = new List<List<float>>();
 
     void Awake()
     {
@@ -26,12 +28,31 @@ public class PlayerSpawner : MonoBehaviour
         teams = FindObjectOfType<TeamManager>();
         effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
+
+
+        for (int i = 0; i < teams.teams.Count; i++)
+        {
+            //spawnPosTimers.Add(new List<float>(teams.teams[i].players.Count));
+
+            // shouldn't be necessary?
+            var list = new List<float>();
+            for (int j = 0; j < teams.teams[i].players.Count; j++)
+                list.Add(0); 
+            spawnPosTimers.Add(list);
+        }
     }
 
     void Update()
     {
-        
+        foreach(List<float> timers in spawnPosTimers)
+        {
+            for(int i = 0; i < timers.Count; i++)
+            {
+                timers[i] -= Time.deltaTime;
+            }
+        }
     }
+
 
 
 
@@ -42,13 +63,13 @@ public class PlayerSpawner : MonoBehaviour
     }
 
     // For joining player manually from preselection
-    public GameObject spawnPlayer()
+    public GameObject createPlayer()
     {
         var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
 
         return player.gameObject;
     }
-    public GameObject spawnBot()
+    public GameObject createBot()
     {
         var player = Instantiate(botPrefab, Vector2.zero, Quaternion.identity).transform;
 
@@ -136,8 +157,25 @@ public class PlayerSpawner : MonoBehaviour
     {
         int team = teams.getTeamOf(player.gameObject);
 
+
+        // Get an open spawn point
+        int pos = 0;
+        var timers = spawnPosTimers[team];
+
+        for (int i = 0; i < timers.Count; i++)
+        {
+            if (timers[i] <= 0)
+            {
+                pos = i;
+                timers[i] = spawnPosBlockTime;
+                break;
+            }
+        }
+        
+
         // Spawn in one of the premade points in the right spawn zone
-        return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
+        //return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
+        return spawnAreas[team].GetChild(pos).position;
     }
 
     private int getPlayerTeam() // 0 or 1 for now
