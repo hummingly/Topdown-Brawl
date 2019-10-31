@@ -3485,7 +3485,6 @@ GameObject:
   - component: {fileID: 1209933898}
   - component: {fileID: 1209933903}
   - component: {fileID: 1209933902}
-  - component: {fileID: 1209933904}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3673,19 +3672,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
---- !u!114 &1209933904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1209933897}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756a277079c775a42a3017c147a78092, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  effectMat: {fileID: 2100000, guid: 2782433ce55023b4bb675a19272294d2, type: 2}
 --- !u!1 &1336492596
 GameObject:
   m_ObjectHideFlags: 0
@@ -4891,6 +4877,8 @@ GameObject:
   - component: {fileID: 1837885766}
   - component: {fileID: 1837885769}
   - component: {fileID: 1837885768}
+  - component: {fileID: 1837885771}
+  - component: {fileID: 1837885770}
   - component: {fileID: 1837885767}
   m_Layer: 0
   m_Name: Camera Post
@@ -4922,7 +4910,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1837885765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756a277079c775a42a3017c147a78092, type: 3}
+  m_Script: {fileID: 11500000, guid: 511369e0a5e795b4b8ba89d56240fd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectMat: {fileID: 2100000, guid: 2782433ce55023b4bb675a19272294d2, type: 2}
@@ -4977,6 +4965,32 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1837885770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837885765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5a2cc975982fca4da075a1785d36c74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectMat: {fileID: 2100000, guid: 45cf0663b33f00d4782e8ddd7ac153c6, type: 2}
+--- !u!114 &1837885771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837885765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5a2cc975982fca4da075a1785d36c74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectMat: {fileID: 2100000, guid: e55c24c421ebc8f49bc7b7daae2e6384, type: 2}
 --- !u!1 &1865215828
 GameObject:
   m_ObjectHideFlags: 0

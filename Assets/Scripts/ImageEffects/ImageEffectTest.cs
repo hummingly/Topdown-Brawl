@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class ImageEffectTest : MonoBehaviour
+public abstract class ImageEffectTest : MonoBehaviour //maybe abstract, then children inherit but also set the values eg. pixel count to shader
 {
-    [SerializeField] private Material effectMat;
+    [SerializeField] protected Material effectMat;
 
     void Awake()
     {
-        effectMat.SetFloat("_AspectRatio", Camera.main.aspect);
-        print(effectMat.GetFloat("_AspectRatio"));
 
     }
 

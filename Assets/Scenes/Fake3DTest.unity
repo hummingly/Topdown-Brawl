@@ -3160,7 +3160,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 4000924215064426767}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 5
@@ -3681,7 +3681,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1209933897}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756a277079c775a42a3017c147a78092, type: 3}
+  m_Script: {fileID: 11500000, guid: 511369e0a5e795b4b8ba89d56240fd4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectMat: {fileID: 2100000, guid: 2782433ce55023b4bb675a19272294d2, type: 2}
