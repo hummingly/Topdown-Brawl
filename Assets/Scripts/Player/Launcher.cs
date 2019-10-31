@@ -17,7 +17,7 @@ public class Launcher : MonoBehaviour
     private float delayTimer;
     private float shootInput;
     // for ztrigger, input value.Get<float> is not 0 but a small number
-    private float inputtolerance = 0.6f;
+    private float inputtolerance = 0.8f;
 
     public void Init (GameObject projectile, Purpose purpose, float speed, float cooldown, int damage)
     {
@@ -64,17 +64,14 @@ public class Launcher : MonoBehaviour
         }
     }
 
-    // for bot shooting
-    public void setShooting(bool b)
-    {
-        shootInput = b ? 1 : 0;
-    }
+    
 
     private void OnZRightTrigger(InputValue value) //https://forum.unity.com/threads/new-input-system-how-to-use-the-hold-interaction.605587/
     {
         if (purpose == Purpose.Secondary)
         {
             shootInput = value.Get<float>();
+            // IMPLEMENT AIMING WITH shootInput > 0 and < 0.8
             //print(shootInput);
         }
     }

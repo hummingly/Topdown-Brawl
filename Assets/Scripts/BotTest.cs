@@ -7,7 +7,7 @@ public class BotTest : MonoBehaviour
 {
     private TeamManager teams;
     private PlayerMovement playerMovement;
-    private Launcher launcher;
+    private Skill skill;
 
     [SerializeField] private float chasingSpeed = 0.75f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderSpeed = 0.5f; //percentage of maxSpeed in PlayerMovement
@@ -49,7 +49,7 @@ public class BotTest : MonoBehaviour
     {
         teams = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
-        launcher = GetComponent<Launcher>();
+        skill = GetComponent<Skill>();
 
 
         // if hasn't been added bcz testing in dev scene
@@ -106,7 +106,7 @@ public class BotTest : MonoBehaviour
                     moveDir.Normalize();
                 }
 
-                launcher.setShooting(false);
+                skill.SetAttacking(false);
 
                 moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
                 lookDir = moveDir;
@@ -132,7 +132,7 @@ public class BotTest : MonoBehaviour
                 moveDir = target.position - transform.position;
                 moveDir.Normalize();
 
-                launcher.setShooting(true);
+                skill.SetAttacking(true);
 
                 moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
 
