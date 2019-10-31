@@ -22,6 +22,14 @@ public class BotTest : MonoBehaviour
     [Space]
     [SerializeField] private float reactionDelay; // TODO: time to wait until doing some actions
     [SerializeField] private float maxRandAimOffset;
+    [Space]
+
+    [SerializeField] private Vector2 playerChaseOffsetMinMax = new Vector2(3,6);
+    //[SerializeField] private float playerChaseOffsetRnd = 0.5f;
+    [SerializeField] private float playerChaseOffsetChangeSpd = 1f;
+    [SerializeField] private float maxStrafe = 2f;
+    [SerializeField] private float strafeChangeSpd = 1f;
+
 
     [Space]
 
@@ -44,6 +52,8 @@ public class BotTest : MonoBehaviour
     private Vector2 lookDir;
     private Transform target;
     private List<GameObject> possibleTargets = new List<GameObject>();
+    private float currPlayerChaseOffset;
+    private float currStrafe;
 
     void Awake()
     {
@@ -85,7 +95,10 @@ public class BotTest : MonoBehaviour
         moveAdjust = ExtensionMethods.remap(moveAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
         //print(moveAdjust);
 
-
+        currPlayerChaseOffset += playerChaseOffsetChangeSpd * ExtensionMethods.randNegPos();
+        currPlayerChaseOffset = Mathf.Clamp(currPlayerChaseOffset, playerChaseOffsetMinMax.x, playerChaseOffsetMinMax.y);
+        currStrafe += strafeChangeSpd * ExtensionMethods.randNegPos();
+        currStrafe = Mathf.Clamp(currStrafe, -maxStrafe, maxStrafe);
 
 
         // Is wandering (enum?)
@@ -129,7 +142,21 @@ public class BotTest : MonoBehaviour
 
             if (gotHitAndNotInRange ||(target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
             {
-                moveDir = target.position - transform.position;
+                // basically when chase try not to move to player but to point that is from player to bot, normalized n distance away... 
+                var targetPos = target.position;
+                var targetOffset = transform.position - targetPos;
+                targetOffset = targetOffset.normalized;
+                targetOffset *= currPlayerChaseOffset; //Random.Range(playerChaseOffsetMinMax.x, playerChaseOffsetMinMax.y);
+
+                // strafe left and right from current chase position (if i nrange)
+                var dist = Vector2.Distance(targetPos, transform.position);
+                if (dist > playerChaseOffsetMinMax.x && dist < playerChaseOffsetMinMax.y)
+                {
+                    targetOffset += new Vector3(targetOffset.y, -targetOffset.x, 0) * currStrafe; //* Random.Range(-maxStrafe, maxStrafe);
+                }
+
+
+                moveDir = targetPos + targetOffset - transform.position;
                 moveDir.Normalize();
 
                 launcher.setShooting(true);

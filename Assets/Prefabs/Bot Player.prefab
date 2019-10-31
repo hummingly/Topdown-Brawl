@@ -456,6 +456,10 @@ MonoBehaviour:
   stopChaseDist: 10
   reactionDelay: 0
   maxRandAimOffset: 0
+  playerChaseOffsetMinMax: {x: 4, y: 6}
+  playerChaseOffsetChangeSpd: 0.5
+  maxStrafe: 2
+  strafeChangeSpd: 0.5
   avoidObstacleStrength: 90
   obstacleLookMaxDistance: 3
   obstacleLookFalloff: 1

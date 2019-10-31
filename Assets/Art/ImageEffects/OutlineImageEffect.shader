@@ -199,8 +199,6 @@
 					}
 				}
 
-				//avg
-				//sum /= (_KernelSize * _KernelSize);
 
 				fixed myGrey = (col.r + col.g + col.b) / 3;
 
@@ -209,6 +207,8 @@
 
 				return col;
 				
+
+				//TODO: Also when using extra camera set ortho? In effectscript
 
 
 
