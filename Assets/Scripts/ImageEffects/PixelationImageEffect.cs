@@ -13,8 +13,8 @@ public class PixelationImageEffect : ImageEffectTest
         //print(effectMat.GetFloat("_AspectRatio"));
     }
 
-    void Update()
+    void Update() // LateUpdate?
     {
-        
+        effectMat.SetFloat("_OrthoScale", Camera.main.orthographicSize);
     }
 }

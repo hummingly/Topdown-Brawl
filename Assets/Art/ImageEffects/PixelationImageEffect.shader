@@ -3,9 +3,22 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-		_PixelAmmount("Pixel Ammount", float) = 128
+		_PixelAmmountL("Pixel Ammount (lowest)", float) = 128 //how many pixels at lowest ortho
+		_PixelAmmountH("Pixel Ammount (highest)", float) = 256 //how many pixels at highest ortho
+		_OrthoMin("Min Ortho Scale", float) = 5
+		_OrthoMax("Max Ortho Scale", float) = 20
+		[HideInInspector] _OrthoScale("current scale", float) = 5
 		[HideInInspector] _AspectRatio("This text isn't shown", float) = 1.7
     }
+
+	CGINCLUDE
+		
+		float remap(float value, float low1, float high1, float low2, float high2) 
+		{
+			return(low2 + (high2 - low2) * (value - low1) / (high1 - low1));
+		}
+
+	ENDCG
 
     SubShader
     {
@@ -44,7 +57,11 @@
 			float4 _MainTex_TexelSize;
 
 			float _AspectRatio;
-			float _PixelAmmount;
+			float _PixelAmmountL;
+			float _PixelAmmountH;
+			float _OrthoMin;
+			float _OrthoMax;
+			float _OrthoScale;
 
 
             fixed4 frag (v2f i) : SV_Target
@@ -52,8 +69,9 @@
 				float2 uv = i.uv;
 
 				// Make sure the pixels are squares
-				float xPix = _PixelAmmount * _AspectRatio;
-				float yPix = _PixelAmmount;
+				float pixelAmmount = remap(_OrthoScale, _OrthoMin, _OrthoMax, _PixelAmmountL, _PixelAmmountH);
+				float xPix = pixelAmmount * _AspectRatio;
+				float yPix = pixelAmmount;
 
 				// UV not between 0 and 1 anymore, but 0 and _Columns
 				uv.x *= xPix;
