@@ -445,6 +445,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c776f8dc6a6770b49ac131df560a8e7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wanderTend: 2
+  wanderTendStrength: 0.25
   chasingSpeed: 0.75
   wanderSpeed: 0.25
   wanderDeviation: 0.25

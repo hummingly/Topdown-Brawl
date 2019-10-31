@@ -2472,6 +2472,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
+  startGameplayAnimDur: 1
+  spawnBeforeAnimDone: 0.333
 --- !u!4 &723236035
 Transform:
   m_ObjectHideFlags: 0
@@ -2547,10 +2549,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMapInd: 1
-  mapRange: {x: 1, y: 2}
+  state: 1
+  mapRange: {x: 1, y: 3}
   mapSprites:
   - {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
   - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
+  - {fileID: 21300000, guid: 00b93a1fc534e1d4086af46e443e9497, type: 3}
   mapImg: {fileID: 1689873875}
 --- !u!1 &765712798
 GameObject:

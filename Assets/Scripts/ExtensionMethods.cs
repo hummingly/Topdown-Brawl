@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public static class ExtensionMethods
 {
     public static float remap(float value, float low1, float high1, float low2, float high2)
@@ -61,5 +63,47 @@ public static class ExtensionMethods
         }
         return array;
     }
+
+    public static List<GameObject> shuffle(List<GameObject> array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Count; t++)
+        {
+            GameObject tmp = array[t];
+            int r = Random.Range(t, array.Count);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+    /*
+    public static object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            object tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+
+    public static T[] shuffle<T>(T[] array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            T tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+    public static T[] LastItem<T>(this List<T> list)
+    {
+        return list[list.Count - 1];
+    }*/
 }
 

@@ -9,6 +9,10 @@ public class BotTest : MonoBehaviour
     private PlayerMovement playerMovement;
     private Launcher launcher;
 
+    public enum WanderTendency { MapCenter, EnemyTeamCenter, RandomEnemy, None };
+    [SerializeField] private WanderTendency wanderTend = WanderTendency.None;
+    [SerializeField] private float wanderTendStrength = 0.5f;
+    [Space]
     [SerializeField] private float chasingSpeed = 0.75f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderSpeed = 0.5f; //percentage of maxSpeed in PlayerMovement
     [SerializeField] private float wanderDeviation = 0.1f;
@@ -84,21 +88,22 @@ public class BotTest : MonoBehaviour
 
     void Update()
     {
-        var moveAdjust = obstacleAhead();
-        var possibleMaxAdjust = (90 * rays) / 2; //not accurate???
-        moveAdjust = Mathf.Clamp(moveAdjust, -possibleMaxAdjust, possibleMaxAdjust);
-        // inverted, when big then small
-        if (moveAdjust > 0)
-            moveAdjust = possibleMaxAdjust - moveAdjust;
-        if (moveAdjust < 0)
-            moveAdjust =-possibleMaxAdjust + moveAdjust;
-        moveAdjust = ExtensionMethods.remap(moveAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
-        //print(moveAdjust);
-
         currPlayerChaseOffset += playerChaseOffsetChangeSpd * ExtensionMethods.randNegPos();
         currPlayerChaseOffset = Mathf.Clamp(currPlayerChaseOffset, playerChaseOffsetMinMax.x, playerChaseOffsetMinMax.y);
         currStrafe += strafeChangeSpd * ExtensionMethods.randNegPos();
         currStrafe = Mathf.Clamp(currStrafe, -maxStrafe, maxStrafe);
+
+
+        var moveObstAdjust = obstacleAhead();
+        var possibleMaxAdjust = (90 * rays) / 2; //not accurate???
+        moveObstAdjust = Mathf.Clamp(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust);
+        // inverted, when big then small
+        if (moveObstAdjust > 0)
+            moveObstAdjust = possibleMaxAdjust - moveObstAdjust;
+        if (moveObstAdjust < 0)
+            moveObstAdjust =-possibleMaxAdjust + moveObstAdjust;
+        moveObstAdjust = ExtensionMethods.remap(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
+
 
 
         // Is wandering (enum?)
@@ -119,12 +124,31 @@ public class BotTest : MonoBehaviour
                     moveDir.Normalize();
                 }
 
-                launcher.setShooting(false);
 
-                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
+                Vector2 wanderGeneralDir = moveDir;
+                if (wanderTend == WanderTendency.MapCenter)
+                    wanderGeneralDir = (Vector3.zero - transform.position).normalized;
+                if (wanderTend == WanderTendency.RandomEnemy)
+                {
+                    var target = teams.getRandomEnemy(gameObject);
+                    if(target)
+                        wanderGeneralDir = (target.transform.position - transform.position).normalized;
+                }
+
+
+                // Go to a weigthed value of tendency and random wander
+                moveDir = Vector2.Lerp(moveDir, wanderGeneralDir, wanderTendStrength);
+
+                moveDir.Normalize();
+
+                // Obstacle avoidance always overrides all
+                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveObstAdjust);
+
                 lookDir = moveDir;
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * wanderSpeed);
+
+                launcher.setShooting(false);
             }
             else // instead of wandering chase now
             {
@@ -161,7 +185,7 @@ public class BotTest : MonoBehaviour
 
                 launcher.setShooting(true);
 
-                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveAdjust);
+                moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveObstAdjust);
 
                 lookDir = target.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
                 playerMovement.setRot(lookDir);

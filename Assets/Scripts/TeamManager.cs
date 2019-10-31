@@ -24,53 +24,46 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         teamColors = ExtensionMethods.shuffle(teamColors);
 
-        SceneManager.sceneLoaded += SceneLoadeded;
-
         for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
             teams.Add(new Team());
     }
 
 
 
-    // changed from one scene to another
-    private void SceneLoadeded(Scene scene, LoadSceneMode arg1) 
+    public void initPlayers()
     {
-        // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame)//UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1") //if (teams.Count > 0)
+        // disable more joining
+        GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+
+        //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
+
+
+        // TODO: for each player in each team spawn and assign team, controllerIDs, color
+
+        for (int t = 0; t < teams.Count; t++)
         {
-            // disable more joining
-            GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
-
-            //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
-
-
-            // TODO: for each player in each team spawn and assign team, controllerIDs, color
-
-            for (int t = 0; t < teams.Count; t++)
+            for (int p = 0; p < teams[t].players.Count; p++)
             {
-                for (int p = 0; p < teams[t].players.Count; p++)
+                GameObject currPlayer = null;
+
+                // Bot controller is not destroyed on scene load, so now destroy it and spawn a bot object, not a player object
+                if (teams[t].players[p] != null)
                 {
-                    GameObject currPlayer = null;
+                    Destroy(teams[t].players[p].gameObject);
 
-                    // Bot controller is not destroyed on scene load, so now destroy it and spawn a bot object, not a player object
-                    if (teams[t].players[p] != null)
-                    {
-                        Destroy(teams[t].players[p].gameObject);
-                    
-                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
-                    }
-                    else
-                    {
-                        // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
-
-                        currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
-                        //newPlayer.GetComponent<PlayerInput>().device
-                    }
-
-                    teams[t].players[p] = currPlayer;
-                    FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
-                    currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
+                    currPlayer = FindObjectOfType<PlayerSpawner>().spawnBot();
                 }
+                else
+                {
+                    // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
+
+                    currPlayer = FindObjectOfType<PlayerSpawner>().spawnPlayer();
+                    //newPlayer.GetComponent<PlayerInput>().device
+                }
+
+                teams[t].players[p] = currPlayer;
+                FindObjectOfType<PlayerSpawner>().playerJoined(currPlayer.transform);
+                currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
             }
         }
     }
@@ -148,6 +141,26 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             i = 0;
 
         teams[i].players.Add(player);
+    }
+
+    public GameObject getRandomEnemy(GameObject player)
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            // Found enemy team
+            if(!teams[i].players.Contains(player))
+            {
+                // get random active player
+                var randPlayers = ExtensionMethods.shuffle(teams[i].players);
+                foreach(GameObject p in randPlayers)
+                {
+                    if (p.active)
+                        return p;
+                }
+            }
+        }
+
+        return null;
     }
 
     private int getEmptyTeam()
