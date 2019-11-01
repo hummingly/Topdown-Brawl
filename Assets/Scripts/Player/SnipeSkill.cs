@@ -33,6 +33,7 @@ public class SnipeSkill : Skill
         // may be integrated into the OnRight- / OnZRightTrigger methods
         if (inputValue > aimTolerance && inputValue < inputTolerance)
         {
+            print("AIMIN");
             if (aimLaser == null) 
                 print("NULLLLLLLL AIMLASER");
             aimLaser.setAim(true);

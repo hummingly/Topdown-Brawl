@@ -36,15 +36,23 @@ public class AimLaser : MonoBehaviour
             print("NULL PLAYERMOVEMENT");
         //print(playerMovement.getLastRot());
         //Vector2 v = new Vector2(transform.position.x, transform.position.y);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerMovement.getLastRot().normalized);
+
+        var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerMovement.getLastRot().normalized, float.MaxValue, bulletLayerIgnored);
         //Debug.DrawLine(transform.position, playerMovement.getLastRot().normalized, Color.green);
         //playerMovement.getLastRot().normalized * 10f
         // Debug.DrawLine(transform.position, hit.point, Color.green);
-        Debug.DrawRay(transform.position, playerMovement.getLastRot().normalized, Color.green); //Desired look dir
-        //print(hit.point);
-        laserHit.position = hit.point;
+
+        if (hit)
+        {
+            print(hit.transform.name);
+            //Debug.DrawRay(transform.position, hit.point, Color.green); //Desired look dir
+            laserHit.position = hit.point;
+        }
+
         lineRenderer.SetPosition(0, transform.position); // first position
-        lineRenderer.SetPosition(1, hit.point); // end point of laser
+        lineRenderer.SetPosition(1, laserHit.position);//hit.point); // end point of laser
         /*
         lineRenderer.SetPosition(0, transform.position);
         RaycastHit hit;
