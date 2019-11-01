@@ -62,7 +62,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""name"": ""ZRightTrigger"",
                     ""type"": ""Button"",
                     ""id"": ""5755e339-7bbe-4bae-a1d7-1e582c4d1be9"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }

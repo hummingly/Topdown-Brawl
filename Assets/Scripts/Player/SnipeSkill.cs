@@ -6,14 +6,11 @@ public class SnipeSkill : Skill
 {
     [SerializeField] private GameObject projectile;
     [SerializeField] private float speed;
-    [SerializeField] private float aimTolerance;
     private AimLaser aimLaser;
+    private float lastInput;
 
     void Start ()
     {
-        // which ones does it get?? multiple players?????????
-        //aimLaser = GameObject.FindObjectOfType<AimLaser>();
-        // doesnt work
         aimLaser = gameObject.GetComponentInChildren<AimLaser>();
         playerMovement = GetComponent<PlayerMovement>();
     }
@@ -30,17 +27,16 @@ public class SnipeSkill : Skill
 
     protected override void OnTrigger(float inputValue)
     {
-        // may be integrated into the OnRight- / OnZRightTrigger methods
-        if (inputValue > aimTolerance && inputValue < inputTolerance)
+        // bug for permanent aiming very difficult to reproduce now (almost impossible)
+        if (inputValue > lastInput && inputValue < inputTolerance && delayTimer <= 0)
         {
-            print("AIMIN");
-            if (aimLaser == null) 
-                print("NULLLLLLLL AIMLASER");
+            //print(inputValue);
             aimLaser.setAim(true);
         } else
         {
             aimLaser.setAim(false);
         }
         shootInput = inputValue;
+        lastInput = inputValue;
     }
 }

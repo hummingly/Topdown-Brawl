@@ -32,8 +32,8 @@ public class AimLaser : MonoBehaviour
             lineRenderer.enabled = true;
         else
             lineRenderer.enabled = false;
-        if (playerMovement == null)
-            print("NULL PLAYERMOVEMENT");
+        /*if (playerMovement == null)
+            print("NULL PLAYERMOVEMENT");*/
         //print(playerMovement.getLastRot());
         //Vector2 v = new Vector2(transform.position.x, transform.position.y);
 
@@ -46,7 +46,7 @@ public class AimLaser : MonoBehaviour
 
         if (hit)
         {
-            print(hit.transform.name);
+            //print(hit.transform.name);
             //Debug.DrawRay(transform.position, hit.point, Color.green); //Desired look dir
             laserHit.position = hit.point;
         }

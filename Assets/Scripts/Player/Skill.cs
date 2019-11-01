@@ -18,7 +18,7 @@ public abstract class Skill : MonoBehaviour
     // for ztrigger, input value.Get<float> is not 0 but a small number
     [SerializeField] protected float inputTolerance = 0.8f;
 
-    private float delayTimer;
+    protected float delayTimer;
     protected float shootInput;
     
     void Start()
