@@ -35,10 +35,15 @@ public abstract class Skill : MonoBehaviour
 
         if (shootInput > 0 && delayTimer <= 0)
         {
-            delayTimer = cooldown;
-
-            Attack(playerMovement.getLastRot());
+            doAttack();
         }   
+    }
+
+    public void doAttack()
+    {
+        delayTimer = cooldown;
+
+        Attack(playerMovement.getLastRot());
     }
     
     protected void OnRightTrigger(InputValue value)

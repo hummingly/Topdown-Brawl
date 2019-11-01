@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6d78ab0ce71f847a4837b5ace7c8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 2
+  cooldown: 1
   damage: 40
   spawnPosFromCenter: 0.75
   trigger: 1
-  inputTolerance: 0.95
   projectile: {fileID: 1650181106410228009, guid: 551f67c285f39684aa17e3f6e79f3ef8,
     type: 3}
   speed: 100

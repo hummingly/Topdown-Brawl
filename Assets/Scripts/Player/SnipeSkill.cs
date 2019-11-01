@@ -32,10 +32,7 @@ public class SnipeSkill : Skill
         if (aimVal > 0 && delayTimer <= 0)
             aimLaser.setAim(true);
         else
-        {
-            shootInput = 0;
             aimLaser.setAim(false);
-        }
     }
 
     protected override void OnTrigger(float inputValue)
@@ -61,7 +58,9 @@ public class SnipeSkill : Skill
 
     protected override void OnTriggerUp(float inputValue)
     {
-        print("SHOT");
-        shootInput = inputValue; //1;
+
+        //shootInput = inputValue; //1;
+        if (delayTimer <= 0)
+            doAttack();
     }
 }
