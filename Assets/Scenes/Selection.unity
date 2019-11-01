@@ -2548,7 +2548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMapInd: 1
+  currentMapInd: 2
   state: 1
   mapRange: {x: 1, y: 3}
   mapSprites:

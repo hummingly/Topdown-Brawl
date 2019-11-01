@@ -1823,6 +1823,7 @@ MonoBehaviour:
   respawnTime: 3
   zoomBefore: 0.5
   stayAfterDeath: 0.5
+  spawnPosBlockTime: 0.3
 --- !u!114 &362807576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2030,6 +2031,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
+  startGameplayAnimDur: 1
+  spawnBeforeAnimDone: 0.2
 --- !u!4 &423136064
 Transform:
   m_ObjectHideFlags: 0

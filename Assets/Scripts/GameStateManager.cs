@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
 
     void Start()
     {
-        
+        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
     }
 
     void Update()
