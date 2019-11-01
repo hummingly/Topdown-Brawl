@@ -49,7 +49,7 @@ public class BotTest : MonoBehaviour
     {
         teams = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
-        skill = GetComponent<Skill>();
+        skill = GetComponent<DefaultShootSkill>();
 
 
         // if hasn't been added bcz testing in dev scene

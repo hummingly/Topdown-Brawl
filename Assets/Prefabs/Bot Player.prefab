@@ -56,7 +56,6 @@ SpriteMask:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -181,7 +180,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -261,7 +259,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -296,11 +293,11 @@ GameObject:
   - component: {fileID: 4000924214873993291}
   - component: {fileID: 4000924214873993328}
   - component: {fileID: 2380627806415850663}
-  - component: {fileID: 3493012201695741743}
   - component: {fileID: 4971230030713657587}
   - component: {fileID: 4000924214873993294}
   - component: {fileID: 4000924214873993295}
   - component: {fileID: 6566428458231614679}
+  - component: {fileID: 1258821288972550897}
   m_Layer: 0
   m_Name: Bot Player
   m_TagString: Untagged
@@ -360,25 +357,6 @@ MonoBehaviour:
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
   maxHealthPoints: 100
---- !u!114 &3493012201695741743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4000924214873993329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99571df17ca72854cb07f12f2bd3281d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  purpose: 0
-  projectile: {fileID: 1650181106410228009, guid: 551f67c285f39684aa17e3f6e79f3ef8,
-    type: 3}
-  speed: 40
-  cooldown: 0.125
-  damage: 6
-  spawnPosFromCenter: 0.75
 --- !u!114 &4971230030713657587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,6 +444,26 @@ MonoBehaviour:
   obstacleLookFalloff: 1
   obstaclelookAgroFoV: 135
   obstacleRays: 4
+--- !u!114 &1258821288972550897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000924214873993329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40d68bc5aeb299d498c7b5d699b96e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0.125
+  damage: 10
+  spawnPosFromCenter: 0.75
+  trigger: 0
+  inputTolerance: 0.8
+  projectile: {fileID: 1650181106410228009, guid: 551f67c285f39684aa17e3f6e79f3ef8,
+    type: 3}
+  speed: 40
 --- !u!1 &4427621900641901306
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,7 +520,6 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -723,6 +720,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

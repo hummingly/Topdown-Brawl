@@ -21,7 +21,7 @@ public class AimLaser : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.useWorldSpace = true;
         lineRenderer.enabled = false;
-        playerMovement = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
+        playerMovement = gameObject.GetComponentInParent<PlayerMovement>();
         // FIND WITH TAG ????
     }
 
@@ -33,7 +33,7 @@ public class AimLaser : MonoBehaviour
         else
             lineRenderer.enabled = false;
         if (playerMovement == null)
-            print("NULL");
+            print("NULL PLAYERMOVEMENT");
         //print(playerMovement.getLastRot());
         //Vector2 v = new Vector2(transform.position.x, transform.position.y);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, playerMovement.getLastRot().normalized);

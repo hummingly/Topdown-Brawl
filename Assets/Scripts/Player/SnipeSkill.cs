@@ -9,11 +9,12 @@ public class SnipeSkill : Skill
     [SerializeField] private float aimTolerance;
     private AimLaser aimLaser;
 
-    public SnipeSkill ()
+    void Start ()
     {
         // which ones does it get?? multiple players?????????
-        aimLaser = GameObject.FindObjectOfType<AimLaser>();
+        //aimLaser = GameObject.FindObjectOfType<AimLaser>();
         // doesnt work
+        aimLaser = gameObject.GetComponentInChildren<AimLaser>();
     }
 
     protected override void Attack(Vector2 shootDir)
@@ -31,10 +32,12 @@ public class SnipeSkill : Skill
         // may be integrated into the OnRight- / OnZRightTrigger methods
         if (inputValue > aimTolerance && inputValue < inputTolerance)
         {
-            //aimLaser.setAim(true);
+            if (aimLaser == null) 
+                print("NULLLLLLLL AIMLASER");
+            aimLaser.setAim(true);
         } else
         {
-            //aimLaser.setAim(false);
+            aimLaser.setAim(false);
         }
         shootInput = inputValue;
     }
