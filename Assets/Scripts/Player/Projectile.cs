@@ -23,6 +23,11 @@ public class Projectile : MonoBehaviour
         this.owner = owner;
     }
 
+    public void setDamage(int damage)
+    {
+        this.damage = damage;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner (now done via layer)

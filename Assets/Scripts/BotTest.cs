@@ -7,7 +7,7 @@ public class BotTest : MonoBehaviour
 {
     private TeamManager teams;
     private PlayerMovement playerMovement;
-    private Launcher launcher;
+    private Skill skill;
 
     public enum WanderTendency { MapCenter, EnemyTeamCenter, RandomEnemy, None };
     [SerializeField] private WanderTendency wanderTend = WanderTendency.None;
@@ -63,7 +63,7 @@ public class BotTest : MonoBehaviour
     {
         teams = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
-        launcher = GetComponent<Launcher>();
+        skill = GetComponent<DefaultShootSkill>();
 
 
         // if hasn't been added bcz testing in dev scene
@@ -148,7 +148,7 @@ public class BotTest : MonoBehaviour
                 playerMovement.setRot(lookDir);
                 playerMovement.setMove(moveDir * wanderSpeed);
 
-                launcher.setShooting(false);
+                skill.SetAttacking(false);
             }
             else // instead of wandering chase now
             {
@@ -183,7 +183,7 @@ public class BotTest : MonoBehaviour
                 moveDir = targetPos + targetOffset - transform.position;
                 moveDir.Normalize();
 
-                launcher.setShooting(true);
+                skill.SetAttacking(true);
 
                 moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveObstAdjust);
 

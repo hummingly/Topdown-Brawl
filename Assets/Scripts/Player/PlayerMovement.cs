@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float inputStartRotThresh;
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
-    private Launcher launcher;
     private PlayerStats stats;
     private PlayerVisuals visuals;
     private EffectManager effects;
@@ -47,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
-        launcher = GetComponent<Launcher>();
         visuals = GetComponentInChildren<PlayerVisuals>();
         effects = FindObjectOfType<EffectManager>();
 
