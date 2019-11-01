@@ -15,6 +15,7 @@ public class SnipeSkill : Skill
         //aimLaser = GameObject.FindObjectOfType<AimLaser>();
         // doesnt work
         aimLaser = gameObject.GetComponentInChildren<AimLaser>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     protected override void Attack(Vector2 shootDir)

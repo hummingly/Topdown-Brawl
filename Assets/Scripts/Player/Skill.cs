@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public abstract class Skill : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
+    protected PlayerMovement playerMovement;
 
     protected enum Trigger { Basic, Secondary };
     // put speed and projectile in children because melee skill might not have speed or projectile
