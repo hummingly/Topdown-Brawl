@@ -49,6 +49,7 @@ public class AimLaser : MonoBehaviour
             //print(hit.transform.name);
             //Debug.DrawRay(transform.position, hit.point, Color.green); //Desired look dir
             laserHit.position = hit.point;
+
         }
 
         lineRenderer.SetPosition(0, transform.position); // first position
