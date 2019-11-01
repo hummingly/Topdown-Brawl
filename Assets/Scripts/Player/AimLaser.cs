@@ -26,7 +26,7 @@ public class AimLaser : MonoBehaviour
     }
 
     
-    void Update()
+    void Update() //TODO: not always raycast, only if held down (aim?)
     {
         if (aim)
             lineRenderer.enabled = true;

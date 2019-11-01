@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6d78ab0ce71f847a4837b5ace7c8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldown: 5
+  cooldown: 2
   damage: 40
   spawnPosFromCenter: 0.75
   trigger: 1
@@ -234,6 +234,21 @@ PrefabInstance:
     - target: {fileID: 4000924214873993291, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032545265659443728, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032545265659443728, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -322380456580466538, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: inputTolerance
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

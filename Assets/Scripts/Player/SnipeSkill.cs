@@ -7,7 +7,8 @@ public class SnipeSkill : Skill
     [SerializeField] private GameObject projectile;
     [SerializeField] private float speed;
     private AimLaser aimLaser;
-    private float lastInput;
+    //private float lastInput;
+    private float aimVal;
 
     void Start ()
     {
@@ -25,18 +26,42 @@ public class SnipeSkill : Skill
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
     }
 
+
+    private void LateUpdate()
+    {
+        if (aimVal > 0 && delayTimer <= 0)
+            aimLaser.setAim(true);
+        else
+        {
+            shootInput = 0;
+            aimLaser.setAim(false);
+        }
+    }
+
     protected override void OnTrigger(float inputValue)
     {
         // bug for permanent aiming very difficult to reproduce now (almost impossible)
-        if (inputValue > lastInput && inputValue < inputTolerance && delayTimer <= 0)
+        /*if (inputValue < inputTolerance && delayTimer <= 0)
         {
             //print(inputValue);
             aimLaser.setAim(true);
-        } else
+        }
+        else
         {
             aimLaser.setAim(false);
-        }
-        shootInput = inputValue;
-        lastInput = inputValue;
+        }*/
+
+        //shootInput = inputValue;
+        //lastInput = inputValue;
+
+        aimVal = inputValue;
+    }
+
+
+
+    protected override void OnTriggerUp(float inputValue)
+    {
+        print("SHOT");
+        shootInput = inputValue; //1;
     }
 }

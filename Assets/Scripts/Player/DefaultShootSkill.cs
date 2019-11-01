@@ -22,4 +22,9 @@ public class DefaultShootSkill : Skill
         // may be integrated into the OnRight- / OnZRightTrigger methods
         shootInput = inputValue;
     }
+
+    protected override void OnTriggerUp(float inputValue)
+    {
+
+    }
 }

@@ -8,6 +8,7 @@ public abstract class Skill : MonoBehaviour
     protected PlayerMovement playerMovement;
 
     protected enum Trigger { Basic, Secondary };
+    //protected enum Type { Press, Release };
     // put speed and projectile in children because melee skill might not have speed or projectile
     //[SerializeField] private GameObject projectile;
     //[SerializeField] private float speed = 40;
@@ -16,7 +17,7 @@ public abstract class Skill : MonoBehaviour
     [SerializeField] protected float spawnPosFromCenter;
     [SerializeField] protected Trigger trigger;
     // for ztrigger, input value.Get<float> is not 0 but a small number
-    [SerializeField] protected float inputTolerance = 0.8f;
+    //[SerializeField] protected float inputTolerance = 0.8f;
 
     protected float delayTimer;
     protected float shootInput;
@@ -32,11 +33,12 @@ public abstract class Skill : MonoBehaviour
         // https://forum.unity.com/threads/how-to-call-update-from-a-class-thats-not-inheriting-from-monobehaviour.451954/
         delayTimer -= Time.deltaTime;
 
-        if (shootInput > inputTolerance && delayTimer <= 0)
+        if (shootInput > 0 && delayTimer <= 0)
         {
             delayTimer = cooldown;
+            shootInput = 0;
             Attack(playerMovement.getLastRot());
-        }
+        }   
     }
     
     protected void OnRightTrigger(InputValue value)
@@ -53,7 +55,13 @@ public abstract class Skill : MonoBehaviour
             OnTrigger(value.Get<float>());
     }
 
+    protected void OnZRightTriggerUp(InputValue value)
+    {
+        OnTriggerUp(value.Get<float>());
+    }
+
     protected abstract void OnTrigger(float inputValue);
+    protected abstract void OnTriggerUp(float inputValue);
 
     protected abstract void Attack(Vector2 shootDir); // Don't shoot where player really faces, but where he tries to look at with stick
 
