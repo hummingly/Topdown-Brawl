@@ -17,8 +17,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public List<Team> teams = new List<Team>();
     //public List<GameObject> playerIDs = new List<GameObject>();
     public List<GameObject> playerNrs = new List<GameObject>(); //not for bots, just players... for keeping track of what name to put for each, etc
+    public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
 
     [SerializeField] private Color[] teamColors;
+    [SerializeField] private GameObject playerPrefab;
     private PlayerSpawner spawner;
 
 
@@ -35,8 +37,11 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public void initPlayers()
     {
         // disable more joining
-        GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        //GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually; //here still added a cursor in gameplay still...
         spawner = FindObjectOfType<PlayerSpawner>();
+        var input = FindObjectOfType<PlayerInputManager>();
+
+        int ind = 0;
 
         //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
@@ -49,7 +54,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             {
                 GameObject currPlayer = null;
 
-                // Bot controller is not destroyed on scene load, so now destroy it and spawn a bot object, not a player object
+                // Bot cursor is not destroyed on scene load, so now destroy it and spawn a bot, not a player object
                 if (teams[t].players[p] != null)
                 {
                     Destroy(teams[t].players[p].gameObject);
@@ -60,8 +65,36 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 {
                     // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
 
-                    currPlayer = spawner.createPlayer();
+                    //currPlayer = spawner.createPlayer();
+
+                    //actually conenct to controller again correctly
+
+                    // couldn't get it to just repair the device to the joined PlayerInput, so instead just join manually... (alternativly try to change loop order so devices stay correct?)
+                    input.playerPrefab = playerPrefab;
+                    input.JoinPlayer(ind, -1, null, playerDevices[ind]);
+                    foreach(PlayerInput playr in FindObjectsOfType<PlayerInput>())
+                    {
+                        if (playr.devices[0] == playerDevices[ind])
+                            currPlayer = playr.gameObject;
+                    }
+                    ind++;
+
+                    //currPlayer.GetComponent<PlayerInput>().user.UnpairDevices();
+                    //UnityEngine.InputSystem.Users.InputUser.PerformPairingWithDevice(playerDevices[0], currPlayer.GetComponent<PlayerInput>());
+
+                    //currPlayer.GetComponent<PlayerInput>().devices[0].;//SwitchCurrentControlScheme();
+                    //currPlayer.GetComponent<PlayerInput>().user.UnpairDevices();
+                    //UnityEngine.InputSystem.Users.InputUser.PerformPairingWithDevice(InputDevice.all[0], UnityEngine.InputSystem.Users.InputUser );
+                    //print(currPlayer.GetComponent<PlayerInput>().devices[0].deviceId);
                     //newPlayer.GetComponent<PlayerInput>().device
+                    //var currPlayerInput = currPlayer.GetComponent<PlayerInput>();
+                    //GetComponent<PlayerInputManager>().JoinPlayer(currPlayerInput);
+                    //print(PlayerInputManager.instance.playerCount);
+
+                    /* Each PlayerInput can be assigned one or more devices. 
+                     * By default, no two PlayerInput components will be assigned the same devices — 
+                     * although this can be forced explicitly by manually assigning devices to a player when calling PlayerInput.
+                     * Instantiate or by calling InputUser.PerformPairingWithDevice on the InputUser of a PlayerInput */
                 }
 
                 teams[t].players[p] = currPlayer;
@@ -69,6 +102,19 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
             }
         }
+
+
+        /*var players = GetComponent<PlayerInputManager>().playerCount;
+
+        foreach (PlayerInput pi in FindObjectsOfType<PlayerInput>())
+        {
+            //pi.user.UnpairDevices();
+
+            //foreach (InputDevice d in pi.devices)
+            var d = pi.devices[0];
+                print(pi.name + " " + d.name);
+        }*/
+
     }
 
 
@@ -124,8 +170,11 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         //playerIDs.Add(player);
 
         // if no bot
-        if(player.GetComponent<MenuCursor>())
+        if (player.GetComponent<MenuCursor>())
+        {
             playerNrs.Add(player);
+            playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
+        }
     }
 
     public void addToEmptyOrSmallestTeam(GameObject player)
@@ -241,7 +290,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return playerIDs.IndexOf(player);
     }*/
 
-    public void increaseScore(GameObject player)
+                    public void increaseScore(GameObject player)
     {
         //find team that GO is in and add point
         int team = getTeamOf(player);

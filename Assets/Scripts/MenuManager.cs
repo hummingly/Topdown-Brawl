@@ -150,6 +150,7 @@ public class MenuManager : MonoBehaviour
 
     public void Play()
     {
+        FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
         gameState.state = GameStateManager.GameState.Ingame;
         LoadMap();
     }
