@@ -2452,6 +2452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teams: []
   playerNrs: []
+  playerChars: []
   teamColors:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.93725497, b: 0, a: 1}
@@ -2459,8 +2460,6 @@ MonoBehaviour:
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
   - {r: 0.8117648, g: 0, b: 1, a: 1}
-  playerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
-    type: 3}
 --- !u!114 &723236034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4976,7 +4975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableChars:
   - {fileID: 11400000, guid: 64bc184b3a7b85946a62dd3c165c5c0d, type: 2}
-  - {fileID: 11400000, guid: 68f439090c045e84c96c2c3e067c128c, type: 2}
+  - {fileID: 11400000, guid: 2cad82067caa7734ca185452d3cdd9d3, type: 2}
   inputPrompt: {fileID: 351662704}
   botPrompt: {fileID: 796645691}
   charSlotParent: {fileID: 271888753}

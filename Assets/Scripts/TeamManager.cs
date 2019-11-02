@@ -18,14 +18,18 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     //public List<GameObject> playerIDs = new List<GameObject>();
     public List<GameObject> playerNrs = new List<GameObject>(); //not for bots, just players... for keeping track of what name to put for each, etc
     public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
+    public List<Character> playerChars = new List<Character>(); 
 
     [SerializeField] private Color[] teamColors;
-    [SerializeField] private GameObject playerPrefab;
+    //[SerializeField] private GameObject playerPrefab;
     private PlayerSpawner spawner;
+    private MenuManager menu;
 
 
     private void Awake()
     {
+        menu = FindObjectOfType<MenuManager>();
+
         teamColors = ExtensionMethods.shuffle(teamColors);
 
         for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
@@ -33,6 +37,15 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     }
 
 
+    public void saveCharacters()
+    {
+        foreach (GameObject p in playerNrs)
+        {
+            var cha = menu.getCharacterOfPlayer(p);
+
+            playerChars.Add(cha);//(menu.availableChars[ind]);
+        }
+    }
 
     public void initPlayers()
     {
@@ -70,7 +83,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                     //actually conenct to controller again correctly
 
                     // couldn't get it to just repair the device to the joined PlayerInput, so instead just join manually... (alternativly try to change loop order so devices stay correct?)
-                    input.playerPrefab = playerPrefab;
+                    input.playerPrefab = playerChars[ind].prefab;
                     input.JoinPlayer(ind, -1, null, playerDevices[ind]);
                     foreach(PlayerInput playr in FindObjectsOfType<PlayerInput>())
                     {

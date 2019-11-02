@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00c5cb7df18ab144adf09d9cad5f8a1, type: 3}
   m_Name: Dps1
   m_EditorClassIdentifier: 
-  name: Idk
+  name: Guy
   description: 
+  prefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884, type: 3}
   sprite: {fileID: 5105561115069631295, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
-  role: 0
+  role: 1
   roleIcon: {fileID: 0}

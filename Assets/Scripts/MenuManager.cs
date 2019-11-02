@@ -7,7 +7,7 @@ public class MenuManager : MonoBehaviour
     private TeamManager teams;
     private GameStateManager gameState;
 
-    [SerializeField] private List<Character> availableChars = new List<Character>();
+    public List<Character> availableChars = new List<Character>();
     
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
@@ -150,6 +150,7 @@ public class MenuManager : MonoBehaviour
 
     public void Play()
     {
+        teams.saveCharacters();
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
         gameState.state = GameStateManager.GameState.Ingame;
         LoadMap();
@@ -174,4 +175,17 @@ public class MenuManager : MonoBehaviour
         return slotGO.GetSiblingIndex() - emptySlots;
     }
 
+    public Character getCharacterOfPlayer(GameObject player)
+    {
+        for (int i = 0; i < charSlotParent.childCount; i++)
+        {
+            var slot = charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>();
+
+            if (slot != null && slot.myPlayer == player)
+            {
+                return slot.chara;
+            }
+        }
+        return null;
+    }
 }

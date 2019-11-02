@@ -8,6 +8,7 @@ public class Character : ScriptableObject
     public new string name;
     public string description;
 
+    public GameObject prefab;
     public Sprite sprite;
 
     public enum Role { Tank, Dps, etc };
