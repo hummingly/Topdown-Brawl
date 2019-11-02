@@ -4,10 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 public class MenuCursor : MonoBehaviour
 {
     [SerializeField] private float speed = 0.5f;
+    [SerializeField] private Image spriteTeamCol;
+    [SerializeField] private TextMeshProUGUI playerNrText;
+
 
     private Vector2 moveInput;
 
@@ -20,6 +24,16 @@ public class MenuCursor : MonoBehaviour
         gr = FindObjectOfType<GraphicRaycaster>();
     }
 
+    public void setup(int playerNr, Color teamColor)
+    {
+        playerNrText.text = "P" + (playerNr + 1).ToString("0");
+        setColor(teamColor);
+    }
+
+    public void setColor(Color teamColor)
+    {
+        spriteTeamCol.color = teamColor;
+    }
 
     void Update()
     {

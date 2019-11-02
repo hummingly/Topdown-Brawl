@@ -16,6 +16,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
     public List<Team> teams = new List<Team>();
     //public List<GameObject> playerIDs = new List<GameObject>();
+    public List<GameObject> playerNrs = new List<GameObject>(); //not for bots, just players... for keeping track of what name to put for each, etc
 
     [SerializeField] private Color[] teamColors;
     private PlayerSpawner spawner;
@@ -121,6 +122,10 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         teams[i].players.Add(player);
         //playerIDs.Add(player);
+
+        // if no bot
+        if(player.GetComponent<MenuCursor>())
+            playerNrs.Add(player);
     }
 
     public void addToEmptyOrSmallestTeam(GameObject player)

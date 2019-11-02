@@ -59,6 +59,7 @@ public class MenuManager : MonoBehaviour
         {
             teams.moveTeam(player);
             slot.setCol(teams.getColorOf(player));
+            slot.myPlayer.GetComponent<MenuCursor>().setColor(teams.getColorOf(player));
         }
 
         // everyone can change bot
@@ -113,51 +114,38 @@ public class MenuManager : MonoBehaviour
         playerCursor.parent = cursorParent;
         playerCursor.localPosition = Vector3.zero;
 
+        if (!isBot) playerCursor.GetComponent<MenuCursor>().setup(teams.playerNrs.IndexOf(playerCursor.gameObject)/*teams.getPlayerId(playerCursor.gameObject)*/, teams.getColorOf(playerCursor.gameObject));
+  
+
+        var replaced = false;
+
         //add as many empty slots as needed so bot spawns where pressed
         if(isBot)
         {
             //replace that empty GO with bot
             if (place < charSlotParent.childCount)
             {
-
-                print("replace that empty GO with bot");
-
                 Destroy(charSlotParent.GetChild(place).gameObject);
 
-                var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-                slot.parent = charSlotParent;
-                slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
-
-                slot.transform.SetSiblingIndex(place);
-                // REFACTOR BIG TIME !!!!!!!!
+                replaced = true;
             }
             else
             {
-                // count how many are missing to place this on right
-                for (int i = 0; i < place; i++)
-                {
-                    //place -> offset... basically how many there are occupied?
-                    //if(charSlotParent.GetChild(i)) 
-                }
-
                 int offSet = place - charSlotParent.childCount;
                 for (int i = 0; i < offSet; i++)
                 {
                     Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
                     empty.parent = charSlotParent;
                 }
-
-                var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-                slot.parent = charSlotParent;
-                slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
             }
         }
-        else
-        {
-            var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-            slot.parent = charSlotParent;
-            slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
-        }
+
+        var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
+        slot.parent = charSlotParent;
+        slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
+
+        if(replaced)
+            slot.transform.SetSiblingIndex(place);
     }
 
     public void Play()
