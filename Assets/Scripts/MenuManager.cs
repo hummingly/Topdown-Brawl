@@ -35,9 +35,8 @@ public class MenuManager : MonoBehaviour
         var slot = slotGO.GetComponent<PlayerSlotMenuDisplay>();
 
         // only change on own button (everyone can change bot)
-        if (slotGO.GetSiblingIndex() == teams.getPlayerId(player) || slot.isBot)
+        if (slot.myPlayer == player || slot.isBot)//(getSlotInd(slotGO) == teams.getPlayerId(player) || slot.isBot)
         {
-            //var displaySlot = charSlotParent.GetChild(teams.getPlayerId(player)).GetComponent<PlayerSlotMenuDisplay>();
             var lastIndex = availableChars.IndexOf(slot.chara);
             lastIndex += dir;
             if (lastIndex < 0) lastIndex = availableChars.Count - 1;
@@ -50,13 +49,13 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    public void togglePlayerTeam(GameObject player, GameObject toggleButton)
+    public void togglePlayerTeam(GameObject player/*that toggled*/, GameObject toggleButton)
     {
         var slotGO = toggleButton.transform.parent;
         var slot = slotGO.GetComponent<PlayerSlotMenuDisplay>();
 
         // only change on own button 
-        if (slotGO.GetSiblingIndex() == teams.getPlayerId(player))
+        if (slot.myPlayer == player) //(getSlotInd(slotGO) == teams.getPlayerId(player))
         {
             teams.moveTeam(player);
             slot.setCol(teams.getColorOf(player));
@@ -65,10 +64,32 @@ public class MenuManager : MonoBehaviour
         // everyone can change bot
         if(slot.isBot)
         {
-            var bot = teams.getPlayerByID(slotGO.GetSiblingIndex()); //possibly instable, prone to bugs ?!?!?!
+            var bot = slot.myPlayer;//teams.getPlayerByID(getSlotInd(slotGO)); //possibly instable, prone to bugs ?!?!?!
 
-            teams.moveTeam(bot);
-            slot.setCol(teams.getColorOf(bot));
+            // Instead of going through each team go through all colors from when bot placed, and then delete
+            slot.botDeleteCounter++;
+
+            // Already max team, so remove instead (after cycle through all colors)
+            if (slot.botDeleteCounter >= teams.teams.Count)//(teams.getTeamOf(bot) + 1 >= teams.teams.Count)
+            {
+                teams.remove(bot);//remove bot cursor in team list
+
+                //replace the slot with an empty fill one
+                var index = slot.transform.GetSiblingIndex();
+                Destroy(slot.gameObject);
+                Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
+                empty.parent = charSlotParent;
+                empty.SetSiblingIndex(index);
+
+                Destroy(bot);//remove bot cursor
+
+                print("del bot");
+            }
+            else
+            {
+                teams.moveTeam(bot);
+                slot.setCol(teams.getColorOf(bot));
+            }
         }
     }
 
@@ -81,7 +102,7 @@ public class MenuManager : MonoBehaviour
 
 
 
-    public void playerJoined(Transform playerCursor, bool isBot = false)
+    public void playerJoined(Transform playerCursor, bool isBot = false, int place = 0)
     {
         if (inputPrompt.active)
         {
@@ -92,9 +113,51 @@ public class MenuManager : MonoBehaviour
         playerCursor.parent = cursorParent;
         playerCursor.localPosition = Vector3.zero;
 
-        var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-        slot.parent = charSlotParent;
-        slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
+        //add as many empty slots as needed so bot spawns where pressed
+        if(isBot)
+        {
+            //replace that empty GO with bot
+            if (place < charSlotParent.childCount)
+            {
+
+                print("replace that empty GO with bot");
+
+                Destroy(charSlotParent.GetChild(place).gameObject);
+
+                var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
+                slot.parent = charSlotParent;
+                slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
+
+                slot.transform.SetSiblingIndex(place);
+                // REFACTOR BIG TIME !!!!!!!!
+            }
+            else
+            {
+                // count how many are missing to place this on right
+                for (int i = 0; i < place; i++)
+                {
+                    //place -> offset... basically how many there are occupied?
+                    //if(charSlotParent.GetChild(i)) 
+                }
+
+                int offSet = place - charSlotParent.childCount;
+                for (int i = 0; i < offSet; i++)
+                {
+                    Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
+                    empty.parent = charSlotParent;
+                }
+
+                var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
+                slot.parent = charSlotParent;
+                slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
+            }
+        }
+        else
+        {
+            var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
+            slot.parent = charSlotParent;
+            slot.GetComponent<PlayerSlotMenuDisplay>().setSlot(playerCursor, availableChars[0], teams.getColorOf(playerCursor.gameObject), isBot);
+        }
     }
 
     public void Play()
@@ -106,6 +169,20 @@ public class MenuManager : MonoBehaviour
     public void LoadMap()
     {
         SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
+    }
+
+
+    // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
+    private int getSlotInd(Transform slotGO)
+    {
+        // count all the empty fill slots that help add a bot all the way on the right on the grid for example
+        int emptySlots = 0;
+
+        for (int i = 0; i < charSlotParent.childCount; i++)
+            if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>() == null)
+                emptySlots++;
+
+        return slotGO.GetSiblingIndex() - emptySlots;
     }
 
 }

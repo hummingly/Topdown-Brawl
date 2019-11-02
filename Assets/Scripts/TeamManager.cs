@@ -15,7 +15,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     }
 
     public List<Team> teams = new List<Team>();
-    public List<GameObject> playerIDs = new List<GameObject>();
+    //public List<GameObject> playerIDs = new List<GameObject>();
 
     [SerializeField] private Color[] teamColors;
     private PlayerSpawner spawner;
@@ -71,7 +71,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     }
 
 
-    public void addBot()
+    public void addBot(int addBotButtonIndex)
     {
         //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
         // not needed since players will change everything for the bot?
@@ -80,7 +80,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
         addToEmptyOrSmallestTeam(bot);
 
-        FindObjectOfType<MenuManager>().playerJoined(bot.transform, true);
+        FindObjectOfType<MenuManager>().playerJoined(bot.transform, true, addBotButtonIndex);
 
         bot.transform.parent = null;
         DontDestroyOnLoad(bot);
@@ -120,7 +120,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public void addToTeam(GameObject player, int i)
     {
         teams[i].players.Add(player);
-        playerIDs.Add(player);
+        //playerIDs.Add(player);
     }
 
     public void addToEmptyOrSmallestTeam(GameObject player)
@@ -204,6 +204,22 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return -1; //error, maybe throw ex
     }
 
+    public void remove(GameObject player)
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            // Found correct team
+            if (teams[i].players.Contains(player))
+            {
+                //foreach (GameObject p in teams[i].players)
+                //    if (p == player)
+                        //playerIDs.Remove(player);
+                        teams[i].players.Remove(player);
+                        return;
+            }
+        }
+    }
+
 
     public Color getColorOf(GameObject player)
     {
@@ -211,14 +227,14 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return teamColors[i];
     }
 
-    public GameObject getPlayerByID(int i)
+    /*public GameObject getPlayerByID(int i)
     {
         return playerIDs[i];
     }
     public int getPlayerId(GameObject player)
     {
         return playerIDs.IndexOf(player);
-    }
+    }*/
 
     public void increaseScore(GameObject player)
     {

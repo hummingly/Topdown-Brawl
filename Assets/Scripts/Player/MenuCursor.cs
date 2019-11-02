@@ -49,7 +49,7 @@ public class MenuCursor : MonoBehaviour
         if (results.Count > 0)
         {
             var emptySlot = true;
-            var addBot = false;
+            GameObject addBotButton = null;
 
             foreach(RaycastResult hitObj in results)
             {
@@ -74,11 +74,11 @@ public class MenuCursor : MonoBehaviour
 
 
                 if (hitObj.gameObject.name == "Add Bot Button")
-                    addBot = true;
+                    addBotButton = hitObj.gameObject;
             }
-
-            if (addBot && emptySlot)
-                FindObjectOfType<TeamManager>().addBot();//FindObjectOfType<MenuManager>().addBot();
+            
+            if (addBotButton && emptySlot)
+                FindObjectOfType<TeamManager>().addBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
         }
 
     }
