@@ -17,7 +17,8 @@ public class GameMode : ScriptableObject
     public int maxTeams = 2;
 
 
-    ////public enum WinConditions { Kills, Objective };
+    public enum WinCondition { Kills, Protecc };
+    public WinCondition winCondition;
     //public enum PointReward { OnKill, OnDestroy, OnOccupyTime, OnReturnFlag, OnGoal, None };
     //public PointReward pointsFor = PointReward.None; //skirmish or sandbox per default
 

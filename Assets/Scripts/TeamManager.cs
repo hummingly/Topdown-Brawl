@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,6 +13,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         public List<GameObject> players = new List<GameObject>();
         public int points;
+        public DestructibleTeamBlock protecc;
     }
 
     public List<Team> teams = new List<Team>();
@@ -32,7 +34,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
         teamColors = ExtensionMethods.Shuffle(teamColors);
 
-        for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
+        for(int i = 0; i < GetComponent<WinManager>().gameMode.maxTeams; i++)
             teams.Add(new Team());
     }
 
@@ -130,6 +132,15 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
     }
 
+    public void InitProteccs()
+    {
+        DestructibleTeamBlock[] proteccs = FindObjectsOfType<DestructibleTeamBlock>();
+
+        for (int t = 0; t < teams.Count; t++)
+        {
+            teams[t].protecc = proteccs[t];
+        }
+    }
 
     public void AddBot(int addBotButtonIndex)
     {
@@ -303,29 +314,22 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return playerIDs.IndexOf(player);
     }*/
 
-                    public void increaseScore(GameObject player)
+    public void increaseScore(GameObject player)
     {
         //find team that GO is in and add point
         int team = GetTeamOf(player);
 
         teams[team].points++;
     }
-
-    public bool SomeTeamWon(int pointsToWin)
-    {
-        //if bigger than gamemode max then won
-        foreach(Team t in teams)
-        {
-            if (t.points >= pointsToWin)
-                return true;
-        }
-
-        return false;
-    }
-
+    
     public int GetScore(int team)
     {
         return teams[team].points;
+    }
+
+    public List<Team> GetTeams()
+    {
+        return teams;
     }
 
 }

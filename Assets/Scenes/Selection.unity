@@ -2431,6 +2431,7 @@ GameObject:
   - component: {fileID: 723236033}
   - component: {fileID: 723236037}
   - component: {fileID: 723236036}
+  - component: {fileID: 723236038}
   m_Layer: 0
   m_Name: Game Logic (Static)
   m_TagString: Untagged
@@ -2472,7 +2473,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1fe5f7cb946a74cab93499dea883e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
   startGameplayAnimDur: 1
   spawnBeforeAnimDone: 0.333
 --- !u!4 &723236035
@@ -2557,6 +2557,19 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
   - {fileID: 21300000, guid: 00b93a1fc534e1d4086af46e443e9497, type: 3}
   mapImg: {fileID: 1689873875}
+--- !u!114 &723236038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723236032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf33e0ec3ff4adc46b19a2d63459be76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
 --- !u!1 &765712798
 GameObject:
   m_ObjectHideFlags: 0

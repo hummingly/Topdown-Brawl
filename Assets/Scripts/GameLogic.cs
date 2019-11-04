@@ -11,10 +11,10 @@ public class GameLogic : MonoBehaviour
     public static GameLogic Instance { get { return instance; } }
 
 
-    public GameMode gameMode;
 
     private UIManager uiManager;
     private TeamManager teams;
+    private WinManager winManager;
 
     private float mapSize;
 
@@ -28,7 +28,8 @@ public class GameLogic : MonoBehaviour
             Destroy(this.gameObject);     
         else
             instance = this; 
-
+        
+        winManager = GetComponent<WinManager>();
         teams = GetComponent<TeamManager>();
 
         SceneManager.sceneLoaded += SceneLoadeded;
@@ -38,8 +39,16 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
-        //gameMode.useTeams = true;
-        gameMode.pointsToWin = 8;
+
+    }
+
+    void Update()
+    {
+        //if bigger than gamemode max then won
+        if (winManager.TeamWon())
+        {
+            GameOver();
+        }
     }
 
 
@@ -88,6 +97,11 @@ public class GameLogic : MonoBehaviour
 
 
         teams.InitPlayers();
+
+        if (winManager.gameMode.winCondition == GameMode.WinCondition.Protecc)
+        {
+            teams.InitProteccs();
+        }
     }
 
 
@@ -97,12 +111,6 @@ public class GameLogic : MonoBehaviour
 
         // display new score in UI
         uiManager.UpdateScores();
-
-        //if bigger than gamemode max then won
-        if (teams.SomeTeamWon(gameMode.pointsToWin))
-        {
-            GameOver();
-        }
     }
 
     public void GameOver()

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e276c388bc4b0242818425ce83f2d1c, type: 3}
-  m_Name: Test Mode
+  m_Name: Protecc
   m_EditorClassIdentifier: 
-  name: Death Match
-  description: Most kills wins
-  pointsToWin: 8
+  name: Protecc
+  description: 
+  pointsToWin: 0
   stockCount: 0
   maxTeams: 2
-  winCondition: 0
+  winCondition: 1
