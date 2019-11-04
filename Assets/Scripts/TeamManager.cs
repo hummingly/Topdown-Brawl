@@ -151,7 +151,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
         if (AddToEmptyOrSmallestTeam(bot))
         {
-            FindObjectOfType<MenuManager>().playerJoined(bot.transform, true);
+            FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true);
             bot.transform.parent = null;
             DontDestroyOnLoad(bot);
         }
@@ -169,7 +169,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // first just add all to a new team
             if (AddToEmptyOrSmallestTeam(player.gameObject))
             {
-                FindObjectOfType<MenuManager>().playerJoined(player.transform);
+                FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
             }
             //TODO: check which player? write string P1 for example
         }
@@ -182,15 +182,15 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // for testing add to a new team each new player
             if (AddToEmptyOrSmallestTeam(player.gameObject))
             {
-                FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
-                player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
+                FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
+                player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
             }
         }
     }
 
     private void OnPlayerLeft(PlayerInput player)
     {
-        int team = getTeamOf(player.gameObject);
+        int team = GetTeamOf(player.gameObject);
         if (team > -1)
         {
             teams[team].players.Remove(player.gameObject);
@@ -228,23 +228,23 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             playerNrs.Add(player);
             playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
         }
-        return true
+        return true;
     }
 
-    public void AddToEmptyOrSmallestTeam(GameObject player)
+    public bool AddToEmptyOrSmallestTeam(GameObject player)
     {
         if (GetEmptyTeam() != -1)
-            AddToTeam(player, GetEmptyTeam());
+            return AddToTeam(player, GetEmptyTeam());
         else
-            AddToTeam(player, GetSmallestTeam());
+            return AddToTeam(player, GetSmallestTeam());
     }
 
     public void MoveTeam(GameObject player) //can only cycle ion one dir through teams
     {
-        int currentTeam = getTeamOf(player);
+        int currentTeam = GetTeamOf(player);
         if (currentTeam == -1)
         {
-            addToEmptyOrSmallestTeam(player);
+            AddToEmptyOrSmallestTeam(player);
             return;
         }
 
