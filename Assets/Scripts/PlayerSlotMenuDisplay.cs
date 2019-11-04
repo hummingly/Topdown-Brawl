@@ -16,10 +16,10 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
 
     public GameObject myPlayer; //or bot
 
-    public void setSlot(Transform player, Character character, Color col, bool bot, int playerNr)
+    public void SetSlot(Transform player, Character character, Color col, bool bot, int playerNr)
     {
-        setChar(character);
-        setCol(col);
+        SetChar(character);
+        SetCol(col);
         isBot = bot;
         myPlayer = player.gameObject;
 
@@ -30,14 +30,14 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
     }
 
 
-    public void setChar(Character character)
+    public void SetChar(Character character)
     {
         chara = character;
 
         displaySprite.sprite = chara.sprite;
     }
 
-    public void setCol(Color col)
+    public void SetCol(Color col)
     {
         displaySprite.color = col;
     }

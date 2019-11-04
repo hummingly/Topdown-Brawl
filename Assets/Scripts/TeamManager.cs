@@ -30,24 +30,24 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     {
         menu = FindObjectOfType<MenuManager>();
 
-        teamColors = ExtensionMethods.shuffle(teamColors);
+        teamColors = ExtensionMethods.Shuffle(teamColors);
 
         for(int i = 0; i < GetComponent<GameLogic>().gameMode.maxTeams; i++)
             teams.Add(new Team());
     }
 
 
-    public void saveCharacters()
+    public void SaveCharacters()
     {
         foreach (GameObject p in playerNrs)
         {
-            var cha = menu.getCharacterOfPlayer(p);
+            var cha = menu.GetCharacterOfPlayer(p);
 
             playerChars.Add(cha);//(menu.availableChars[ind]);
         }
     }
 
-    public void initPlayers()
+    public void InitPlayers()
     {
         // disable more joining
         //GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually; //here still added a cursor in gameplay still...
@@ -72,7 +72,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 {
                     Destroy(teams[t].players[p].gameObject);
 
-                    currPlayer = spawner.createBot();
+                    currPlayer = spawner.CreateBot();
                 }
                 else
                 {
@@ -111,8 +111,8 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 }
 
                 teams[t].players[p] = currPlayer;
-                spawner.playerJoined(currPlayer.transform);
-                currPlayer.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(currPlayer));
+                spawner.PlayerJoined(currPlayer.transform);
+                currPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currPlayer));
             }
         }
 
@@ -131,16 +131,16 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     }
 
 
-    public void addBot(int addBotButtonIndex)
+    public void AddBot(int addBotButtonIndex)
     {
         //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
         // not needed since players will change everything for the bot?
 
         GameObject bot = new GameObject("Empty Bot Cursor");
 
-        addToEmptyOrSmallestTeam(bot);
+        AddToEmptyOrSmallestTeam(bot);
 
-        FindObjectOfType<MenuManager>().playerJoined(bot.transform, true, addBotButtonIndex);
+        FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true, addBotButtonIndex);
 
         bot.transform.parent = null;
         DontDestroyOnLoad(bot);
@@ -156,9 +156,9 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
-            addToEmptyOrSmallestTeam(player.gameObject);
+            AddToEmptyOrSmallestTeam(player.gameObject);
 
-            FindObjectOfType<MenuManager>().playerJoined(player.transform);
+            FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
 
             //TODO: check which player? write string P1 for example
         }
@@ -169,15 +169,15 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
             // for testing add to a new team each new player
-            addToEmptyOrSmallestTeam(player.gameObject);
+            AddToEmptyOrSmallestTeam(player.gameObject);
 
-            FindObjectOfType<PlayerSpawner>().playerJoined(player.transform);
-            player.GetComponentInChildren<PlayerVisuals>().initColor(getColorOf(player.gameObject));
+            FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
+            player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
         }
     }
 
 
-    public void addToTeam(GameObject player, int i)
+    public void AddToTeam(GameObject player, int i)
     {
         teams[i].players.Add(player);
         //playerIDs.Add(player);
@@ -190,17 +190,17 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         }
     }
 
-    public void addToEmptyOrSmallestTeam(GameObject player)
+    public void AddToEmptyOrSmallestTeam(GameObject player)
     {
-        if (getEmptyTeam() != -1)
-            addToTeam(player, getEmptyTeam());
+        if (GetEmptyTeam() != -1)
+            AddToTeam(player, GetEmptyTeam());
         else
-            addToTeam(player, getSmallestTeam());
+            AddToTeam(player, GetSmallestTeam());
     }
 
-    public void moveTeam(GameObject player) //can only cycle ion one dir through teams
+    public void MoveTeam(GameObject player) //can only cycle ion one dir through teams
     {
-        int i = getTeamOf(player);
+        int i = GetTeamOf(player);
 
         teams[i].players.Remove(player);
         //print(i);
@@ -212,7 +212,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         teams[i].players.Add(player);
     }
 
-    public GameObject getRandomEnemy(GameObject player)
+    public GameObject GetRandomEnemy(GameObject player)
     {
         for (int i = 0; i < teams.Count; i++)
         {
@@ -220,7 +220,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             if(!teams[i].players.Contains(player))
             {
                 // get random active player
-                var randPlayers = ExtensionMethods.shuffle(teams[i].players);
+                var randPlayers = ExtensionMethods.Shuffle(teams[i].players);
                 foreach(GameObject p in randPlayers)
                 {
                     if (p.active)
@@ -232,7 +232,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return null;
     }
 
-    private int getEmptyTeam()
+    private int GetEmptyTeam()
     {
         for (int i = 0; i < teams.Count; i++)
         {
@@ -242,7 +242,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return -1;
     }
 
-    private int getSmallestTeam()
+    private int GetSmallestTeam()
     {
         int smallestTeam = int.MaxValue;
         int smallestTeamPlayers = int.MaxValue;
@@ -257,7 +257,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return smallestTeam;
     }
 
-    public int getTeamOf(GameObject player) //for now jsut 0 or 1, limited teams
+    public int GetTeamOf(GameObject player) //for now jsut 0 or 1, limited teams
     {
         for(int i = 0; i < teams.Count; i++)
         {
@@ -271,7 +271,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return -1; //error, maybe throw ex
     }
 
-    public void remove(GameObject player)
+    public void Remove(GameObject player)
     {
         for (int i = 0; i < teams.Count; i++)
         {
@@ -288,9 +288,9 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     }
 
 
-    public Color getColorOf(GameObject player)
+    public Color GetColorOf(GameObject player)
     {
-        int i = getTeamOf(player);
+        int i = GetTeamOf(player);
         return teamColors[i];
     }
 
@@ -306,12 +306,12 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                     public void increaseScore(GameObject player)
     {
         //find team that GO is in and add point
-        int team = getTeamOf(player);
+        int team = GetTeamOf(player);
 
         teams[team].points++;
     }
 
-    public bool someTeamWon(int pointsToWin)
+    public bool SomeTeamWon(int pointsToWin)
     {
         //if bigger than gamemode max then won
         foreach(Team t in teams)
@@ -323,7 +323,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return false;
     }
 
-    public int getScore(int team)
+    public int GetScore(int team)
     {
         return teams[team].points;
     }

@@ -55,10 +55,10 @@ public class LevelManager : MonoBehaviour
             Random.InitState(seed);
 
         // Generate map bounds
-        placeBlock(BlockType.Rect, new Vector2( topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, bounds);
-        placeBlock(BlockType.Rect, new Vector2(-topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, bounds);
-        placeBlock(BlockType.Rect, new Vector2(0,  topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, bounds);
-        placeBlock(BlockType.Rect, new Vector2(0, -topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, bounds);
+        PlaceBlock(BlockType.Rect, new Vector2( topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, bounds);
+        PlaceBlock(BlockType.Rect, new Vector2(-topRight.x, 0), new Vector2(1, halfLevelHeight * 2), Quaternion.identity, bounds);
+        PlaceBlock(BlockType.Rect, new Vector2(0,  topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, bounds);
+        PlaceBlock(BlockType.Rect, new Vector2(0, -topRight.y), new Vector2(halfLevelWidth * 2, 1),  Quaternion.identity, bounds);
 
 
         // Actually generate map pieces
@@ -71,7 +71,7 @@ public class LevelManager : MonoBehaviour
                 Vector2 randPos = new Vector2(Random.Range(-halfLevelWidth, halfLevelWidth), Random.Range(-halfLevelHeight, halfLevelHeight));
                 Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
             }
         }
         if (symm == Symmetry.x)
@@ -81,8 +81,8 @@ public class LevelManager : MonoBehaviour
                 Vector2 randPos = new Vector2(Random.Range(0, halfLevelWidth), Random.Range(-halfLevelHeight, halfLevelHeight));
                 Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, solid);
             }
         }
         if (symm == Symmetry.xy)
@@ -92,10 +92,10 @@ public class LevelManager : MonoBehaviour
                 Vector2 randPos = new Vector2(Random.Range(0, halfLevelWidth), Random.Range(0, halfLevelHeight));
                 Vector2 randScale = new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-                placeBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, solid);
-                placeBlock(BlockType.Rect, new Vector2(-randPos.x,-randPos.y), randScale, Quaternion.identity, solid);
-                placeBlock(BlockType.Rect, new Vector2(randPos.x, -randPos.y), randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, randPos, randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, new Vector2(-randPos.x, randPos.y), randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, new Vector2(-randPos.x,-randPos.y), randScale, Quaternion.identity, solid);
+                PlaceBlock(BlockType.Rect, new Vector2(randPos.x, -randPos.y), randScale, Quaternion.identity, solid);
             }
         }
 
@@ -103,8 +103,8 @@ public class LevelManager : MonoBehaviour
         Vector2 randPos2 = new Vector2(Random.Range(halfLevelWidth * 0.2f, halfLevelWidth * 0.9f), 0);
         Vector2 randScale2 = Vector2.one * 4; //new Vector2(Random.Range(minMaxScaleMult.x, minMaxScaleMult.y), Random.Range(minMaxScaleMult.x, minMaxScaleMult.y)) * levelSize;
 
-        placeSpawnZone(randPos2, randScale2, spawnZones);
-        placeSpawnZone(new Vector2(-randPos2.x, randPos2.y), randScale2, spawnZones);
+        PlaceSpawnZone(randPos2, randScale2, spawnZones);
+        PlaceSpawnZone(new Vector2(-randPos2.x, randPos2.y), randScale2, spawnZones);
     }
 
 
@@ -113,7 +113,7 @@ public class LevelManager : MonoBehaviour
         
     }
 
-    private void placeSpawnZone(Vector2 pos, Vector2 scale, Transform parent)
+    private void PlaceSpawnZone(Vector2 pos, Vector2 scale, Transform parent)
     {
         Transform s = Instantiate(spawnArea, pos, Quaternion.identity).transform;
         s.localScale = scale;
@@ -121,7 +121,7 @@ public class LevelManager : MonoBehaviour
         // TODO: clear space if any solid overlap boxray & scale & place individual spawn points apart (depending on team size later 2/3)
     }
 
-    private Block placeBlock(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, Transform parent)//(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, bool moveable, float weight, bool destructible, Color color, Transform parent)
+    private Block PlaceBlock(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, Transform parent)//(BlockType type, Vector2 pos, Vector2 scale, Quaternion rot, bool moveable, float weight, bool destructible, Color color, Transform parent)
     {
         GameObject block = null;
         if (type == BlockType.Rect) block = rect;

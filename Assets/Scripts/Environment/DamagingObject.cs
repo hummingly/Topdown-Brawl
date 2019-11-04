@@ -34,7 +34,7 @@ public class DamagingObject : MonoBehaviour
         if(damageOnSqueeze)
         {
             // Raycast in moving dir
-            var moveDir = movement.getMoveDir();
+            var moveDir = movement.GetMoveDir();
 
             if (moveDir.magnitude >= damageSpeedThresh)
             {
@@ -82,7 +82,7 @@ public class DamagingObject : MonoBehaviour
             var damageable = collision.gameObject.GetComponent<IDamageable>();
             if (damageable)
             {
-                var moveDir = movement.getMoveDir();
+                var moveDir = movement.GetMoveDir();
 
                 if (moveDir.magnitude >= damageSpeedThresh)
                 {
@@ -99,7 +99,7 @@ public class DamagingObject : MonoBehaviour
                                 damageable.ReduceHealth(damage);
                                 var rb = damageable.GetComponent<Rigidbody2D>();
                                 if (rb)
-                                    rb.AddForce(moveDir * pushForce + new Vector2(moveDir.y * ExtensionMethods.randNegPos(), moveDir.x * ExtensionMethods.randNegPos()) * pushForceSide, ForceMode2D.Impulse);
+                                    rb.AddForce(moveDir * pushForce + new Vector2(moveDir.y * ExtensionMethods.RandNegPos(), moveDir.x * ExtensionMethods.RandNegPos()) * pushForceSide, ForceMode2D.Impulse);
                             }
                         }
                     }

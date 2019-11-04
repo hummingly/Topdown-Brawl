@@ -29,13 +29,13 @@ public class BlockFake3D : MonoBehaviour
         {
             // Top one different color
             if (i == steps-1)
-                prepareNewSprite(ref tops, "Top", 2, orgCol);
+                PrepareNewSprite(ref tops, "Top", 2, orgCol);
             else
-                prepareNewSprite(ref tops, "Top", 1, wallColor);
+                PrepareNewSprite(ref tops, "Top", 1, wallColor);
         }
         for (int i = 0; i < steps; i++)
         {
-            prepareNewSprite(ref bots, "Bot", -1, wallColor);
+            PrepareNewSprite(ref bots, "Bot", -1, wallColor);
         }
     }
 
@@ -67,7 +67,7 @@ public class BlockFake3D : MonoBehaviour
     }
 
 
-    private void prepareNewSprite(ref List<Transform> ts, string name, int orderInLayer, Color col)
+    private void PrepareNewSprite(ref List<Transform> ts, string name, int orderInLayer, Color col)
     {
         var t = new GameObject(name).transform;
         ts.Add(t);

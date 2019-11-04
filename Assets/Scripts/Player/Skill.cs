@@ -20,7 +20,7 @@ public abstract class Skill : MonoBehaviour
     //[SerializeField] protected float inputTolerance = 0.8f;
 
     protected float delayTimer;
-    protected float shootInput;
+    protected float actionInput;
     
     void Start()
     {
@@ -33,17 +33,17 @@ public abstract class Skill : MonoBehaviour
         // https://forum.unity.com/threads/how-to-call-update-from-a-class-thats-not-inheriting-from-monobehaviour.451954/
         delayTimer -= Time.deltaTime;
 
-        if (shootInput > 0 && delayTimer <= 0)
+        if (actionInput > 0 && delayTimer <= 0)
         {
-            doAttack();
+            DoAttack();
         }   
     }
 
-    public void doAttack()
+    public void DoAttack()
     {
         delayTimer = cooldown;
 
-        Attack(playerMovement.getLastRot());
+        Attack(playerMovement.GetLastRot());
     }
     
     protected void OnRightTrigger(InputValue value)
@@ -73,7 +73,7 @@ public abstract class Skill : MonoBehaviour
     // for bot shooting
     public void SetAttacking(bool b)
     {
-        shootInput = b ? 1 : 0;
+        actionInput = b ? 1 : 0;
     }
 
 }

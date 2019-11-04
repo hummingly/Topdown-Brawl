@@ -10,14 +10,14 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private GameObject dashPartic;
 
 
-    public void doDashPartic(Vector2 pos, Vector2 playerRot)
+    public void DoDashPartic(Vector2 pos, Vector2 playerRot)
     {
         var exp = Instantiate(dashPartic, pos, Quaternion.identity).transform;
         exp.forward = -playerRot;
     }
 
     // for now on spawn, but maybe rather an explosion on kill? or big dmg  !!!!!!!!!!
-    public void squareParticle(Vector2 pos)
+    public void SquareParticle(Vector2 pos)
     {
         // a circle that (almost) starts at max size, is rotated and has a color, then a mask that is rotated starts in middle and gets bigger until the whole thing is a hole, then delete
 

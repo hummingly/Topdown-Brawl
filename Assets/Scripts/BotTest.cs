@@ -69,32 +69,32 @@ public class BotTest : MonoBehaviour
         // if hasn't been added bcz testing in dev scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
         {
-            FindObjectOfType<TeamManager>().addToEmptyOrSmallestTeam(gameObject);
-            GetComponentInChildren<PlayerVisuals>().initColor(FindObjectOfType<TeamManager>().getColorOf(gameObject));
+            FindObjectOfType<TeamManager>().AddToEmptyOrSmallestTeam(gameObject);
+            GetComponentInChildren<PlayerVisuals>().InitColor(FindObjectOfType<TeamManager>().GetColorOf(gameObject));
         }
     }
 
     void Start()
     {
-        var myTeam = teams.getTeamOf(gameObject);
+        var myTeam = teams.GetTeamOf(gameObject);
         var allEntities = FindObjectsOfType<PlayerMovement>();
 
         foreach (PlayerMovement pm in allEntities)
         {
-            if (teams.getTeamOf(pm.gameObject) != myTeam)
+            if (teams.GetTeamOf(pm.gameObject) != myTeam)
                 possibleTargets.Add(pm.gameObject);
         }
     }
 
     void Update()
     {
-        currPlayerChaseOffset += playerChaseOffsetChangeSpd * ExtensionMethods.randNegPos();
+        currPlayerChaseOffset += playerChaseOffsetChangeSpd * ExtensionMethods.RandNegPos();
         currPlayerChaseOffset = Mathf.Clamp(currPlayerChaseOffset, playerChaseOffsetMinMax.x, playerChaseOffsetMinMax.y);
-        currStrafe += strafeChangeSpd * ExtensionMethods.randNegPos();
+        currStrafe += strafeChangeSpd * ExtensionMethods.RandNegPos();
         currStrafe = Mathf.Clamp(currStrafe, -maxStrafe, maxStrafe);
 
 
-        var moveObstAdjust = obstacleAhead();
+        var moveObstAdjust = ObstacleAhead();
         var possibleMaxAdjust = (90 * rays) / 2; //not accurate???
         moveObstAdjust = Mathf.Clamp(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust);
         // inverted, when big then small
@@ -102,14 +102,14 @@ public class BotTest : MonoBehaviour
             moveObstAdjust = possibleMaxAdjust - moveObstAdjust;
         if (moveObstAdjust < 0)
             moveObstAdjust =-possibleMaxAdjust + moveObstAdjust;
-        moveObstAdjust = ExtensionMethods.remap(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
+        moveObstAdjust = ExtensionMethods.Remap(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
 
 
 
         // Is wandering (enum?)
         if (!isChasing)
         {
-            Transform enemySeen = enemyInSight();
+            Transform enemySeen = EnemyInSight();
 
             // Wander around
             if (!enemySeen)
@@ -130,7 +130,7 @@ public class BotTest : MonoBehaviour
                     wanderGeneralDir = (Vector3.zero - transform.position).normalized;
                 if (wanderTend == WanderTendency.RandomEnemy)
                 {
-                    var target = teams.getRandomEnemy(gameObject);
+                    var target = teams.GetRandomEnemy(gameObject);
                     if(target)
                         wanderGeneralDir = (target.transform.position - transform.position).normalized;
                 }
@@ -145,8 +145,8 @@ public class BotTest : MonoBehaviour
                 moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveObstAdjust);
 
                 lookDir = moveDir;
-                playerMovement.setRot(lookDir);
-                playerMovement.setMove(moveDir * wanderSpeed);
+                playerMovement.SetRot(lookDir);
+                playerMovement.SetMove(moveDir * wanderSpeed);
 
                 skill.SetAttacking(false);
             }
@@ -188,8 +188,8 @@ public class BotTest : MonoBehaviour
                 moveDir = ExtensionMethods.RotatePointAroundPivot(moveDir, Vector2.zero, moveObstAdjust);
 
                 lookDir = target.position + (Vector3)(Random.insideUnitCircle.normalized * maxRandAimOffset) - transform.position;
-                playerMovement.setRot(lookDir);
-                playerMovement.setMove(moveDir * chasingSpeed);
+                playerMovement.SetRot(lookDir);
+                playerMovement.SetMove(moveDir * chasingSpeed);
             }
             else //stop chasing
             {
@@ -199,7 +199,7 @@ public class BotTest : MonoBehaviour
     }
 
 
-    private Transform enemyInSight()
+    private Transform EnemyInSight()
     {
         Vector2 pointA = transform.position;
 
@@ -233,7 +233,7 @@ public class BotTest : MonoBehaviour
         return null;
     }
 
-    private float obstacleAhead()
+    private float ObstacleAhead()
     {
         float steerDir = 0;
 
@@ -269,7 +269,7 @@ public class BotTest : MonoBehaviour
 
 
 
-    public void gotHit(GameObject hitBy)
+    public void GotHit(GameObject hitBy)
     {
         if (!isChasing)
         {
@@ -281,7 +281,7 @@ public class BotTest : MonoBehaviour
         }
     }
 
-    public void stopChasing()
+    public void StopChasing()
     {
         isChasing = false;
     }

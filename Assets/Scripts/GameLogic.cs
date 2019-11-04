@@ -50,11 +50,11 @@ public class GameLogic : MonoBehaviour
         // Regularly loaded into gameplay from character selection
         if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
-            StartCoroutine(initGameplay());
+            StartCoroutine(InitGameplay());
         }
     }
 
-    private IEnumerator initGameplay()
+    private IEnumerator InitGameplay()
     {
         uiManager = FindObjectOfType<UIManager>();
 
@@ -87,27 +87,27 @@ public class GameLogic : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
 
-        teams.initPlayers();
+        teams.InitPlayers();
     }
 
 
-    public void increaseScore(GameObject player)
+    public void IncreaseScore(GameObject player)
     {
         teams.increaseScore(player);
 
         // display new score in UI
-        uiManager.updateScores();
+        uiManager.UpdateScores();
 
         //if bigger than gamemode max then won
-        if (teams.someTeamWon(gameMode.pointsToWin))
+        if (teams.SomeTeamWon(gameMode.pointsToWin))
         {
-            gameOver();
+            GameOver();
         }
     }
 
-    public void gameOver()
+    public void GameOver()
     {
-        uiManager.setGameOverUI();
+        uiManager.SetGameOverUI();
         Time.timeScale = 0;
     }
 }

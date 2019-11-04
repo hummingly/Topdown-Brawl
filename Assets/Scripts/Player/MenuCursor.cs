@@ -24,13 +24,13 @@ public class MenuCursor : MonoBehaviour
         gr = FindObjectOfType<GraphicRaycaster>();
     }
 
-    public void setup(int playerNr, Color teamColor)
+    public void Setup(int playerNr, Color teamColor)
     {
         playerNrText.text = "P" + (playerNr + 1).ToString("0");
-        setColor(teamColor);
+        SetColor(teamColor);
     }
 
-    public void setColor(Color teamColor)
+    public void SetColor(Color teamColor)
     {
         spriteTeamCol.color = teamColor;
     }
@@ -71,20 +71,20 @@ public class MenuCursor : MonoBehaviour
                     FindObjectOfType<MenuManager>().Play();
 
                 if (hitObj.gameObject.name == "Char Up")
-                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, hitObj.gameObject, 1);
+                    FindObjectOfType<MenuManager>().ToggleCharacter(gameObject, hitObj.gameObject, 1);
 
                 if (hitObj.gameObject.name == "Char Down")
-                    FindObjectOfType<MenuManager>().toggleCharacter(gameObject, hitObj.gameObject, - 1);
+                    FindObjectOfType<MenuManager>().ToggleCharacter(gameObject, hitObj.gameObject, - 1);
 
 
                 if (hitObj.gameObject.name == "Change Team Button")
                 {
-                    FindObjectOfType<MenuManager>().togglePlayerTeam(gameObject, hitObj.gameObject);
+                    FindObjectOfType<MenuManager>().TogglePlayerTeam(gameObject, hitObj.gameObject);
                     emptySlot = false;
                 }
 
                 if (hitObj.gameObject.name == "Map Button Toggle")
-                    FindObjectOfType<MenuManager>().toggleMap();
+                    FindObjectOfType<MenuManager>().ToggleMap();
 
 
                 if (hitObj.gameObject.name == "Add Bot Button")
@@ -92,7 +92,7 @@ public class MenuCursor : MonoBehaviour
             }
             
             if (addBotButton && emptySlot)
-                FindObjectOfType<TeamManager>().addBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
+                FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
         }
 
     }

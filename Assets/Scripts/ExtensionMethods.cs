@@ -6,13 +6,13 @@ using UnityEngine;
 
 public static class ExtensionMethods
 {
-    public static float remap(float value, float low1, float high1, float low2, float high2)
+    public static float Remap(float value, float low1, float high1, float low2, float high2)
     {
         return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
     }
 
 
-    public static float randNegPos()
+    public static float RandNegPos()
     {
         return (Random.Range(0, 2) * 2) - 1;
     }
@@ -40,7 +40,7 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    public static int[] shuffle(int[] array)//object[] shuffle(object[] array)
+    public static int[] Shuffle(int[] array)//object[] shuffle(object[] array)
     {
         for (int t = 0; t < array.Length; t++)
         {
@@ -52,7 +52,7 @@ public static class ExtensionMethods
         return array;
     }
 
-    public static Color[] shuffle(Color[] array)//object[] shuffle(object[] array)
+    public static Color[] Shuffle(Color[] array)//object[] shuffle(object[] array)
     {
         for (int t = 0; t < array.Length; t++)
         {
@@ -64,7 +64,7 @@ public static class ExtensionMethods
         return array;
     }
 
-    public static List<GameObject> shuffle(List<GameObject> array)//object[] shuffle(object[] array)
+    public static List<GameObject> Shuffle(List<GameObject> array)//object[] shuffle(object[] array)
     {
         for (int t = 0; t < array.Count; t++)
         {

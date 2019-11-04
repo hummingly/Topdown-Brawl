@@ -25,12 +25,12 @@ public class Projectile : MonoBehaviour
 
     }
 
-    public void setOwner(GameObject owner)
+    public void SetOwner(GameObject owner)
     {
         this.owner = owner;
     }
 
-    public void setDamage(int damage)
+    public void SetDamage(int damage)
     {
         this.damage = damage;
     }
@@ -46,19 +46,19 @@ public class Projectile : MonoBehaviour
 
         if (damageAble)
         {
-            var sameTeam = teams.getTeamOf(owner) == teams.getTeamOf(damageAble.gameObject);
+            var sameTeam = teams.GetTeamOf(owner) == teams.GetTeamOf(damageAble.gameObject);
 
             // only damage enemys (-1 case isn't caught)
             if (!sameTeam)
             {
                 if (damageAble.GetComponent<BotTest>())
-                    damageAble.GetComponent<BotTest>().gotHit(owner); //order important so bot loses agro on death
+                    damageAble.GetComponent<BotTest>().GotHit(owner); //order important so bot loses agro on death
 
                 bool didKill = damageAble.ReduceHealth(damage);
 
                 if (didKill)
                 {
-                    FindObjectOfType<GameLogic>().increaseScore(owner);
+                    FindObjectOfType<GameLogic>().IncreaseScore(owner);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.GetComponent<PlayerMovement>())
             {
-                if(teams.getTeamOf(owner) != teams.getTeamOf(damageAble.gameObject))
+                if(teams.GetTeamOf(owner) != teams.GetTeamOf(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.AddForce(knockDir * knockStrengthPlayer, ForceMode2D.Impulse); //TODO: instead of value for objects & for enemys: factor in mas and drag

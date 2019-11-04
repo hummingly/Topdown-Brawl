@@ -25,7 +25,7 @@ public class GameStateManager : MonoBehaviour
         
     }
 
-    public void toggleMap()
+    public void ToggleMap()
     {
         currentMapInd++;
         if (currentMapInd > mapRange.y)

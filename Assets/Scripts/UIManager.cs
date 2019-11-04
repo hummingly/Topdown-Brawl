@@ -21,16 +21,16 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void updateScores()
+    public void UpdateScores()
     {
         for(int i = 0; i < teams.teams.Count; i++)
         {
             TextMeshProUGUI text = scores[i].GetComponent<TextMeshProUGUI>();
-            text.SetText(teams.getScore(i).ToString());
+            text.SetText(teams.GetScore(i).ToString());
         }
     }
 
-    public void setGameOverUI()
+    public void SetGameOverUI()
     {
         gameOver.SetActive(true);
     }

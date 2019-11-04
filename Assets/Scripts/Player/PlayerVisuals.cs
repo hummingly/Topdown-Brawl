@@ -18,13 +18,13 @@ public class PlayerVisuals : MonoBehaviour
         
     }
 
-    public void initColor(Color col)
+    public void InitColor(Color col)
     {
-        setColorAll(col);
+        SetColorAll(col);
         mainColor = col;
     }
 
-    public void setDashUsedColor()
+    public void SetDashUsedColor()
     {
         var darkColor = mainColor;
         float H;
@@ -34,14 +34,14 @@ public class PlayerVisuals : MonoBehaviour
         V = dashUsedBrigthness;
         darkColor = Color.HSVToRGB(H,S,V);
         //print(darkColor);
-        setColorAll(darkColor);
+        SetColorAll(darkColor);
     }
-    public void setMainColor()
+    public void SetMainColor()
     {
-        setColorAll(mainColor);
+        SetColorAll(mainColor);
     }
 
-    private void setColorAll(Color col)
+    private void SetColorAll(Color col)
     {
         foreach (SpriteRenderer spr in GetComponentsInChildren<SpriteRenderer>())
             spr.color = col;

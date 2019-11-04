@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     {
         dashTimer -= Time.deltaTime;
         if(dashTimer <= 0 && visuals)
-            visuals.setMainColor();
+            visuals.SetMainColor();
     }
 
     private void FixedUpdate()
@@ -78,15 +78,15 @@ public class PlayerMovement : MonoBehaviour
 
         
         // TODO: instead add torque for physics! OR smooth visually
-        rotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
+        RotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
 
-        breathSpeed = getBreathSpeed();
-        counter = (counter + 1) % breathSpeed;
+        //breathSpeed = GetBreathSpeed();
+        //counter = (counter + 1) % breathSpeed;
 
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
-
-    private int getBreathSpeed()
+    /*
+    private int GetBreathSpeed()
     {
         if (velocity < 4)
         {
@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         //return Mathf.RoundToInt(velocity * 4f);
     }
 
-    private float getBreathStrength()
+    private float GetBreathStrength()
     {
         if (velocity < 1)
         {
@@ -116,19 +116,19 @@ public class PlayerMovement : MonoBehaviour
         //return velocity * 3;
     }
 
-    private float addBreathing(float desiredRot)
+    private float AddBreathing(float desiredRot)
     {
         if (counter == 0)
         {
             if (breathing > 0)
-                breathing = getBreathStrength() * -1;
+                breathing = GetBreathStrength() * -1;
             else
-                breathing = getBreathStrength()*5;
+                breathing = GetBreathStrength()*5;
             return desiredRot + breathing;
         }
         return desiredRot;
     }
-
+    */
 
     // TODO: refactor out into input script
     private void OnA()
@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         if(dashTimer <= 0)
         {
             dashTimer = dashCooldown;
-            visuals.setDashUsedColor();
+            visuals.SetDashUsedColor();
 
             // if not using left stick to move, dash to look direction or right stick
             Vector2 dashDir;
@@ -152,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
 
 
-            effects.doDashPartic(transform.position, dashDir);
+            effects.DoDashPartic(transform.position, dashDir);
         }
     }
     private void OnMove(InputValue value)
@@ -166,21 +166,21 @@ public class PlayerMovement : MonoBehaviour
 
 
     // bot setters
-    public void setMove(Vector2 val)
+    public void SetMove(Vector2 val)
     {
         moveInput = val;
     }
-    public void setRot(Vector2 val)
+    public void SetRot(Vector2 val)
     {
         rotInput = val;
     }
-    public Vector2 getLastRot()
+    public Vector2 GetLastRot()
     {
         return lastRotInput;
     }
 
 
-    private void rotateToRightStick()
+    private void RotateToRightStick()
     {
         // Always rotate to last input dir
         if (rotInput.magnitude > inputStartRotThresh) // 0 is immediety input, but weird cause snaps to L/R/U/D
