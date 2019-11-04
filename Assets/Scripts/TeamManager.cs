@@ -11,7 +11,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     [System.Serializable]
     public class Team //or struct?
     {
-        public List<GameObject> players = new List<GameObject>();
+        public List<GameObject> players;
         public int points;
 
         public Team(int teamSize)
@@ -145,7 +145,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     public void AddBot(int addBotButtonIndex)
     {
         //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
-        // not needed since players will change everything for the bot?
+        // not needed since players will change everything for the bot?                   
 
         GameObject bot = new GameObject("Empty Bot Cursor");
 
@@ -185,15 +185,6 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
                 player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
             }
-        }
-    }
-
-    private void OnPlayerLeft(PlayerInput player)
-    {
-        int team = GetTeamOf(player.gameObject);
-        if (team > -1)
-        {
-            teams[team].players.Remove(player.gameObject);
         }
     }
 
@@ -336,7 +327,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 //    if (p == player)
                         //playerIDs.Remove(player);
                         teams[i].players.Remove(player);
-                        return;
+                        break;
             }
         }
     }
