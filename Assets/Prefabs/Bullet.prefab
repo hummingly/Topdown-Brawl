@@ -69,6 +69,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  knockStrength: 20
+  knockStrengthPlayer: 100
+  knockKeepOrgVel: 0.5
 --- !u!61 &3289076920080764759
 BoxCollider2D:
   m_ObjectHideFlags: 0

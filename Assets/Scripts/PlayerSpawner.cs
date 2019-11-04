@@ -13,12 +13,14 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float respawnTime = 3;
     [SerializeField] private float zoomBefore = 0.3f;
     [SerializeField] private float stayAfterDeath = 0.3f;
+    [SerializeField] private float spawnPosBlockTime = 0.3f;
 
     private GameLogic gameLogic;
     private TeamManager teams;
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
+    [SerializeField] private List<List<float>> spawnPosTimers = new List<List<float>>();
 
     void Awake()
     {
@@ -26,29 +28,48 @@ public class PlayerSpawner : MonoBehaviour
         teams = FindObjectOfType<TeamManager>();
         effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
+
+
+        for (int i = 0; i < teams.teams.Count; i++)
+        {
+            //spawnPosTimers.Add(new List<float>(teams.teams[i].players.Count));
+
+            // shouldn't be necessary?
+            var list = new List<float>();
+            for (int j = 0; j < teams.teams[i].players.Count; j++)
+                list.Add(0); 
+            spawnPosTimers.Add(list);
+        }
     }
 
     void Update()
     {
-        
+        foreach(List<float> timers in spawnPosTimers)
+        {
+            for(int i = 0; i < timers.Count; i++)
+            {
+                timers[i] -= Time.deltaTime;
+            }
+        }
     }
 
 
 
 
-    public void playerDied(PlayerStats player)
+
+    public void PlayerDied(PlayerStats player)
     {
-        StartCoroutine(respawn(player));
+        StartCoroutine(Respawn(player));
     }
 
     // For joining player manually from preselection
-    public GameObject spawnPlayer()
+    public GameObject CreatePlayer()
     {
         var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
 
         return player.gameObject;
     }
-    public GameObject spawnBot()
+    public GameObject CreateBot()
     {
         var player = Instantiate(botPrefab, Vector2.zero, Quaternion.identity).transform;
 
@@ -56,9 +77,9 @@ public class PlayerSpawner : MonoBehaviour
     }
 
     // For normal debug playign from gameplay scene
-    public void playerJoined(Transform player)//void OnPlayerJoined(PlayerInput player)
+    public void PlayerJoined(Transform player)//void OnPlayerJoined(PlayerInput player)
     {
-        spawnPlayer(player.transform);
+        SpawnPlayer(player.transform);
     }
 
     
@@ -67,9 +88,9 @@ public class PlayerSpawner : MonoBehaviour
 
 
 
-    IEnumerator respawn(PlayerStats player)
+    IEnumerator Respawn(PlayerStats player)
     {
-        setPlayerActive(false, player);
+        SetPlayerActive(false, player);
         //player.GetComponent<Rigidbody2D>().reset(); // TODO: reset movement -> rb.velocity / angularVelocity and player inputDir(?)
         camTargetGroup.RemoveMember(player.transform);
 
@@ -87,7 +108,7 @@ public class PlayerSpawner : MonoBehaviour
 
         // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
         yield return new WaitForSeconds(respawnTime - stayAfterDeath - zoomBefore);
-        var spawnPos = getSpawnArea(player.transform);
+        var spawnPos = GetSpawnArea(player.transform);
         placeholder = new GameObject().transform;
         placeholder.position = spawnPos;
         camTargetGroup.AddMember(placeholder, 1, 1);
@@ -96,25 +117,25 @@ public class PlayerSpawner : MonoBehaviour
         yield return new WaitForSeconds(zoomBefore);
         camTargetGroup.RemoveMember(placeholder);
 
-        setPlayerActive(true, player);
+        SetPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue);
-        spawnPlayer(player.transform, spawnPos);
+        SpawnPlayer(player.transform, spawnPos);
     }
 
-    private void spawnPlayer(Transform player)
+    private void SpawnPlayer(Transform player)
     {
-        spawnPlayer(player, getSpawnArea(player));
+        SpawnPlayer(player, GetSpawnArea(player));
     }
 
-    private void spawnPlayer(Transform player, Vector2 pos)
+    private void SpawnPlayer(Transform player, Vector2 pos)
     {
         player.position = pos;
         camTargetGroup.AddMember(player.transform, 1, 1);
 
-        effectManager.squareParticle(player.position);
+        effectManager.SquareParticle(player.position);
     }
 
-    private void setPlayerActive(bool b, PlayerStats player)
+    private void SetPlayerActive(bool b, PlayerStats player)
     {
         //player.gameObject.SetActive(b);
 
@@ -132,15 +153,32 @@ public class PlayerSpawner : MonoBehaviour
     }
 
 
-    private Vector2 getSpawnArea(Transform player)
+    private Vector2 GetSpawnArea(Transform player)
     {
-        int team = teams.getTeamOf(player.gameObject);
+        int team = teams.GetTeamOf(player.gameObject);
+
+
+        // Get an open spawn point
+        int pos = 0;
+        var timers = spawnPosTimers[team];
+
+        for (int i = 0; i < timers.Count; i++)
+        {
+            if (timers[i] <= 0)
+            {
+                pos = i;
+                timers[i] = spawnPosBlockTime;
+                break;
+            }
+        }
+        
 
         // Spawn in one of the premade points in the right spawn zone
-        return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
+        //return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
+        return spawnAreas[team].GetChild(pos).position;
     }
 
-    private int getPlayerTeam() // 0 or 1 for now
+    private int GetPlayerTeam() // 0 or 1 for now
     {
         return Random.Range(0, 2);
     }

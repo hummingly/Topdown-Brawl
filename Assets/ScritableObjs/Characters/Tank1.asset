@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Idk
   description: 
-  sprite: {fileID: -7017378215715786011, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
+  prefab: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 219ad33622d42234a9c2ebcb0bad1044, type: 3}
   role: 0
   roleIcon: {fileID: 0}

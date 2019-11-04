@@ -138,12 +138,8 @@ public class MovingObject : MonoBehaviour
     }*/
 
 
-    public Vector2 getMoveDir()
+    public Vector2 GetMoveDir()
     {
-        //return rb.velocity; won't work since using movePosition
-
-        //return direction;
-
         return lastDir;
     }
 }

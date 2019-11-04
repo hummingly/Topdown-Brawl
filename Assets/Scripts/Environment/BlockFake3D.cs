@@ -29,41 +29,45 @@ public class BlockFake3D : MonoBehaviour
         {
             // Top one different color
             if (i == steps-1)
-                prepareNewSprite(ref tops, "Top", 2, orgCol);
+                PrepareNewSprite(ref tops, "Top", 2, orgCol);
             else
-                prepareNewSprite(ref tops, "Top", 1, wallColor);
+                PrepareNewSprite(ref tops, "Top", 1, wallColor);
         }
         for (int i = 0; i < steps; i++)
         {
-            prepareNewSprite(ref bots, "Bot", -1, wallColor);
+            PrepareNewSprite(ref bots, "Bot", -1, wallColor);
         }
-
-
     }
 
 
-    // Rotate top and bottom sprites so that it looks 3d from the camera pos
+    // Rotate the position of the top and bottom sprites so that it looks 3d from the camera pos
     void LateUpdate()
     {
-        for (int i = 1; i <= tops.Count; i++)
-        {
-            tops[i - 1].transform.localPosition = (transform.position - cam.position).normalized;// new Vector2(0,1);
-            tops[i - 1].transform.localPosition = new Vector2(tops[i - 1].transform.localPosition.x / transform.localScale.x,
-                                                              tops[i - 1].transform.localPosition.y / transform.localScale.y);
-            tops[i - 1].transform.localPosition = tops[i - 1].transform.localPosition * maxOffset * ((float)i / tops.Count);
-    }
+        Vector2 topDir = (transform.position - cam.position).normalized;
+        topDir = ExtensionMethods.RotatePointAroundPivot(topDir, Vector2.zero, -transform.eulerAngles.z);
 
         for (int i = 1; i <= tops.Count; i++)
         {
-            bots[i - 1].transform.localPosition = (cam.position - transform.position).normalized;// new Vector2(0,1);
-            bots[i - 1].transform.localPosition = new Vector2(bots[i - 1].transform.localPosition.x / transform.localScale.x,
-                                                              bots[i - 1].transform.localPosition.y / transform.localScale.y);
-            bots[i - 1].transform.localPosition = bots[i - 1].transform.localPosition * maxOffset * ((float)i / tops.Count);
+            var dir = new Vector2(topDir.x / transform.localScale.x,
+                                  topDir.y / transform.localScale.y);
+            dir *= maxOffset * ((float)i / tops.Count);
+
+            tops[i - 1].transform.localPosition = dir;
+        }
+        
+        for (int i = 1; i <= bots.Count; i++)
+        {
+            var dir = -topDir;
+            dir = new Vector2(dir.x / transform.localScale.x,
+                              dir.y / transform.localScale.y);
+            dir *= maxOffset * ((float)i / bots.Count);
+
+            bots[i - 1].transform.localPosition = dir;
         }
     }
 
 
-    private void prepareNewSprite(ref List<Transform> ts, string name, int orderInLayer, Color col)
+    private void PrepareNewSprite(ref List<Transform> ts, string name, int orderInLayer, Color col)
     {
         var t = new GameObject(name).transform;
         ts.Add(t);

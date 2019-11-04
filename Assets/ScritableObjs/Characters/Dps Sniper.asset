@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00c5cb7df18ab144adf09d9cad5f8a1, type: 3}
+  m_Name: Dps Sniper
+  m_EditorClassIdentifier: 
+  name: Snipi
+  description: 
+  prefab: {fileID: 7706905693724581864, guid: 39ca112c30779054fb439862d592e998, type: 3}
+  sprite: {fileID: -7017378215715786011, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
+  role: 1
+  roleIcon: {fileID: 0}

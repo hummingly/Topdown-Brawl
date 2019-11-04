@@ -10,6 +10,7 @@ public class Block : MonoBehaviour // need mono?
     private Tweener t;
     private DestructibleBlock destruct;
 
+    private Vector3 orgScale;
 
     // TODO: factor the properties like destructible out to other scripts
     //public bool isDestructible;
@@ -25,30 +26,33 @@ public class Block : MonoBehaviour // need mono?
     private void Awake()
     {
         if (doesBounce)
+        {
             sprite = GetComponentInChildren<SpriteRenderer>();
+            orgScale = sprite.transform.localScale;
+        }
         if (GetComponent<Rigidbody2D>())
             rb = GetComponent<Rigidbody2D>();
     }
 
 
 
-    public void setColor(Color color)
+    public void SetColor(Color color)
     {
         GetComponent<SpriteRenderer>().color = color; // or make public and set directly?
     }
 
-    public void setMoveable(float weight)
+    public void SetMoveable(float weight)
     {
         rb = gameObject.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0;
         rb.mass = weight;
     }
-    public void setDestructible(float hp)
+    public void SetDestructible(float hp)
     {
         // TODO
     }
 
-    public void startMoving()
+    public void StartMoving()
     {
         doesMove = true;
         // TODO: start moving in a direction
@@ -68,21 +72,13 @@ public class Block : MonoBehaviour // need mono?
         {
             rb.AddForce((rb.transform.position - transform.position).normalized * bounceAm, ForceMode2D.Impulse); //TODO: add option to preserve last velocity before contact
 
-            if (t != null && t.IsPlaying()) t.Kill();
+            if (t != null && t.IsPlaying())
+            {
+                t.Kill();
+                sprite.transform.localScale = orgScale;
+            }
 
             t = sprite.transform.DOPunchScale(Vector3.one, 0.25f); //TODO: add shakeScale && make sure no deformation stays
         }
-
-        /*
-        if(isDestructible)
-        {
-            var projectile = collision.collider.GetComponent<Projectile>();
-            if(projectile)
-            {
-
-            }
-            // TODO: add possibilty to get damaged if its the player himself flying against this
-        }
-        */
     }
 }

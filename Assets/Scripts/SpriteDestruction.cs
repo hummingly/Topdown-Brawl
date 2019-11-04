@@ -13,12 +13,12 @@ public class SpriteDestruction : MonoBehaviour
         spriteRend = GetComponent<SpriteRenderer>();
         sourcePolyCollider = GetComponent<PolygonCollider2D>();
 
-        copyInitialSprite(0,1,2);
+        CopyInitialSprite(0,1,2);
         //copyInitialSpriteSplitBy(1);
     }
 
-
-    private void copyInitialSpriteSplitBy(int splitPoints)
+    /*
+    private void CopyInitialSpriteSplitBy(int splitPoints)
     {
         /*var currVerts = sourcePolyCollider.GetPath(0).Length;
         var newTris = currVerts * splitPoints - (currVerts - 1); // 1 new point: 3 tris, 2 new points: 5 tris, 3 new points: 7 tris
@@ -59,26 +59,21 @@ public class SpriteDestruction : MonoBehaviour
 
         foreach (piece in pieces)
             copyInitialSprite(...);
-        */
-    }
+        
+    }*/
 
 
     //https://www.google.com/search?safe=active&rlz=1C1CHBF_deDE832DE832&sxsrf=ACYBGNSFRh7fqJnp7-h4lL-LAtxj8805BA%3A1571516804708&ei=hHGrXbbwKsnIwALEv7OAAw&q=unity+shatter+mesh&oq=unity+shatter+mesh&gs_l=psy-ab.3..0i203.4067.6745..6826...3.4..1.77.748.11......0....1..gws-wiz.......0i71j0i13j0i7i30j0i7i10i30j0i7i30i19j0i19j0i13i30i19j0i8i13i30i19.p30JUBtEeF8&ved=0ahUKEwi2wpynlKnlAhVJJFAKHcTfDDAQ4dUDCAs&uact=5
 
 
-    private void makeTri()
-    {
-
-    }
-
-    private void copyInitialSprite(int vertInd0, int vertInd1, int vertInd2)
+    private void CopyInitialSprite(int vertInd0, int vertInd1, int vertInd2)
     {
         GameObject newGO = new GameObject("Test Mesh");
 
         var mf = newGO.AddComponent<MeshFilter>();
         var mr = newGO.AddComponent<MeshRenderer>();
 
-        mr.material = getMat(spriteRend);
+        mr.material = GetMat(spriteRend);
         mf.mesh = SpriteToMesh(spriteRend.sprite);
 
         var coll = newGO.AddComponent<PolygonCollider2D>();
@@ -130,7 +125,7 @@ public class SpriteDestruction : MonoBehaviour
         return mesh;
     }
 
-    private Material getMat(SpriteRenderer sRend)
+    private Material GetMat(SpriteRenderer sRend)
     {
         Material mat = new Material(sRend.sharedMaterial);
         mat.SetTexture("_MainTex", sRend.sprite.texture);
