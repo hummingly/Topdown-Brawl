@@ -36,7 +36,7 @@ public class PlayerSpawner : MonoBehaviour
 
             // shouldn't be necessary?
             var list = new List<float>();
-            for (int j = 0; j < teams.teams[i].players.Count; j++)
+            for (int j = 0; j < teams.teams[i].Count; j++)
                 list.Add(0); 
             spawnPosTimers.Add(list);
         }
@@ -155,7 +155,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private Vector2 GetSpawnArea(Transform player)
     {
-        int team = teams.GetTeamOf(player.gameObject);
+        int team = teams.FindPlayerTeam(player.gameObject);
 
 
         // Get an open spawn point

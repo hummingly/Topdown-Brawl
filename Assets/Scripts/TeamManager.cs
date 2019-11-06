@@ -5,33 +5,101 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class TeamManager : MonoBehaviour // Singleton instead of static, so can change variable in inspector
+public class TeamManager : MonoBehaviour
 {
-
-    [System.Serializable]
-    public class Team //or struct?
+    [Serializable]
+    public class Team : IEnumerable
     {
-        public List<GameObject> players;
-        public int points;
+        private List<GameObject> players;
+        public readonly int Capacity;
+        public int Points { get; set; }
 
         public Team(int teamSize)
         {
-            players = new List<GameObject>(teamSize);
-            points = 0;
+            Capacity = teamSize;
+            players = new List<GameObject>(Capacity);
+            Points = 0;
         }
+
+        public bool AddPlayer(GameObject player)
+        {
+            if (players.Count < Capacity && player != null)
+            {
+                players.Add(player);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemovePlayer(GameObject player)
+        {
+            return players.Remove(player);
+        }
+
+        public bool ReplacePlayer(GameObject oldPlayer, GameObject newPlayer)
+        {
+            if (newPlayer == null)
+            {
+                throw new Exception("An uninitialized player cannot be added to a team.");
+            }
+
+            int index = players.IndexOf(oldPlayer);
+            if (index > -1)
+            {
+                players.Insert(index, newPlayer);
+                return true;
+            }
+            return false;
+        }
+
+        // A player can be only added to a full team if there is replaceable bot.
+        public bool ReplaceBot(GameObject player)
+        {
+            int slot = players.FindIndex(b => b.GetComponent<MenuCursor>() == null);
+            if (slot > -1)
+            {
+                players[slot] = player;
+                return true;
+            }
+            return false;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return players.GetEnumerator();
+        }
+
+        public List<GameObject> FilterPlayers(Predicate<GameObject> predicate)
+        {
+            return players.FindAll(predicate);
+        }
+
+        public bool HasPlayer(GameObject player)
+        {
+            return players.Contains(player);
+        }
+
+        public bool ExistsPlayer(Predicate<GameObject> predicate)
+        {
+            return players.Exists(predicate);
+        }
+
+        public int Count => players.Count;
+
+        public bool IsEmpty => players.Count == 0;
+
+        public bool IsFull => players.Count == Capacity;
     }
 
-    public List<Team> teams = new List<Team>();
-    //public List<GameObject> playerIDs = new List<GameObject>();
-    public List<GameObject> playerNrs = new List<GameObject>(); //not for bots, just players... for keeping track of what name to put for each, etc
-    public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
-    public List<Character> playerChars = new List<Character>(); 
-
-    [SerializeField] private Color[] teamColors;
-    //[SerializeField] private GameObject playerPrefab;
-    private PlayerSpawner spawner;
     private MenuManager menu;
+    private PlayerSpawner spawner;
+    public List<Team> teams = new List<Team>();
+    [SerializeField] private Color[] teamColors;
 
+    // Actual players
+    public List<GameObject> playerNrs = new List<GameObject>();
+    public List<InputDevice> playerDevices = new List<InputDevice>();
+    public List<Character> playerChars = new List<Character>();
 
     private void Awake()
     {
@@ -54,102 +122,62 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         {
             var cha = menu.GetCharacterOfPlayer(p);
 
-            playerChars.Add(cha);//(menu.availableChars[ind]);
+            playerChars.Add(cha);
         }
     }
 
     public void InitPlayers()
     {
-        // disable more joining
-        //GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually; //here still added a cursor in gameplay still...
         spawner = FindObjectOfType<PlayerSpawner>();
         var input = FindObjectOfType<PlayerInputManager>();
 
-        int ind = 0;
+        int index = 0;
 
         //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
-
         // TODO: for each player in each team spawn and assign team, controllerIDs, color
-
-        for (int t = 0; t < teams.Count; t++)
+        foreach (Team team in teams)
         {
-            for (int p = 0; p < teams[t].players.Count; p++)
+            foreach (GameObject player in team)
             {
-                GameObject currPlayer = null;
-
+                GameObject currentPlayer = null;
                 // Bot cursor is not destroyed on scene load, so now destroy it and spawn a bot, not a player object
-                if (teams[t].players[p] != null)
+                if (player != null)
                 {
-                    Destroy(teams[t].players[p].gameObject);
-
-                    currPlayer = spawner.CreateBot();
+                    Destroy(player.gameObject);
+                    currentPlayer = spawner.CreateBot();
                 }
                 else
                 {
-                    // var existingPlayer = teams[0].players[0]; // EMPTY since the player cursor got deleted on scene load, SO REPLACE (BUT WITH CORRECT CONTROLLER?)
-
-                    //currPlayer = spawner.createPlayer();
-
-                    //actually conenct to controller again correctly
-
                     // couldn't get it to just repair the device to the joined PlayerInput, so instead just join manually... (alternativly try to change loop order so devices stay correct?)
-                    input.playerPrefab = playerChars[ind].prefab;
-                    input.JoinPlayer(ind, -1, null, playerDevices[ind]);
-                    foreach(PlayerInput playr in FindObjectsOfType<PlayerInput>())
+                    input.playerPrefab = playerChars[index].prefab;
+                    input.JoinPlayer(index, -1, null, playerDevices[index]);
+                    foreach (PlayerInput playerInput in FindObjectsOfType<PlayerInput>())
                     {
-                        if (playr.devices[0] == playerDevices[ind])
-                            currPlayer = playr.gameObject;
+                        if (playerInput.devices[0] == playerDevices[index])
+                        {
+                            currentPlayer = playerInput.gameObject;
+                        }
                     }
-                    ind++;
-
-                    //currPlayer.GetComponent<PlayerInput>().user.UnpairDevices();
-                    //UnityEngine.InputSystem.Users.InputUser.PerformPairingWithDevice(playerDevices[0], currPlayer.GetComponent<PlayerInput>());
-
-                    //currPlayer.GetComponent<PlayerInput>().devices[0].;//SwitchCurrentControlScheme();
-                    //currPlayer.GetComponent<PlayerInput>().user.UnpairDevices();
-                    //UnityEngine.InputSystem.Users.InputUser.PerformPairingWithDevice(InputDevice.all[0], UnityEngine.InputSystem.Users.InputUser );
-                    //print(currPlayer.GetComponent<PlayerInput>().devices[0].deviceId);
-                    //newPlayer.GetComponent<PlayerInput>().device
-                    //var currPlayerInput = currPlayer.GetComponent<PlayerInput>();
-                    //GetComponent<PlayerInputManager>().JoinPlayer(currPlayerInput);
-                    //print(PlayerInputManager.instance.playerCount);
-
+                    index++;
                     /* Each PlayerInput can be assigned one or more devices. 
                      * By default, no two PlayerInput components will be assigned the same devices — 
                      * although this can be forced explicitly by manually assigning devices to a player when calling PlayerInput.
                      * Instantiate or by calling InputUser.PerformPairingWithDevice on the InputUser of a PlayerInput */
                 }
-
-                teams[t].players[p] = currPlayer;
-                spawner.PlayerJoined(currPlayer.transform);
-                currPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currPlayer));
+                team.ReplacePlayer(player, currentPlayer);
+                spawner.PlayerJoined(currentPlayer.transform);
+                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
             }
         }
-
-
-        /*var players = GetComponent<PlayerInputManager>().playerCount;
-
-        foreach (PlayerInput pi in FindObjectsOfType<PlayerInput>())
-        {
-            //pi.user.UnpairDevices();
-
-            //foreach (InputDevice d in pi.devices)
-            var d = pi.devices[0];
-                print(pi.name + " " + d.name);
-        }*/
-
     }
 
 
     public void AddBot(int addBotButtonIndex)
     {
-        //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
-        // not needed since players will change everything for the bot?                   
-
         GameObject bot = new GameObject("Empty Bot Cursor");
 
-        if (AddToEmptyOrSmallestTeam(bot))
+        if (AddToSmallestTeam(bot))
         {
             FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true);
             bot.transform.parent = null;
@@ -159,15 +187,13 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
 
     private void OnPlayerJoined(PlayerInput player)
     {
-        //if (!gameLogic.gameMode.maxTeams > teams.Count) return;
-
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
 
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
-            if (AddToEmptyOrSmallestTeam(player.gameObject))
+            if (AddToSmallestTeam(player.gameObject))
             {
                 FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
             }
@@ -180,7 +206,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
             // for testing add to a new team each new player
-            if (AddToEmptyOrSmallestTeam(player.gameObject))
+            if (AddToSmallestTeam(player.gameObject))
             {
                 FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
                 player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
@@ -195,182 +221,152 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
     // player is added else false.
     public bool AddToTeam(GameObject player, int team)
     {
-        // Checks whether the team is already full.
-        if (teams[team].players.Count >= teams[team].players.Capacity) {
-            // Players are always added as long there is enough space.
-            if (player.GetComponent<MenuCursor>())
-            {
-                // Search for bot to replace the player with.
-                int slot = teams[team].players.FindIndex(b => b.GetComponent<BotTest>() != null);
-                if (slot > -1)
-                {
-                    teams[team].players[slot] = player;
-                    playerNrs.Add(player);
-                    playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
-                    return true;
-                }
-            }
+        // Bots are just added immediately.
+        if (player.GetComponent<MenuCursor>() == null)
+        {
+            return teams[team].AddPlayer(player);
+        }
+
+        // When no spot could be found on the team, return false immediately.
+        if (!teams[team].AddPlayer(player) && !teams[team].ReplaceBot(player))
+        {
             return false;
         }
 
-        teams[team].players.Add(player);
-        if (player.GetComponent<MenuCursor>())
-        {
-            playerNrs.Add(player);
-            playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
-        }
+        playerNrs.Add(player);
+        playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
         return true;
     }
 
-    public bool AddToEmptyOrSmallestTeam(GameObject player)
+    public bool AddToSmallestTeam(GameObject player)
     {
-        if (GetEmptyTeam() != -1)
-            return AddToTeam(player, GetEmptyTeam());
-        else
-            return AddToTeam(player, GetSmallestTeam());
+        int openTeam = FindSmallestTeam();
+        if (openTeam > -1)
+        {
+            return AddToTeam(player, openTeam);
+        }
+        return false;
     }
 
     public void MoveTeam(GameObject player) //can only cycle ion one dir through teams
     {
-        int currentTeam = GetTeamOf(player);
+        int currentTeam = FindPlayerTeam(player);
         if (currentTeam == -1)
         {
-            AddToEmptyOrSmallestTeam(player);
+            AddToSmallestTeam(player);
             return;
         }
 
-        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Count, t => t.players.Count < t.players.Capacity);
+        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Count, t => t.Count < t.Capacity);
         if (nextTeam > -1)
         {
-            teams[currentTeam].players.Remove(player);
-            teams[nextTeam].players.Add(player);
+            teams[currentTeam].RemovePlayer(player);
+            teams[nextTeam].AddPlayer(player);
             return;
         }
-        else
+        // Look for empty slot in team before the current team.
+        int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.Capacity);
+        if (previousTeam > -1)
         {
-            // Look for empty slot in team before the current team.
-            int previousTeam = teams.FindIndex(0, currentTeam, t => t.players.Count < t.players.Capacity);
-            if (previousTeam > -1)
-            {
-                teams[currentTeam].players.Remove(player);
-                teams[previousTeam].players.Add(player);
-            }
+            teams[currentTeam].RemovePlayer(player);
+            teams[previousTeam].AddPlayer(player);
         }
     }
 
     public GameObject GetRandomEnemy(GameObject player)
     {
-        for (int i = 0; i < teams.Count; i++)
+        foreach (Team team in teams)
         {
-            // Found enemy team
-            if(!teams[i].players.Contains(player))
+            if (team.HasPlayer(player))
             {
-                // get random active player
-                var randPlayers = ExtensionMethods.Shuffle(teams[i].players);
-                foreach(GameObject p in randPlayers)
-                {
-                    if (p.active)
-                        return p;
-                }
+                List<GameObject> activePlayers = team.FilterPlayers(p => p.active);
+                int r = UnityEngine.Random.Range(0, activePlayers.Count);
+                return activePlayers[r];
             }
         }
-
         return null;
     }
 
-    private int GetEmptyTeam()
+    // Returns index of empty team, else -1.
+    private int FindEmptyTeam()
     {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            if (teams[i].players.Count == 0)
-                return i;
-        }
-        return -1;
+        return teams.FindIndex(t => t.IsEmpty);
     }
 
-    private int GetSmallestTeam()
+    // Returns a list of teams which could add a player (empty spot or replace
+    // bot). If the list is empty, all teams are already filled with players.
+    private List<Team> FindOpenTeams()
     {
-        int smallestTeam = int.MaxValue;
-        int smallestTeamPlayers = int.MaxValue;
-        for (int i = 0; i < teams.Count; i++)
+        return teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
+    }
+
+    // Returns smallest team or -1 if all teams are full.
+    private int FindSmallestTeam()
+    {
+        List<Team> openTeams = FindOpenTeams();
+        if (openTeams.Count == 0)
         {
-            if (teams[i].players.Count < smallestTeamPlayers)
+            return -1;
+        }
+
+        int smallestTeam = 0;
+        int smallestTeamPlayers = openTeams[0].Count;
+        for (int i = 0; i < openTeams.Count; i++)
+        {
+            if (openTeams[i].Count < smallestTeamPlayers)
             {
                 smallestTeam = i;
-                smallestTeamPlayers = teams[i].players.Count;
+                smallestTeamPlayers = openTeams[i].Count;
             }
         }
         return smallestTeam;
     }
 
     // Returns the index of the player's team or -1 if the player has no team.
-    public int GetTeamOf(GameObject player) //for now jsut 0 or 1, limited teams
+    public int FindPlayerTeam(GameObject player)
     {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            int index = teams[i].players.IndexOf(player);
-            if (index != -1)
-                return i;
-        }
-
-        return -1;
+        return teams.FindIndex(t => t.HasPlayer(player));
     }
 
     public void Remove(GameObject player)
     {
-        for (int i = 0; i < teams.Count; i++)
+        foreach (Team team in teams)
         {
-            // Found correct team
-            if (teams[i].players.Contains(player))
+            if (team.RemovePlayer(player))
             {
-                //foreach (GameObject p in teams[i].players)
-                //    if (p == player)
-                        //playerIDs.Remove(player);
-                        teams[i].players.Remove(player);
-                        break;
+                break;
             }
         }
     }
 
-
+    // If the player has no team, it will return a transparent black.
     public Color GetColorOf(GameObject player)
     {
-        int i = GetTeamOf(player);
-        return teamColors[i];
+        int i = FindPlayerTeam(player);
+        if (i > -1)
+        {
+            return teamColors[i];
+        }
+        return new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    /*public GameObject getPlayerByID(int i)
+    public void IncreaseScore(GameObject player)
     {
-        return playerIDs[i];
-    }
-    public int getPlayerId(GameObject player)
-    {
-        return playerIDs.IndexOf(player);
-    }*/
-
-                    public void increaseScore(GameObject player)
-    {
-        //find team that GO is in and add point
-        int team = GetTeamOf(player);
-
-        teams[team].points++;
+        int team = FindPlayerTeam(player);
+        if (team <= -1)
+        {
+            throw new Exception("Score can be only increased in a match with a player on one team!");
+        }
+        teams[team].Points++;
     }
 
     public bool SomeTeamWon(int pointsToWin)
     {
-        //if bigger than gamemode max then won
-        foreach (Team t in teams)
-        {
-            if (t.points >= pointsToWin)
-                return true;
-        }
-
-        return false;
+        return teams.Exists(t => t.Points >= pointsToWin);
     }
 
     public int GetScore(int team)
     {
-        return teams[team].points;
+        return teams[team].Points;
     }
-
 }

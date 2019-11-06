@@ -93,7 +93,7 @@ public class GameLogic : MonoBehaviour
 
     public void IncreaseScore(GameObject player)
     {
-        teams.increaseScore(player);
+        teams.IncreaseScore(player);
 
         // display new score in UI
         uiManager.UpdateScores();
