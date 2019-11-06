@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
     private GameStateManager gameState;
 
     public List<Character> availableChars = new List<Character>();
-    
+
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
     [SerializeField] private Transform charSlotParent;
@@ -21,13 +21,10 @@ public class MenuManager : MonoBehaviour
         gameState = FindObjectOfType<GameStateManager>();
     }
 
-
     void Update()
     {
-        // CHECK IF ALL PLAYERS READY
+        // TODO: CHECK IF ALL PLAYERS ARE READY
     }
-
-
 
     public void ToggleCharacter(GameObject player, GameObject toggleButton, int dir)
     {
@@ -39,15 +36,22 @@ public class MenuManager : MonoBehaviour
         {
             var lastIndex = availableChars.IndexOf(slot.chara);
             lastIndex += dir;
-            if (lastIndex < 0) lastIndex = availableChars.Count - 1;
-            if (lastIndex >= availableChars.Count) lastIndex = 0;
+            if (lastIndex < 0)
+            {
+                lastIndex = availableChars.Count - 1;
+            }
+
+            if (lastIndex >= availableChars.Count)
+            {
+                lastIndex = 0;
+            }
+
             slot.SetChar(availableChars[lastIndex]);
         }
 
 
         //TODO: actually spawn different character based on selection
     }
-
 
     public void TogglePlayerTeam(GameObject player/*that toggled*/, GameObject toggleButton)
     {
@@ -63,7 +67,7 @@ public class MenuManager : MonoBehaviour
         }
 
         // everyone can change bot
-        if(slot.isBot)
+        if (slot.isBot)
         {
             var bot = slot.myPlayer;//teams.getPlayerByID(getSlotInd(slotGO)); //possibly instable, prone to bugs ?!?!?!
 
@@ -94,14 +98,10 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-
     public void ToggleMap()
     {
         gameState.ToggleMap();
     }
-
-
-
 
     public void PlayerJoined(Transform playerCursor, bool isBot = false, int place = 0)
     {
@@ -114,13 +114,15 @@ public class MenuManager : MonoBehaviour
         playerCursor.parent = cursorParent;
         playerCursor.localPosition = Vector3.zero;
 
-        if (!isBot) playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject)/*teams.getPlayerId(playerCursor.gameObject)*/, teams.GetColorOf(playerCursor.gameObject));
-  
+        if (!isBot)
+        {
+            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject)/*teams.getPlayerId(playerCursor.gameObject)*/, teams.GetColorOf(playerCursor.gameObject));
+        }
 
         var replaced = false;
 
         //add as many empty slots as needed so bot spawns where pressed
-        if(isBot)
+        if (isBot)
         {
             //replace that empty GO with bot
             if (place < charSlotParent.childCount)
@@ -144,8 +146,10 @@ public class MenuManager : MonoBehaviour
         slot.parent = charSlotParent;
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
 
-        if(replaced)
+        if (replaced)
+        {
             slot.transform.SetSiblingIndex(place);
+        }
     }
 
     public void Play()
@@ -161,16 +165,19 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
     }
 
-
     // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
-    private int GetSlotInd(Transform slotGO)
+    private int GetSlotIndex(Transform slotGO)
     {
         // count all the empty fill slots that help add a bot all the way on the right on the grid for example
         int emptySlots = 0;
 
         for (int i = 0; i < charSlotParent.childCount; i++)
+        {
             if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>() == null)
+            {
                 emptySlots++;
+            }
+        }
 
         return slotGO.GetSiblingIndex() - emptySlots;
     }

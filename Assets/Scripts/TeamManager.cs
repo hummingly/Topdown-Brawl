@@ -293,17 +293,12 @@ public class TeamManager : MonoBehaviour
         return teams.FindIndex(t => t.IsEmpty);
     }
 
-    // Returns a list of teams which could add a player (empty spot or replace
-    // bot). If the list is empty, all teams are already filled with players.
-    private List<Team> FindOpenTeams()
-    {
-        return teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
-    }
-
     // Returns smallest team or -1 if all teams are full.
     private int FindSmallestTeam()
     {
-        List<Team> openTeams = FindOpenTeams();
+        // Returns a list of teams which could add a player (empty spot or replace
+        // bot). If the list is empty, all teams are already filled with players.
+        List<Team> openTeams = teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
         if (openTeams.Count == 0)
         {
             return -1;
@@ -347,7 +342,7 @@ public class TeamManager : MonoBehaviour
         {
             return teamColors[i];
         }
-        return new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        return new Color(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     public void IncreaseScore(GameObject player)
