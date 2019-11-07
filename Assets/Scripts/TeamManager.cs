@@ -1,96 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class TeamManager : MonoBehaviour
+public partial class TeamManager : MonoBehaviour
 {
-    [Serializable]
-    public class Team : IEnumerable
-    {
-        private List<GameObject> players;
-        public readonly int Capacity;
-        public int Points { get; set; }
-
-        public Team(int teamSize)
-        {
-            Capacity = teamSize;
-            players = new List<GameObject>(Capacity);
-            Points = 0;
-        }
-
-        public bool AddPlayer(GameObject player)
-        {
-            if (players.Count < Capacity && player != null)
-            {
-                players.Add(player);
-                return true;
-            }
-            return false;
-        }
-
-        public bool RemovePlayer(GameObject player)
-        {
-            return players.Remove(player);
-        }
-
-        public bool ReplacePlayer(GameObject oldPlayer, GameObject newPlayer)
-        {
-            if (newPlayer == null)
-            {
-                throw new Exception("An uninitialized player cannot be added to a team.");
-            }
-
-            int index = players.IndexOf(oldPlayer);
-            if (index > -1)
-            {
-                players.Insert(index, newPlayer);
-                return true;
-            }
-            return false;
-        }
-
-        // A player can be only added to a full team if there is replaceable bot.
-        public bool ReplaceBot(GameObject player)
-        {
-            int slot = players.FindIndex(b => b.GetComponent<MenuCursor>() == null);
-            if (slot > -1)
-            {
-                players[slot] = player;
-                return true;
-            }
-            return false;
-        }
-
-        public IEnumerator GetEnumerator()
-        {
-            return players.GetEnumerator();
-        }
-
-        public List<GameObject> FilterPlayers(Predicate<GameObject> predicate)
-        {
-            return players.FindAll(predicate);
-        }
-
-        public bool HasPlayer(GameObject player)
-        {
-            return players.Contains(player);
-        }
-
-        public bool ExistsPlayer(Predicate<GameObject> predicate)
-        {
-            return players.Exists(predicate);
-        }
-
-        public int Count => players.Count;
-
-        public bool IsEmpty => players.Count == 0;
-
-        public bool IsFull => players.Count == Capacity;
-    }
-
     private MenuManager menu;
     private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
@@ -120,14 +35,17 @@ public class TeamManager : MonoBehaviour
     {
         foreach (GameObject p in playerNrs)
         {
-            var cha = menu.GetCharacterOfPlayer(p);
-
-            playerChars.Add(cha);
+            Character character = menu.GetCharacterOfPlayer(p);
+            if (character != null)
+            {
+                playerChars.Add(character);
+            }
         }
     }
 
     public void InitPlayers()
     {
+        Debug.Log("Init Player");
         spawner = FindObjectOfType<PlayerSpawner>();
         var input = FindObjectOfType<PlayerInputManager>();
 
@@ -136,10 +54,12 @@ public class TeamManager : MonoBehaviour
         //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
         // TODO: for each player in each team spawn and assign team, controllerIDs, color
-        foreach (Team team in teams)
+        for (int t = 0; t < teams.Count; t++)
         {
-            foreach (GameObject player in team)
+            Team team = teams[t];
+            for (int p = 0; p < team.Count; p++)
             {
+                GameObject player = team.Get(p);
                 GameObject currentPlayer = null;
                 // Bot cursor is not destroyed on scene load, so now destroy it and spawn a bot, not a player object
                 if (player != null)
@@ -175,9 +95,13 @@ public class TeamManager : MonoBehaviour
 
     public void AddBot(int addBotButtonIndex)
     {
+        int team = FindSmallestTeam();
+        if (team <= -1)
+        {
+            return;
+        }
         GameObject bot = new GameObject("Empty Bot Cursor");
-
-        if (AddToSmallestTeam(bot))
+        if (teams[team].AddPlayer(bot))
         {
             FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true);
             bot.transform.parent = null;
@@ -187,9 +111,9 @@ public class TeamManager : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput player)
     {
+        Debug.Log("Player joined");
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
-
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
@@ -198,6 +122,7 @@ public class TeamManager : MonoBehaviour
                 FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
             }
             //TODO: check which player? write string P1 for example
+            return;
         }
 
         //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
@@ -279,7 +204,7 @@ public class TeamManager : MonoBehaviour
         {
             if (team.HasPlayer(player))
             {
-                List<GameObject> activePlayers = team.FilterPlayers(p => p.active);
+                List<GameObject> activePlayers = team.FilterPlayers(p => p.activeSelf);
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
                 return activePlayers[r];
             }
