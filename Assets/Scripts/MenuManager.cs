@@ -184,12 +184,13 @@ public class MenuManager : MonoBehaviour
 
     public Character GetCharacterOfPlayer(GameObject player)
     {
-        PlayerSlotMenuDisplay[] characters = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
-        foreach (PlayerSlotMenuDisplay character in characters)
+        for (int i = 0; i < charSlotParent.childCount; i++)
         {
-            if (character != null && character.myPlayer == player)
+            var slot = charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>();
+
+            if (slot != null && slot.myPlayer == player)
             {
-                return character.chara;
+                return slot.chara;
             }
         }
         return null;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MenuCursor : MonoBehaviour
 {
-    [SerializeField] private readonly float speed = 6.0f;
+    [SerializeField] private readonly float speed = 0.5f;
     [SerializeField] private Image spriteTeamCol;
     [SerializeField] private TextMeshProUGUI playerNrText;
 
