@@ -211,6 +211,16 @@ public partial class TeamManager : MonoBehaviour
         return null;
     }
 
+    public int GetTotalPlayers()
+    {
+        int count = 0;
+        foreach (var team in teams)
+        {
+            count += team.Count;
+        }
+        return count;
+    }
+
     // Returns smallest team or -1 if all teams are full.
     private int FindSmallestTeam()
     {

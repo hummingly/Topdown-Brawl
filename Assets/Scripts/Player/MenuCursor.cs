@@ -8,16 +8,14 @@ using UnityEngine.UI;
 
 public class MenuCursor : MonoBehaviour
 {
-    [SerializeField] private readonly float speed = 6.0f;
+    private readonly float speed = 0.01f;
     [SerializeField] private Image spriteTeamCol;
     [SerializeField] private TextMeshProUGUI playerNrText;
-
 
     private Vector2 moveInput;
 
     private GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
-
 
     void Start()
     {
@@ -35,14 +33,10 @@ public class MenuCursor : MonoBehaviour
         spriteTeamCol.color = teamColor;
     }
 
-    void Update()
-    {
-
-    }
-
     private void FixedUpdate()
     {
-        transform.position += new Vector3(moveInput.x, moveInput.y, 0).normalized * speed;
+        var dir = new Vector3(moveInput.x, moveInput.y, 0);
+        transform.position += Vector3.ClampMagnitude(dir, 1) * speed * Screen.width;
     }
 
     private void OnSelect()
@@ -102,6 +96,7 @@ public class MenuCursor : MonoBehaviour
         }
 
     }
+
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();

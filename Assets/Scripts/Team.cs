@@ -8,7 +8,7 @@ public partial class TeamManager
     [Serializable]
     public class Team : IEnumerable
     {
-        public List<GameObject> players;
+        private readonly List<GameObject> players;
         public readonly int Capacity;
         public int Points { get; set; }
 

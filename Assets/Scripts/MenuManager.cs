@@ -131,7 +131,7 @@ public class MenuManager : MonoBehaviour
 
                 replaced = true;
             }
-            else
+            else // place new empty GO(s)
             {
                 int offSet = place - charSlotParent.childCount;
                 for (int i = 0; i < offSet; i++)
@@ -146,10 +146,51 @@ public class MenuManager : MonoBehaviour
         slot.SetParent(charSlotParent);
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
 
+        // for bot
         if (replaced)
         {
             slot.transform.SetSiblingIndex(place);
         }
+
+        //for player on joining if full (but with bots or empty GOs)
+        if (!isBot)
+        {
+            var currentPlayerCount = teams.GetTotalPlayers();
+            if (currentPlayerCount > 1) currentPlayerCount--; //since just joined one
+
+            if (currentPlayerCount < 6) //TODO: add max player size dynamically... and enforce it too
+            {
+                // if current team count is still smaller than 6, but the children on the slotParent are already 6, get rid of the first empty GO...
+                if (charSlotParent.childCount >= 6)
+                {
+                    for (int i = 0; i < charSlotParent.childCount; i++)
+                        if (!charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>())
+                        {
+                            Destroy(charSlotParent.GetChild(i).gameObject);
+                            slot.transform.SetSiblingIndex(i);
+                            break;
+                        }
+                }
+            }
+            else //if team count is 6, get rid of first bot
+            {
+                for (int i = 0; i < charSlotParent.childCount; i++)
+                {
+                    if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().isBot)
+                    {
+                        teams.Remove(charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().myPlayer);//remove bot cursor in team list
+
+                        //TODO: missing step? everything of bot deleted?????
+
+                        Destroy(charSlotParent.GetChild(i).gameObject);
+                        slot.transform.SetSiblingIndex(i);
+                        break;
+                    }
+                }
+                //TODO: delete player again if no bot to delete...
+            }
+        }
+        slot.transform.localScale = Vector3.one;
     }
 
     public void Play()
