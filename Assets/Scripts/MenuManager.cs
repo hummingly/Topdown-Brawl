@@ -105,13 +105,13 @@ public class MenuManager : MonoBehaviour
 
     public void PlayerJoined(Transform playerCursor, bool isBot = false, int place = 0)
     {
-        if (inputPrompt.active)
+        if (inputPrompt.activeSelf)
         {
             inputPrompt.SetActive(false);
             botPrompt.SetActive(true);
         }
 
-        playerCursor.parent = cursorParent;
+        playerCursor.SetParent(cursorParent);
         playerCursor.localPosition = Vector3.zero;
 
         if (!isBot)
@@ -143,7 +143,7 @@ public class MenuManager : MonoBehaviour
         }
 
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-        slot.parent = charSlotParent;
+        slot.SetParent(charSlotParent);
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
 
         if (replaced)
@@ -163,23 +163,6 @@ public class MenuManager : MonoBehaviour
     public void LoadMap()
     {
         SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
-    }
-
-    // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
-    private int GetSlotIndex(Transform slotGO)
-    {
-        // count all the empty fill slots that help add a bot all the way on the right on the grid for example
-        int emptySlots = 0;
-
-        for (int i = 0; i < charSlotParent.childCount; i++)
-        {
-            if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>() == null)
-            {
-                emptySlots++;
-            }
-        }
-
-        return slotGO.GetSiblingIndex() - emptySlots;
     }
 
     public Character GetCharacterOfPlayer(GameObject player)

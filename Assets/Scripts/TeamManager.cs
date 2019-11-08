@@ -30,7 +30,6 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-
     public void SaveCharacters()
     {
         foreach (GameObject p in playerNrs)
@@ -210,12 +209,6 @@ public partial class TeamManager : MonoBehaviour
             }
         }
         return null;
-    }
-
-    // Returns index of empty team, else -1.
-    private int FindEmptyTeam()
-    {
-        return teams.FindIndex(t => t.IsEmpty);
     }
 
     // Returns smallest team or -1 if all teams are full.
