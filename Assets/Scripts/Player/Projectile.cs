@@ -76,13 +76,16 @@ public class Projectile : MonoBehaviour
                 if(teams.GetTeamOf(owner) != teams.GetTeamOf(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
+                    otherRb.velocity *= keepOrgVelPlayer; // doesnt work well since player always changed velocity...
                     otherRb.AddForce(knockDir * knockStrengthPlayer, ForceMode2D.Impulse); //TODO: instead of value for objects & for enemys: factor in mas and drag
                 }
             }
-            else
+            else // Object
             {
-                otherRb.velocity = Vector2.zero;
+                //otherRb.velocity = Vector2.zero;
+                otherRb.velocity *= keepOrgVel; // doesnt work well since player always changed velocity...
                 otherRb.AddForce(knockDir * knockStrength, ForceMode2D.Impulse); //TODO: instead of value for objects & for enemys: factor in mas and drag
+                //otherRb.AddForceAtPosition(knockDir * knockStrength, other.ClosestPoint(transform.position), ForceMode2D.Impulse); 
             }
         }
     }

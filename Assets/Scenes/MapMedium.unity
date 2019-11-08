@@ -2421,7 +2421,7 @@ GameObject:
   - component: {fileID: 460403715}
   m_Layer: 0
   m_Name: Door 01 (1)
-  m_TagString: Untagged
+  m_TagString: BotLookThrough
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2491,7 +2491,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 8
+  m_Mass: 20
   m_LinearDrag: 0.25
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -8425,7 +8425,7 @@ GameObject:
   - component: {fileID: 1355195588}
   m_Layer: 0
   m_Name: Door 01
-  m_TagString: Untagged
+  m_TagString: BotLookThrough
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8495,7 +8495,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 8
+  m_Mass: 20
   m_LinearDrag: 0.25
   m_AngularDrag: 0.05
   m_GravityScale: 0

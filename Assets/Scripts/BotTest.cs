@@ -218,7 +218,8 @@ public class BotTest : MonoBehaviour
             // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
-                if(rayHit[j].transform != transform)
+                //not myself & special tag case to eg. ignore doors
+                if (rayHit[j].transform != transform && rayHit[j].transform.tag != "BotLookThrough")
                 {
                     var entityThere = rayHit[j].collider.GetComponent<PlayerMovement>();
 
@@ -254,7 +255,8 @@ public class BotTest : MonoBehaviour
             // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
-                if (rayHit[j].transform != transform)
+                //not myself & special tag case to eg. ignore doors
+                if (rayHit[j].transform != transform && rayHit[j].transform.tag != "BotLookThrough")
                 {
                     steerDir += Vector2.SignedAngle(lookDir, rayHit[j].normal);
 
