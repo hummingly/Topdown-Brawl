@@ -91,7 +91,7 @@ public class MenuCursor : MonoBehaviour
 
             if (addBotButton && emptySlot)
             {
-                FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());
+                FindObjectOfType<TeamManager>().AddBot();
             }
         }
 

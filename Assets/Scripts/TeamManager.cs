@@ -91,8 +91,7 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-
-    public void AddBot(int addBotButtonIndex)
+    public void AddBot()
     {
         int team = FindSmallestTeam();
         if (team <= -1)
@@ -181,7 +180,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
 
-        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Count, t => t.Count < t.Capacity);
+        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.Capacity);
         if (nextTeam > -1)
         {
             teams[currentTeam].RemovePlayer(player);
@@ -203,7 +202,7 @@ public partial class TeamManager : MonoBehaviour
         {
             if (team.HasPlayer(player))
             {
-                List<GameObject> activePlayers = team.FilterPlayers(p => p.activeSelf);
+                List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
                 return activePlayers[r];
             }

@@ -64,6 +64,7 @@ public class MenuManager : MonoBehaviour
             teams.MoveTeam(player);
             slot.SetCol(teams.GetColorOf(player));
             slot.myPlayer.GetComponent<MenuCursor>().SetColor(teams.GetColorOf(player));
+            return;
         }
 
         // everyone can change bot
@@ -83,12 +84,12 @@ public class MenuManager : MonoBehaviour
                 var index = slot.transform.GetSiblingIndex();
                 Destroy(slot.gameObject);
                 Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
-                empty.parent = charSlotParent;
+                empty.SetParent(charSlotParent, false);
                 empty.SetSiblingIndex(index);
 
                 Destroy(bot);//remove bot cursor
 
-                print("del bot");
+                Debug.Log("Removed bot from selection");
             }
             else
             {
@@ -103,94 +104,40 @@ public class MenuManager : MonoBehaviour
         gameState.ToggleMap();
     }
 
-    public void PlayerJoined(Transform playerCursor, bool isBot = false, int place = 0)
+    // This is only called when a player or bot has been added successfully by
+    // the AddToSmallestTeam method in TeamManager.
+    // TODO: Move this to add logic somehow
+    public void PlayerJoined(Transform playerCursor, bool isBot = false)
     {
-        if (inputPrompt.activeSelf)
+        if (inputPrompt.activeInHierarchy)
         {
             inputPrompt.SetActive(false);
             botPrompt.SetActive(true);
         }
 
-        playerCursor.SetParent(cursorParent);
-        playerCursor.localPosition = Vector3.zero;
-
         if (!isBot)
         {
-            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject)/*teams.getPlayerId(playerCursor.gameObject)*/, teams.GetColorOf(playerCursor.gameObject));
-        }
-
-        var replaced = false;
-
-        //add as many empty slots as needed so bot spawns where pressed
-        if (isBot)
-        {
-            //replace that empty GO with bot
-            if (place < charSlotParent.childCount)
-            {
-                Destroy(charSlotParent.GetChild(place).gameObject);
-
-                replaced = true;
-            }
-            else // place new empty GO(s)
-            {
-                int offSet = place - charSlotParent.childCount;
-                for (int i = 0; i < offSet; i++)
-                {
-                    Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
-                    empty.parent = charSlotParent;
-                }
-            }
+            // Attach cursor to scene and place in the middle of the screen.
+            playerCursor.SetParent(cursorParent);
+            playerCursor.localPosition = Vector3.zero;
+            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject), teams.GetColorOf(playerCursor.gameObject));
         }
 
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
         slot.SetParent(charSlotParent);
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
-
-        // for bot
-        if (replaced)
-        {
-            slot.transform.SetSiblingIndex(place);
-        }
-
-        //for player on joining if full (but with bots or empty GOs)
-        if (!isBot)
-        {
-            var currentPlayerCount = teams.GetTotalPlayers();
-            if (currentPlayerCount > 1) currentPlayerCount--; //since just joined one
-
-            if (currentPlayerCount < 6) //TODO: add max player size dynamically... and enforce it too
-            {
-                // if current team count is still smaller than 6, but the children on the slotParent are already 6, get rid of the first empty GO...
-                if (charSlotParent.childCount >= 6)
-                {
-                    for (int i = 0; i < charSlotParent.childCount; i++)
-                        if (!charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>())
-                        {
-                            Destroy(charSlotParent.GetChild(i).gameObject);
-                            slot.transform.SetSiblingIndex(i);
-                            break;
-                        }
-                }
-            }
-            else //if team count is 6, get rid of first bot
-            {
-                for (int i = 0; i < charSlotParent.childCount; i++)
-                {
-                    if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().isBot)
-                    {
-                        teams.Remove(charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().myPlayer);//remove bot cursor in team list
-
-                        //TODO: missing step? everything of bot deleted?????
-
-                        Destroy(charSlotParent.GetChild(i).gameObject);
-                        slot.transform.SetSiblingIndex(i);
-                        break;
-                    }
-                }
-                //TODO: delete player again if no bot to delete...
-            }
-        }
         slot.transform.localScale = Vector3.one;
+        foreach (Transform child in charSlotParent)
+        {
+            if (child.name == "Fill")
+            {
+                var index = child.transform.GetSiblingIndex();
+                Destroy(child.gameObject);
+                slot.transform.SetSiblingIndex(index);
+                return;
+            }
+        }
+        slot.transform.SetSiblingIndex(charSlotParent.childCount);
     }
 
     public void Play()
