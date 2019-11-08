@@ -43,7 +43,8 @@ public class MenuCursor : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += new Vector3(moveInput.x, moveInput.y, 0).normalized * speed;
+        var dir = new Vector3(moveInput.x, moveInput.y, 0);//new Vector3(moveInput.x, moveInput.y, 0).normalized;
+        transform.position += Vector3.ClampMagnitude(dir, 1) * speed * Screen.width;
 
         // clamp to screen
         //Vector3 world = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));

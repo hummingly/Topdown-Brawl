@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3a79e5db192714980f4014e778ad2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 0.01
   spriteTeamCol: {fileID: 1612415406388952474}
   playerNrText: {fileID: 1612415405870662813}
 --- !u!1 &1612415405870662811

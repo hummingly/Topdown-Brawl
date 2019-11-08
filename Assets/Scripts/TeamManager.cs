@@ -232,6 +232,16 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
         return null;
     }
 
+    public int getTotalPlayers()
+    {
+        int count = 0;
+        for (int i = 0; i < teams.Count; i++)
+        {
+            count += teams[i].players.Count;
+        }
+        return count;
+    }
+
     private int GetEmptyTeam()
     {
         for (int i = 0; i < teams.Count; i++)
