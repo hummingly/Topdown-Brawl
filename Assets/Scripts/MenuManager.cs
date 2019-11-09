@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -26,6 +27,20 @@ public class MenuManager : MonoBehaviour
         // TODO: CHECK IF ALL PLAYERS ARE READY
     }
 
+    public void ToggleReady(GameObject player)
+    {
+        PlayerSlotMenuDisplay[] slots = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
+        foreach (var slot in slots)
+        {
+            if (slot.myPlayer == player)
+            {
+                var ready = slot.transform.GetComponentInChildren<Toggle>();
+                ready.isOn = !ready.isOn;
+                return;
+            }
+        }
+    }
+
     public void ToggleCharacter(GameObject player, GameObject toggleButton, int dir)
     {
         var slotGO = toggleButton.transform.parent.parent;
@@ -48,8 +63,6 @@ public class MenuManager : MonoBehaviour
 
             slot.SetChar(availableChars[lastIndex]);
         }
-
-
         //TODO: actually spawn different character based on selection
     }
 

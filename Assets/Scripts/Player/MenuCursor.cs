@@ -101,4 +101,14 @@ public class MenuCursor : MonoBehaviour
     {
         moveInput = value.Get<Vector2>();
     }
+
+    private void OnReady(InputValue value)
+    {
+        FindObjectOfType<MenuManager>().ToggleReady(gameObject);
+    }
+
+    private void OnLeaveTeam(InputValue value)
+    {
+        Debug.Log("Leaving Team.");
+    }
 }
