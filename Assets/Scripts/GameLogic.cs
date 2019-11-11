@@ -10,11 +10,9 @@ public class GameLogic : MonoBehaviour
     private static GameLogic instance;
     public static GameLogic Instance { get { return instance; } }
 
-
-    public GameMode gameMode;
-
     private UIManager uiManager;
-    private TeamManager teams;
+    private TeamManager teamManager;
+    private WinManager winManager;
 
     private float mapSize;
 
@@ -29,7 +27,7 @@ public class GameLogic : MonoBehaviour
         else
             instance = this; 
 
-        teams = GetComponent<TeamManager>();
+        teamManager = GetComponent<TeamManager>();
 
         SceneManager.sceneLoaded += SceneLoadeded;
 
@@ -38,8 +36,16 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
-        //gameMode.useTeams = true;
-        gameMode.pointsToWin = 8;
+        winManager = GetComponent<WinManager>();
+    }
+
+    void Update()
+    {
+        //if bigger than gamemode max then won
+        if (winManager.TeamWon(teamManager.GetTeams()))
+        {
+            GameOver();
+        }
     }
 
 
@@ -87,22 +93,15 @@ public class GameLogic : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
 
-        teams.InitPlayers();
+        teamManager.InitPlayers();
     }
 
 
     public void IncreaseScore(GameObject player)
     {
-        teams.IncreaseScore(player);
-
+        teamManager.IncreaseScore(player);
         // display new score in UI
         uiManager.UpdateScores();
-
-        //if bigger than gamemode max then won
-        if (teams.SomeTeamWon(gameMode.pointsToWin))
-        {
-            GameOver();
-        }
     }
 
     public void GameOver()

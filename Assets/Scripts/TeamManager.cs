@@ -22,7 +22,8 @@ public partial class TeamManager : MonoBehaviour
 
         teamColors = ExtensionMethods.Shuffle(teamColors);
 
-        GameMode gameMode = GetComponent<GameLogic>().gameMode;
+        // TODO: remove public field reference
+        GameMode gameMode = GetComponent<WinManager>().gameMode;
         teams = new List<Team>(gameMode.maxTeams);
         for (int i = 0; i < gameMode.maxTeams; i++)
         {
@@ -282,13 +283,13 @@ public partial class TeamManager : MonoBehaviour
         teams[team].Points++;
     }
 
-    public bool SomeTeamWon(int pointsToWin)
-    {
-        return teams.Exists(t => t.Points >= pointsToWin);
-    }
-
     public int GetScore(int team)
     {
         return teams[team].Points;
+    }
+
+    public List<Team> GetTeams()
+    {
+        return teams;
     }
 }
