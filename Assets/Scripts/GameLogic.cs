@@ -18,7 +18,7 @@ public class GameLogic : MonoBehaviour
 
     [SerializeField] private float startGameplayAnimDur = 1;
     [SerializeField] private float spawnBeforeAnimDone = 0.2f;
-
+    private bool roundRunning;
 
     private void Awake()
     {
@@ -41,11 +41,13 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        if (GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame)
+        //GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame doesn't help because InitGameplay is Coroutine
+        if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
             if (winManager.TeamWon(teamManager.GetTeams()))
             {
+                roundRunning = false;
                 GameOver();
             }
         }
@@ -102,6 +104,7 @@ public class GameLogic : MonoBehaviour
             print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
+            roundRunning = true;
         }
     }
 
