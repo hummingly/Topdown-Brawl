@@ -69,19 +69,19 @@ public class BotTest : MonoBehaviour
         // if hasn't been added bcz testing in dev scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
         {
-            FindObjectOfType<TeamManager>().AddToEmptyOrSmallestTeam(gameObject);
+            FindObjectOfType<TeamManager>().AddToSmallestTeam(gameObject);
             GetComponentInChildren<PlayerVisuals>().InitColor(FindObjectOfType<TeamManager>().GetColorOf(gameObject));
         }
     }
 
     void Start()
     {
-        var myTeam = teams.GetTeamOf(gameObject);
+        var myTeam = teams.FindPlayerTeam(gameObject);
         var allEntities = FindObjectsOfType<PlayerMovement>();
 
         foreach (PlayerMovement pm in allEntities)
         {
-            if (teams.GetTeamOf(pm.gameObject) != myTeam)
+            if (teams.FindPlayerTeam(pm.gameObject) != myTeam)
                 possibleTargets.Add(pm.gameObject);
         }
     }

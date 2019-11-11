@@ -36,26 +36,24 @@ public class PlayerSpawner : MonoBehaviour
 
             // shouldn't be necessary?
             var list = new List<float>();
-            for (int j = 0; j < teams.teams[i].players.Count; j++)
-                list.Add(0); 
+            for (int j = 0; j < teams.teams[i].Count; j++)
+            {
+                list.Add(0);
+            }
             spawnPosTimers.Add(list);
         }
     }
 
     void Update()
     {
-        foreach(List<float> timers in spawnPosTimers)
+        foreach (List<float> timers in spawnPosTimers)
         {
-            for(int i = 0; i < timers.Count; i++)
+            for (int i = 0; i < timers.Count; i++)
             {
                 timers[i] -= Time.deltaTime;
             }
         }
     }
-
-
-
-
 
     public void PlayerDied(PlayerStats player)
     {
@@ -72,7 +70,6 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject CreateBot()
     {
         var player = Instantiate(botPrefab, Vector2.zero, Quaternion.identity).transform;
-
         return player.gameObject;
     }
 
@@ -81,12 +78,6 @@ public class PlayerSpawner : MonoBehaviour
     {
         SpawnPlayer(player.transform);
     }
-
-    
-
-
-
-
 
     IEnumerator Respawn(PlayerStats player)
     {
@@ -102,9 +93,6 @@ public class PlayerSpawner : MonoBehaviour
 
         yield return new WaitForSeconds(stayAfterDeath);
         camTargetGroup.RemoveMember(placeholder);
-
-
-
 
         // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
         yield return new WaitForSeconds(respawnTime - stayAfterDeath - zoomBefore);
@@ -146,17 +134,15 @@ public class PlayerSpawner : MonoBehaviour
                 m.enabled = b;
 
         foreach (SpriteRenderer s in player.GetComponentsInChildren<SpriteRenderer>())
-                s.enabled = b;
+            s.enabled = b;
 
         player.GetComponentInChildren<SpriteMask>().enabled = b;
         player.GetComponentInChildren<Canvas>().enabled = b;
     }
 
-
     private Vector2 GetSpawnArea(Transform player)
     {
-        int team = teams.GetTeamOf(player.gameObject);
-
+        int team = teams.FindPlayerTeam(player.gameObject);
 
         // Get an open spawn point
         int pos = 0;
@@ -172,13 +158,16 @@ public class PlayerSpawner : MonoBehaviour
             }
         }
 
-
         // Spawn in one of the premade points in the right spawn zone
         //return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
         if (spawnAreas[team].childCount > pos)
+        {
             return spawnAreas[team].GetChild(pos).position;
+        }
         else
+        {
             return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[team].childCount)).position; //team technically too big for the spawn poitns (eg 4 ppl, but only 3 spots) TODO: additional spots, for now random
+        }
     }
 
     private int GetPlayerTeam() // 0 or 1 for now

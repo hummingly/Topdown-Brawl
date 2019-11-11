@@ -15,7 +15,7 @@ public class GameMode : ScriptableObject
     public int stockCount;
 
     public int maxTeams = 2;
-
+    public int maxTeamSize = 3;
 
     ////public enum WinConditions { Kills, Objective };
     //public enum PointReward { OnKill, OnDestroy, OnOccupyTime, OnReturnFlag, OnGoal, None };

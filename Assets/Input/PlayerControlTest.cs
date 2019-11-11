@@ -174,6 +174,22 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ready"",
+                    ""type"": ""Button"",
+                    ""id"": ""652e6783-ffc1-4e11-9acc-b9548ef875d2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LeaveTeam"",
+                    ""type"": ""Button"",
+                    ""id"": ""6726a714-eccd-4751-9f31-cb4dd2ee0363"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -198,6 +214,28 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ef192ba-f2ea-46a1-83d6-254fa579ae1b"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ready"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75f105bd-9c5e-432d-8621-dbbf1d2fecf7"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeaveTeam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -217,6 +255,8 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
+        m_Menu_Ready = m_Menu.FindAction("Ready", throwIfNotFound: true);
+        m_Menu_LeaveTeam = m_Menu.FindAction("LeaveTeam", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -349,12 +389,16 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     private IMenuActions m_MenuActionsCallbackInterface;
     private readonly InputAction m_Menu_Select;
     private readonly InputAction m_Menu_Move;
+    private readonly InputAction m_Menu_Ready;
+    private readonly InputAction m_Menu_LeaveTeam;
     public struct MenuActions
     {
         private PlayerControlTest m_Wrapper;
         public MenuActions(PlayerControlTest wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Menu_Select;
         public InputAction @Move => m_Wrapper.m_Menu_Move;
+        public InputAction @Ready => m_Wrapper.m_Menu_Ready;
+        public InputAction @LeaveTeam => m_Wrapper.m_Menu_LeaveTeam;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -370,6 +414,12 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Move.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
                 Move.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
                 Move.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
+                Ready.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                Ready.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                Ready.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                LeaveTeam.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
+                LeaveTeam.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
+                LeaveTeam.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
             }
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -380,6 +430,12 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Move.started += instance.OnMove;
                 Move.performed += instance.OnMove;
                 Move.canceled += instance.OnMove;
+                Ready.started += instance.OnReady;
+                Ready.performed += instance.OnReady;
+                Ready.canceled += instance.OnReady;
+                LeaveTeam.started += instance.OnLeaveTeam;
+                LeaveTeam.performed += instance.OnLeaveTeam;
+                LeaveTeam.canceled += instance.OnLeaveTeam;
             }
         }
     }
@@ -398,5 +454,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     {
         void OnSelect(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnReady(InputAction.CallbackContext context);
+        void OnLeaveTeam(InputAction.CallbackContext context);
     }
 }
