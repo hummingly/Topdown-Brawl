@@ -11,12 +11,12 @@ public partial class TeamManager : MonoBehaviour
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
     [SerializeField] private String[] colorStrings;
+    [SerializeField] private GameObject defenseBases;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
     public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
-    public bool basesSet;
 
     private void Awake()
     {
@@ -105,6 +105,11 @@ public partial class TeamManager : MonoBehaviour
 
     public void InitDefenses()
     {
+        for (int i = 0; i<teams.Count; i++)
+        {
+            teams[i].setBase(defenseBases.transform.GetChild(i).gameObject);
+        }
+        /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
         // assumption count bases == teams.count --> TODO!
         // random assignment --> TODO!
@@ -113,7 +118,7 @@ public partial class TeamManager : MonoBehaviour
             print("base...");
             teams[t].setBase(bases[t]);
         }
-        basesSet = true;
+        */
     }
 
     public void AddBot()

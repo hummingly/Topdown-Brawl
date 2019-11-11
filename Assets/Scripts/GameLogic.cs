@@ -65,6 +65,8 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator InitGameplay()
     {
+        // HERERERERERERERE
+        GameObject.FindGameObjectWithTag();
         uiManager = FindObjectOfType<UIManager>();
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;

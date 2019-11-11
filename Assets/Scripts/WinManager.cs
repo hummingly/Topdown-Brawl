@@ -36,7 +36,15 @@ public class WinManager : MonoBehaviour
         // start checking when teams are set
         if (teams != null)
         {
-            bool x = teams.Exists(t => t.getBase().getHealth() <= 0);
+            bool x = teams.Exists(t => t.getBase().GetComponent<DestructibleTeamBlock>().getHealth() <= 0);
+            // just for quick testing
+            foreach (Team t in teams)
+            {
+                if (t.getBase().GetComponent<DestructibleTeamBlock>().getHealth() <= 0)
+                {
+                    print(t.color);
+                }
+            }
             //print(x);
             return x;
         }

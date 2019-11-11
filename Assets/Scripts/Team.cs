@@ -13,7 +13,7 @@ public partial class TeamManager
         public int Points { get; set; }
         public Color color { get; set; }
 
-        private DestructibleTeamBlock defenseBase;
+        private GameObject defenseBase;
 
         public Team(int teamSize, Color color)
         {
@@ -105,7 +105,7 @@ public partial class TeamManager
             return players.Exists(predicate);
         }
 
-        public void setBase(DestructibleTeamBlock defenseBase)
+        public void setBase(GameObject defenseBase)
         {
             this.defenseBase = defenseBase;
             if (this.defenseBase != null)
@@ -113,7 +113,7 @@ public partial class TeamManager
                 print("set!");
             }
         }
-        public DestructibleTeamBlock getBase()
+        public GameObject getBase()
         {
             return defenseBase;
         }
