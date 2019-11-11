@@ -58,7 +58,8 @@ public class Projectile : MonoBehaviour
 
                 if (didKill)
                 {
-                    FindObjectOfType<GameLogic>().IncreaseScore(owner);
+                    if (damageAble.CompareTag("Player"))
+                        FindObjectOfType<GameLogic>().IncreaseScore(owner);
                 }
             }
         }
