@@ -41,10 +41,13 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        //if bigger than gamemode max then won
-        if (winManager.TeamWon(teamManager.GetTeams()))
+        if (GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame)
         {
-            GameOver();
+            //if bigger than gamemode max then won
+            if (winManager.TeamWon(teamManager.GetTeams()))
+            {
+                GameOver();
+            }
         }
     }
 
@@ -92,8 +95,13 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-
+        print("init players");
         teamManager.InitPlayers();
+        if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
+        {
+            print("init bases");
+            teamManager.InitDefenses();
+        }
     }
 
 

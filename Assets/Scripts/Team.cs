@@ -12,6 +12,8 @@ public partial class TeamManager
         public readonly int Capacity;
         public int Points { get; set; }
 
+        private DestructibleTeamBlock defenseBase;
+
         public Team(int teamSize)
         {
             Capacity = teamSize;
@@ -99,6 +101,19 @@ public partial class TeamManager
         public bool ExistsPlayer(Predicate<GameObject> predicate)
         {
             return players.Exists(predicate);
+        }
+
+        public void setBase(DestructibleTeamBlock defenseBase)
+        {
+            this.defenseBase = defenseBase;
+            if (this.defenseBase != null)
+            {
+                print("set!");
+            }
+        }
+        public DestructibleTeamBlock getBase()
+        {
+            return defenseBase;
         }
     }
 }

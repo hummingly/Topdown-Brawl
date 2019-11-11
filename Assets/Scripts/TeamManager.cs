@@ -15,6 +15,7 @@ public partial class TeamManager : MonoBehaviour
     public List<GameObject> playerNrs = new List<GameObject>();
     public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
+    public bool basesSet;
 
     private void Awake()
     {
@@ -90,6 +91,20 @@ public partial class TeamManager : MonoBehaviour
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
             }
         }
+    }
+
+
+    public void InitDefenses()
+    {
+        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
+        // assumption count bases == teams.count --> TODO!
+        // random assignment --> TODO!
+        for (int t = 0; t < teams.Count; t++)
+        {
+            print("base...");
+            teams[t].setBase(bases[t]);
+        }
+        basesSet = true;
     }
 
     public void AddBot()
