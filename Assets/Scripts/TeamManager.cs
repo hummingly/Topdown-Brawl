@@ -11,7 +11,7 @@ public partial class TeamManager : MonoBehaviour
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
     [SerializeField] private String[] colorStrings;
-    [SerializeField] private GameObject defenseBases;
+    //[SerializeField] private GameObject defenseBases;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
@@ -103,11 +103,12 @@ public partial class TeamManager : MonoBehaviour
     }
 
 
-    public void InitDefenses()
+    public void InitDefenseBases(GameObject parent)
     {
         for (int i = 0; i<teams.Count; i++)
         {
-            teams[i].setBase(defenseBases.transform.GetChild(i).gameObject);
+            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
+            teams[i].setBase(parent.transform.GetChild(i).gameObject);
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();

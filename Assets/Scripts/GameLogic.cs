@@ -65,8 +65,6 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator InitGameplay()
     {
-        // HERERERERERERERE
-        GameObject.FindGameObjectWithTag();
         uiManager = FindObjectOfType<UIManager>();
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
@@ -102,7 +100,8 @@ public class GameLogic : MonoBehaviour
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
         {
             print("init bases");
-            teamManager.InitDefenses();
+            GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
+            teamManager.InitDefenseBases(defenseBasesParent);
         }
     }
 
