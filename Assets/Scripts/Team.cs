@@ -9,27 +9,29 @@ public partial class TeamManager
     public class Team : IEnumerable
     {
         private readonly List<GameObject> players;
-        public readonly int Capacity;
+        public readonly int capacity;
         public int Points { get; set; }
+        public Color color { get; set; }
 
         private DestructibleTeamBlock defenseBase;
 
-        public Team(int teamSize)
+        public Team(int teamSize, Color color)
         {
-            Capacity = teamSize;
-            players = new List<GameObject>(Capacity);
+            capacity = teamSize;
+            players = new List<GameObject>(capacity);
             Points = 0;
+            this.color = color;
         }
 
         public int Count => players.Count;
 
         public bool IsEmpty => players.Count == 0;
 
-        public bool IsFull => players.Count == Capacity;
+        public bool IsFull => players.Count == capacity;
 
         public GameObject Get(int index)
         {
-            if (index > -1 && index < Capacity)
+            if (index > -1 && index < capacity)
             {
                 return players[index];
             }
@@ -38,7 +40,7 @@ public partial class TeamManager
 
         public bool AddPlayer(GameObject player)
         {
-            if (players.Count < Capacity && player != null)
+            if (players.Count < capacity && player != null)
             {
                 players.Add(player);
                 return true;

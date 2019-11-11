@@ -10,6 +10,8 @@ public partial class TeamManager : MonoBehaviour
     private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
+    [SerializeField] public enum ColorString { White, Yellow, Cyan, Green, Orange, Purple };
+    [SerializeField] private ColorString colorStrings;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
@@ -23,12 +25,14 @@ public partial class TeamManager : MonoBehaviour
 
         teamColors = ExtensionMethods.Shuffle(teamColors);
 
+
+
         // TODO: remove public field reference
         GameMode gameMode = GetComponent<WinManager>().gameMode;
         teams = new List<Team>(gameMode.maxTeams);
         for (int i = 0; i < gameMode.maxTeams; i++)
         {
-            teams.Add(new Team(gameMode.maxTeamSize));
+            teams.Add(new Team(gameMode.maxTeamSize, GetAColor(i)));
         }
     }
 
@@ -88,7 +92,7 @@ public partial class TeamManager : MonoBehaviour
                 }
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
-                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
+                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(teams[FindPlayerTeam(currentPlayer)].color);
             }
         }
     }
@@ -148,7 +152,7 @@ public partial class TeamManager : MonoBehaviour
             if (AddToSmallestTeam(player.gameObject))
             {
                 FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
-                player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
+                player.GetComponentInChildren<PlayerVisuals>().InitColor(teams[FindPlayerTeam(player.gameObject)].color);
             }
         }
     }
@@ -196,7 +200,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
 
-        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.Capacity);
+        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.capacity);
         if (nextTeam > -1)
         {
             teams[currentTeam].RemovePlayer(player);
@@ -204,7 +208,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
         // Look for empty slot in team before the current team.
-        int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.Capacity);
+        int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.capacity);
         if (previousTeam > -1)
         {
             teams[currentTeam].RemovePlayer(player);
@@ -241,7 +245,7 @@ public partial class TeamManager : MonoBehaviour
     {
         // Returns a list of teams which could add a player (empty spot or replace
         // bot). If the list is empty, all teams are already filled with players.
-        List<Team> openTeams = teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
+        List<Team> openTeams = teams.FindAll(t => t.Count < t.capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
         if (openTeams.Count == 0)
         {
             return -1;
@@ -278,12 +282,11 @@ public partial class TeamManager : MonoBehaviour
     }
 
     // If the player has no team, it will return a transparent black.
-    public Color GetColorOf(GameObject player)
+    public Color GetAColor(int index)
     {
-        int i = FindPlayerTeam(player);
-        if (i > -1)
+        if (index > -1)
         {
-            return teamColors[i];
+            return teamColors[index];
         }
         return new Color(0.0f, 0.0f, 0.0f, 1.0f);
     }
