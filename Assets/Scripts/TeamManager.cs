@@ -10,8 +10,7 @@ public partial class TeamManager : MonoBehaviour
     private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
-    [SerializeField] public enum ColorString { White, Yellow, Cyan, Green, Orange, Purple };
-    [SerializeField] private ColorString colorStrings;
+    [SerializeField] private String[] colorStrings;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
@@ -22,9 +21,15 @@ public partial class TeamManager : MonoBehaviour
     private void Awake()
     {
         menu = FindObjectOfType<MenuManager>();
-
-        teamColors = ExtensionMethods.Shuffle(teamColors);
-
+        int seed = UnityEngine.Random.Range(0, 1000);
+        teamColors = ExtensionMethods.Shuffle(teamColors, seed);
+        colorStrings = ExtensionMethods.Shuffle(colorStrings, seed);
+        /*
+        for (int i = 0; i < 6; i++)
+        {
+            print(teamColors[i]);
+            print(colorStrings[i]);
+        }*/
 
 
         // TODO: remove public field reference
@@ -92,7 +97,7 @@ public partial class TeamManager : MonoBehaviour
                 }
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
-                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(teams[FindPlayerTeam(currentPlayer)].color);
+                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
             }
         }
     }
@@ -152,7 +157,7 @@ public partial class TeamManager : MonoBehaviour
             if (AddToSmallestTeam(player.gameObject))
             {
                 FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
-                player.GetComponentInChildren<PlayerVisuals>().InitColor(teams[FindPlayerTeam(player.gameObject)].color);
+                player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
             }
         }
     }
@@ -281,7 +286,6 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    // If the player has no team, it will return a transparent black.
     public Color GetAColor(int index)
     {
         if (index > -1)
@@ -289,6 +293,11 @@ public partial class TeamManager : MonoBehaviour
             return teamColors[index];
         }
         return new Color(0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+    public Color GetColorOf(GameObject player)
+    {
+        return teams[FindPlayerTeam(player)].color;
     }
 
     public void IncreaseScore(GameObject player)

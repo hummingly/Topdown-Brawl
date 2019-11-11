@@ -40,8 +40,9 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    public static int[] Shuffle(int[] array)//object[] shuffle(object[] array)
+    public static int[] Shuffle(int[] array, int seed)//object[] shuffle(object[] array)
     {
+        Random.InitState(seed);
         for (int t = 0; t < array.Length; t++)
         {
             int tmp = array[t];
@@ -52,8 +53,9 @@ public static class ExtensionMethods
         return array;
     }
 
-    public static Color[] Shuffle(Color[] array)//object[] shuffle(object[] array)
+    public static Color[] Shuffle(Color[] array, int seed)//object[] shuffle(object[] array)
     {
+        Random.InitState(seed);
         for (int t = 0; t < array.Length; t++)
         {
             Color tmp = array[t];
@@ -64,8 +66,9 @@ public static class ExtensionMethods
         return array;
     }
 
-    public static List<GameObject> Shuffle(List<GameObject> array)//object[] shuffle(object[] array)
+    public static List<GameObject> Shuffle(List<GameObject> array, int seed)//object[] shuffle(object[] array)
     {
+        Random.InitState(seed);
         for (int t = 0; t < array.Count; t++)
         {
             GameObject tmp = array[t];
@@ -75,6 +78,20 @@ public static class ExtensionMethods
         }
         return array;
     }
+
+    public static string[] Shuffle(string[] array, int seed)//object[] shuffle(object[] array)
+    {
+        Random.InitState(seed);
+        for (int t = 0; t < array.Length; t++)
+        {
+            string tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
     /*
     public static object[] shuffle(object[] array)
     {

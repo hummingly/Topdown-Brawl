@@ -2436,8 +2436,16 @@ MonoBehaviour:
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
   - {r: 0.8117648, g: 0, b: 1, a: 1}
+  colorStrings:
+  - WHITE
+  - YELLOW
+  - CYAN
+  - GREEN
+  - ORANGE
+  - PURPLE
   playerNrs: []
   playerChars: []
+  basesSet: 0
 --- !u!114 &723236034
 MonoBehaviour:
   m_ObjectHideFlags: 0
