@@ -33,6 +33,15 @@
 		}
 
 
+		float random(in float x) {
+			return frac(sin(x)*1e4);
+		}
+
+		float randomSerie(float x, float freq, float t) {
+			return step(.5, random(floor(x*freq) - floor(t)));
+		}
+
+
 	ENDCG
 
     SubShader
@@ -134,6 +143,7 @@
 				uv.x /= xPix;
 				uv.y /= yPix;
 
+				// Pixelated
 				fixed4 col = tex2D(_MainTex, uv);
 
 				// trippy color change -> col *= uv.y + _SinTime; or col += cos(_Time + uv.y);
@@ -189,14 +199,21 @@
 				float f = rand(float2(uv.x, uv.y)) * .5;
 				//uv.y += f * .25;
 
-
-				float brigthness = 1.75f; //0.1f;
+				// Screen scroll white bar
+				float brigthness = 1.5f; //0.1f;
 				float multi = brigthness * cos(_Time * 50 + uv.y);
 				multi = clamp(multi, 1, 1.5);
 				col = col * multi;
+				/*float freq = abs(atan(_Time)*.1);// + random(floor(st.y));//how thick lines
+				float t = _Time * (1.0 - freq)*400; //how to scroll em
+				float val = randomSerie(-uv.y, freq*100, t);
+				col = col * (val + 1);*/
+
+
 				
 				// TODO: noch horizontales zucken? wirklich uv ändern sucks because changes objects
 
+				// Edge flickering
 				float y = cos(_Time * 1 + uv.y) * 100;
 				float centerX = uv.x - 0.5f;
 				//centerX *= f;
