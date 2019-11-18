@@ -32,13 +32,28 @@
 			return frac(sin(sn) * c);
 		}
 
+		float randomNew(in float x) {
+			float x0 = floor(x);
+			float x1 = x0 + 1.;
+			float v0 = frac(sin(x0*.014686)*31718.927 + x0);
+			float v1 = frac(sin(x1*.014686)*31718.927 + x1);
+
+			return (v0*(1. - frac(x)) + v1 * (frac(x)))*2. - 1.*sin(x);
+		}
+
+		float randomSerieNew(float x, float freq, float t) {
+			//return step(.1, random(floor(x*freq) - floor(t)));
+			return randomNew(x * freq - t);
+		}
+
 
 		float random(in float x) {
 			return frac(sin(x)*1e4);
 		}
 
 		float randomSerie(float x, float freq, float t) {
-			return step(.5, random(floor(x*freq) - floor(t)));
+			//return step(.1, random(floor(x*freq) - floor(t)));
+			return smoothstep(.1, .2, random(floor(x*freq) - floor(t)));
 		}
 
 
@@ -200,14 +215,21 @@
 				//uv.y += f * .25;
 
 				// Screen scroll white bar
-				float brigthness = 1.5f; //0.1f;
+				/*float brigthness = 1.5f; //0.1f;
 				float multi = brigthness * cos(_Time * 50 + uv.y);
 				multi = clamp(multi, 1, 1.5);
-				col = col * multi;
+				col = col * multi;*/
 				/*float freq = abs(atan(_Time)*.1);// + random(floor(st.y));//how thick lines
 				float t = _Time * (1.0 - freq)*400; //how to scroll em
 				float val = randomSerie(-uv.y, freq*100, t);
 				col = col * (val + 1);*/
+				/*float val = 1.1f - randomSerie(-uv.y,  5, _Time * 333);
+				val = clamp(val, 1, 100);
+				col = col * val;*/
+				float brigthness = 0.45f; //0.5f;
+				float val = brigthness * randomSerieNew(-uv.y, 3, _Time * 150);
+				val = clamp(val, 1, 1.4f); //100f);
+				col = col * val;
 
 
 				
