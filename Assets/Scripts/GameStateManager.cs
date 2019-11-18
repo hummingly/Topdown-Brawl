@@ -30,6 +30,7 @@ public class GameStateManager : MonoBehaviour
         {
             // hardcoded BAAAD
             currentMapInd = 2;
+            mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
         }
     }
 
