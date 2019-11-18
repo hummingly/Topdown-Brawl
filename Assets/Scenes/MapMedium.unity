@@ -6665,8 +6665,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1154641775}
   m_Layer: 0
-  m_Name: Destructible Objective Test
-  m_TagString: Untagged
+  m_Name: DefenseBases
+  m_TagString: DefenseBases
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7471,7 +7471,7 @@ GameObject:
   - component: {fileID: 1249933567}
   - component: {fileID: 1249933566}
   m_Layer: 0
-  m_Name: Block (6)
+  m_Name: Block (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7501,7 +7501,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1249933564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87b7d0cd8f60bb4e93f95b080e56dc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 83c74491a15b4a24c80dac44b3dcd294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 1853825485}
@@ -12389,7 +12389,7 @@ GameObject:
   - component: {fileID: 1840763945}
   - component: {fileID: 1840763944}
   m_Layer: 0
-  m_Name: Block (5)
+  m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12419,7 +12419,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1840763942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87b7d0cd8f60bb4e93f95b080e56dc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 83c74491a15b4a24c80dac44b3dcd294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 933680732}

@@ -10,6 +10,8 @@ public partial class TeamManager : MonoBehaviour
     private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
+    [SerializeField] private String[] colorStrings;
+    //[SerializeField] private GameObject defenseBases;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
@@ -19,14 +21,16 @@ public partial class TeamManager : MonoBehaviour
     private void Awake()
     {
         menu = FindObjectOfType<MenuManager>();
+        int seed = UnityEngine.Random.Range(0, 1000);
+        teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
+        colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
 
-        teamColors = ExtensionMethods.Shuffle(teamColors);
-
-        GameMode gameMode = GetComponent<GameLogic>().gameMode;
+        // TODO: remove public field reference
+        GameMode gameMode = GetComponent<WinManager>().gameMode;
         teams = new List<Team>(gameMode.maxTeams);
         for (int i = 0; i < gameMode.maxTeams; i++)
         {
-            teams.Add(new Team(gameMode.maxTeamSize));
+            teams.Add(new Team(gameMode.maxTeamSize, GetColor(i)));
         }
     }
 
@@ -89,6 +93,26 @@ public partial class TeamManager : MonoBehaviour
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
             }
         }
+    }
+
+
+    public void InitDefenseBases(GameObject parent)
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
+            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
+        }
+        /*
+        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
+        // assumption count bases == teams.count --> TODO!
+        // random assignment --> TODO!
+        for (int t = 0; t < teams.Count; t++)
+        {
+            print("base...");
+            teams[t].setBase(bases[t]);
+        }
+        */
     }
 
     public void AddBot()
@@ -261,15 +285,18 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    // If the player has no team, it will return a transparent black.
-    public Color GetColorOf(GameObject player)
+    public Color GetColor(int index)
     {
-        int i = FindPlayerTeam(player);
-        if (i > -1)
+        if (index > -1)
         {
-            return teamColors[i];
+            return teamColors[index];
         }
         return new Color(0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+    public Color GetColorOf(GameObject player)
+    {
+        return teams[FindPlayerTeam(player)].Color;
     }
 
     public void IncreaseScore(GameObject player)
@@ -282,13 +309,13 @@ public partial class TeamManager : MonoBehaviour
         teams[team].Points++;
     }
 
-    public bool SomeTeamWon(int pointsToWin)
-    {
-        return teams.Exists(t => t.Points >= pointsToWin);
-    }
-
     public int GetScore(int team)
     {
         return teams[team].Points;
+    }
+
+    public List<Team> GetTeams()
+    {
+        return teams;
     }
 }
