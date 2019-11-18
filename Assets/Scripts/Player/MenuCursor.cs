@@ -81,7 +81,7 @@ public class MenuCursor : MonoBehaviour
                         addBotButton = hitObj.gameObject;
                         break;
                     case "Game Mode Toggle":
-                        //menuManager.ToggleGameMode();
+                        menuManager.ToggleGameMode(hitObj.gameObject);
                         break;
                 }
             }

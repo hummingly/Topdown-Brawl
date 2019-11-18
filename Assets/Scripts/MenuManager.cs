@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -115,6 +116,13 @@ public class MenuManager : MonoBehaviour
     public void ToggleMap()
     {
         gameState.ToggleMap();
+    }
+
+    public void ToggleGameMode(GameObject button)
+    {
+        string name = gameState.ToggleGameMode();
+        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
+        textMesh.SetText(name);
     }
 
     // This is only called when a player or bot has been added successfully by

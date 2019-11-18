@@ -11,9 +11,9 @@ public class WinManager : MonoBehaviour
     [SerializeField] public GameMode gameMode;
     private Team winningTeam;
 
-    void Start()
+    void Update()
     {
-
+        gameMode = GetComponent<GameStateManager>().GetCurrentGameMode();
     }
 
     public bool OnTeamWon(List<Team> teams)
@@ -42,9 +42,7 @@ public class WinManager : MonoBehaviour
         // start checking when teams are set
         if (teams != null)
         {
-            //bool x = teams.Exists(t => t.GetBase().getHealth() <= 0);
             int aliveTeams = 0;
-            // just for quick testing
             foreach (Team t in teams)
             {
                 if (t.DefenseBase.GetHealth() <= 0)
@@ -57,11 +55,9 @@ public class WinManager : MonoBehaviour
                     aliveTeams++;
                 }
             }
-            //print(x);
-
             if (aliveTeams == 1)
             {
-                int index = teams.FindIndex(t => t.DefenseBase.GetHealth() > 0);
+                int index = teams.FindIndex(t => t.DefenseBase != null);
                 winningTeam = teams[index];
                 return true;
             }
