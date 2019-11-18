@@ -23,9 +23,13 @@ public class GameLogic : MonoBehaviour
     private void Awake()
     {
         if (instance != null && instance != this)
-            Destroy(this.gameObject);     
+        {
+            Destroy(this.gameObject);
+        }
         else
-            instance = this; 
+        {
+            instance = this;
+        }
 
         teamManager = GetComponent<TeamManager>();
 
@@ -104,10 +108,9 @@ public class GameLogic : MonoBehaviour
             print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
-            roundRunning = true;
         }
+        roundRunning = true;
     }
-
 
     public void IncreaseScore(GameObject player)
     {
