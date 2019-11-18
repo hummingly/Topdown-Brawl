@@ -22,8 +22,8 @@ public partial class TeamManager : MonoBehaviour
     {
         menu = FindObjectOfType<MenuManager>();
         int seed = UnityEngine.Random.Range(0, 1000);
-        teamColors = ExtensionMethods.Shuffle(teamColors, seed);
-        colorStrings = ExtensionMethods.Shuffle(colorStrings, seed);
+        teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
+        colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
         /*
         for (int i = 0; i < 6; i++)
         {
@@ -108,7 +108,7 @@ public partial class TeamManager : MonoBehaviour
         for (int i = 0; i<teams.Count; i++)
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].setBase(parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>());
+            teams[i].SetBase(parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>());
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
@@ -211,7 +211,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
 
-        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.capacity);
+        int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.Capacity);
         if (nextTeam > -1)
         {
             teams[currentTeam].RemovePlayer(player);
@@ -219,7 +219,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
         // Look for empty slot in team before the current team.
-        int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.capacity);
+        int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.Capacity);
         if (previousTeam > -1)
         {
             teams[currentTeam].RemovePlayer(player);
@@ -256,7 +256,7 @@ public partial class TeamManager : MonoBehaviour
     {
         // Returns a list of teams which could add a player (empty spot or replace
         // bot). If the list is empty, all teams are already filled with players.
-        List<Team> openTeams = teams.FindAll(t => t.Count < t.capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
+        List<Team> openTeams = teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
         if (openTeams.Count == 0)
         {
             return -1;
@@ -303,7 +303,7 @@ public partial class TeamManager : MonoBehaviour
 
     public Color GetColorOf(GameObject player)
     {
-        return teams[FindPlayerTeam(player)].color;
+        return teams[FindPlayerTeam(player)].Color;
     }
 
     public void IncreaseScore(GameObject player)

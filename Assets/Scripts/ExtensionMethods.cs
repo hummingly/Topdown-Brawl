@@ -40,56 +40,18 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    public static int[] Shuffle(int[] array, int seed)//object[] shuffle(object[] array)
+    
+    public static IList<T> Shuffle<T>(IList<T> collection, int seed)
     {
         Random.InitState(seed);
-        for (int t = 0; t < array.Length; t++)
+        for (int t = 0; t < collection.Count; t++)
         {
-            int tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
+            T tmp = collection[t];
+            int r = Random.Range(t, collection.Count);
+            collection[t] = collection[r];
+            collection[r] = tmp;
         }
-        return array;
-    }
-
-    public static Color[] Shuffle(Color[] array, int seed)//object[] shuffle(object[] array)
-    {
-        Random.InitState(seed);
-        for (int t = 0; t < array.Length; t++)
-        {
-            Color tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
-    }
-
-    public static List<GameObject> Shuffle(List<GameObject> array, int seed)//object[] shuffle(object[] array)
-    {
-        Random.InitState(seed);
-        for (int t = 0; t < array.Count; t++)
-        {
-            GameObject tmp = array[t];
-            int r = Random.Range(t, array.Count);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
-    }
-
-    public static string[] Shuffle(string[] array, int seed)//object[] shuffle(object[] array)
-    {
-        Random.InitState(seed);
-        for (int t = 0; t < array.Length; t++)
-        {
-            string tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
+        return collection;
     }
 
     /*

@@ -9,29 +9,29 @@ public partial class TeamManager
     public class Team : IEnumerable
     {
         private readonly List<GameObject> players;
-        public readonly int capacity;
+        public readonly int Capacity;
         public int Points { get; set; }
-        public Color color { get; set; }
+        public Color Color { get; set; }
 
         private DestructibleTeamBlock defenseBase;
 
         public Team(int teamSize, Color color)
         {
-            capacity = teamSize;
-            players = new List<GameObject>(capacity);
+            Capacity = teamSize;
+            players = new List<GameObject>(Capacity);
             Points = 0;
-            this.color = color;
+            Color = color;
         }
 
         public int Count => players.Count;
 
         public bool IsEmpty => players.Count == 0;
 
-        public bool IsFull => players.Count == capacity;
+        public bool IsFull => players.Count == Capacity;
 
         public GameObject Get(int index)
         {
-            if (index > -1 && index < capacity)
+            if (index > -1 && index < Capacity)
             {
                 return players[index];
             }
@@ -40,7 +40,7 @@ public partial class TeamManager
 
         public bool AddPlayer(GameObject player)
         {
-            if (players.Count < capacity && player != null)
+            if (players.Count < Capacity && player != null)
             {
                 players.Add(player);
                 return true;
@@ -105,7 +105,7 @@ public partial class TeamManager
             return players.Exists(predicate);
         }
 
-        public void setBase(DestructibleTeamBlock defenseBase)
+        public void SetBase(DestructibleTeamBlock defenseBase)
         {
             this.defenseBase = defenseBase;
             if (this.defenseBase != null)
@@ -113,7 +113,7 @@ public partial class TeamManager
                 print("set!");
             }
         }
-        public DestructibleTeamBlock getBase()
+        public DestructibleTeamBlock GetBase()
         {
             return defenseBase;
         }
