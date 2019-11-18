@@ -9,13 +9,14 @@ public class WinManager : MonoBehaviour
 {
     // TODO make private
     [SerializeField] public GameMode gameMode;
+    private Team winningTeam;
 
     void Start()
     {
 
     }
 
-    public bool TeamWon(List<Team> teams)
+    public bool OnTeamWon(List<Team> teams)
     {
         switch (gameMode.winCondition)
         {
@@ -29,6 +30,11 @@ public class WinManager : MonoBehaviour
 
     }
 
+    public Team GetWinningTeam()
+    {
+        return winningTeam;
+    }
+
     private bool CheckDefenses(List<Team> teams)
     {
         //print("checking defenses:");
@@ -36,19 +42,30 @@ public class WinManager : MonoBehaviour
         // start checking when teams are set
         if (teams != null)
         {
-            bool x = teams.Exists(t => t.GetBase().getHealth() <= 0);
+            //bool x = teams.Exists(t => t.GetBase().getHealth() <= 0);
+            int aliveTeams = 0;
             // just for quick testing
             foreach (Team t in teams)
             {
                 if (t.GetBase().getHealth() <= 0)
                 {
-                    print(t.Color);
+                    //print(t.Color);
                     t.SetBase(null);
+                } else
+                {
+                    aliveTeams++;
                 }
             }
             //print(x);
+
+            if (aliveTeams == 1)
+            {
+                int index = teams.FindIndex(t => t.GetBase().getHealth() > 0);
+                winningTeam = teams[index];
+                return true;
+            }
             
-            return x;
+            return false;
         }
         //print("returned false without checking");
         return false;
@@ -57,7 +74,11 @@ public class WinManager : MonoBehaviour
     public bool CheckScores(List<Team> teams)
     {
         // checks for a team that won
-        return teams.Exists(t => t.Points >= gameMode.pointsToWin);
+        //return teams.Exists(t => t.Points >= gameMode.pointsToWin);
+        int index = teams.FindIndex(t => t.Points >= gameMode.pointsToWin);
+        if (index != -1)
+            winningTeam = teams[index];
+        return index != -1;
     }
 
 }

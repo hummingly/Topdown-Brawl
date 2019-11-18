@@ -45,7 +45,7 @@ public class GameLogic : MonoBehaviour
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
-            if (winManager.TeamWon(teamManager.GetTeams()))
+            if (winManager.OnTeamWon(teamManager.GetTeams()))
             {
                 roundRunning = false;
                 GameOver();
