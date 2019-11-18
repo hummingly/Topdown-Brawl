@@ -33,6 +33,8 @@ public class UIManager : MonoBehaviour
     public void SetGameOverUI()
     {
         gameOver.SetActive(true);
+        TextMeshProUGUI text = gameOver.GetComponentInChildren<TextMeshProUGUI>();
+        var winningTeam = teams.GetTeamName(FindObjectOfType<WinManager>().GetWinningTeam());
+        text.SetText("Team " + winningTeam + " won!");
     }
-
 }
