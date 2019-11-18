@@ -47,11 +47,12 @@ public class WinManager : MonoBehaviour
             // just for quick testing
             foreach (Team t in teams)
             {
-                if (t.GetBase().getHealth() <= 0)
+                if (t.DefenseBase.GetHealth() <= 0)
                 {
                     //print(t.Color);
-                    t.SetBase(null);
-                } else
+                    t.DefenseBase = null;
+                }
+                else
                 {
                     aliveTeams++;
                 }
@@ -60,11 +61,11 @@ public class WinManager : MonoBehaviour
 
             if (aliveTeams == 1)
             {
-                int index = teams.FindIndex(t => t.GetBase().getHealth() > 0);
+                int index = teams.FindIndex(t => t.DefenseBase.GetHealth() > 0);
                 winningTeam = teams[index];
                 return true;
             }
-            
+
             return false;
         }
         //print("returned false without checking");
@@ -77,8 +78,11 @@ public class WinManager : MonoBehaviour
         //return teams.Exists(t => t.Points >= gameMode.pointsToWin);
         int index = teams.FindIndex(t => t.Points >= gameMode.pointsToWin);
         if (index != -1)
+        {
             winningTeam = teams[index];
-        return index != -1;
+            return true;
+        }
+        return false;
     }
 
 }

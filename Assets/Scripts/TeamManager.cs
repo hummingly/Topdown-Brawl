@@ -24,20 +24,13 @@ public partial class TeamManager : MonoBehaviour
         int seed = UnityEngine.Random.Range(0, 1000);
         teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
         colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
-        /*
-        for (int i = 0; i < 6; i++)
-        {
-            print(teamColors[i]);
-            print(colorStrings[i]);
-        }*/
-
 
         // TODO: remove public field reference
         GameMode gameMode = GetComponent<WinManager>().gameMode;
         teams = new List<Team>(gameMode.maxTeams);
         for (int i = 0; i < gameMode.maxTeams; i++)
         {
-            teams.Add(new Team(gameMode.maxTeamSize, GetAColor(i)));
+            teams.Add(new Team(gameMode.maxTeamSize, GetColor(i)));
         }
     }
 
@@ -105,10 +98,10 @@ public partial class TeamManager : MonoBehaviour
 
     public void InitDefenseBases(GameObject parent)
     {
-        for (int i = 0; i<teams.Count; i++)
+        for (int i = 0; i < teams.Count; i++)
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].SetBase(parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>());
+            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
@@ -292,7 +285,7 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    public Color GetAColor(int index)
+    public Color GetColor(int index)
     {
         if (index > -1)
         {

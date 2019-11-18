@@ -65,7 +65,7 @@ public abstract class IDamageable : MonoBehaviour
 
     public abstract void OnDeath();
 
-    public int getHealth()
+    public int GetHealth()
     {
         return healthPoints;
     }

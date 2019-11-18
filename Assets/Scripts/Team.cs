@@ -15,6 +15,19 @@ public partial class TeamManager
 
         private DestructibleTeamBlock defenseBase;
 
+        public DestructibleTeamBlock DefenseBase
+        {
+            get => defenseBase;
+            set
+            {
+                defenseBase = value;
+                if (defenseBase != null)
+                {
+                    Debug.Log("DefenseBase set!");
+                }
+            }
+        }
+
         public Team(int teamSize, Color color)
         {
             Capacity = teamSize;
@@ -103,19 +116,6 @@ public partial class TeamManager
         public bool ExistsPlayer(Predicate<GameObject> predicate)
         {
             return players.Exists(predicate);
-        }
-
-        public void SetBase(DestructibleTeamBlock defenseBase)
-        {
-            this.defenseBase = defenseBase;
-            if (this.defenseBase != null)
-            {
-                print("set!");
-            }
-        }
-        public DestructibleTeamBlock GetBase()
-        {
-            return defenseBase;
         }
     }
 }
