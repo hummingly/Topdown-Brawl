@@ -25,4 +25,9 @@ public class PlayerStats : IDamageable
 
         playerSpawner.PlayerDied(this);
     }
+
+    public override void OnReduceHealth(int amount, Vector3 projectilePos, Vector3 nextProjectilePos)
+    {
+        // TODO: effects, whatever
+    }
 }

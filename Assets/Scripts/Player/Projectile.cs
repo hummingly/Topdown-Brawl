@@ -40,6 +40,14 @@ public class Projectile : MonoBehaviour
     {
         //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner (now done via layer)
 
+
+        // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
+        if (other.tag == "Destruction Piece" && this.enabled)
+        {
+            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, transform.position, (Vector2)transform.position + GetComponent<Rigidbody2D>().velocity * Time.deltaTime);
+            //this.enabled = false;
+        }
+
         Destroy(gameObject);
 
         var damageAble = other.GetComponent<IDamageable>();
@@ -62,6 +70,8 @@ public class Projectile : MonoBehaviour
                 }
             }
         }
+
+
 
         // only knock back enemys or neutrals
         var otherRb = other.GetComponent<Rigidbody2D>();

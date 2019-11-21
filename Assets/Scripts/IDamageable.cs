@@ -7,13 +7,13 @@ public abstract class IDamageable : MonoBehaviour
 {
     [SerializeField] private Slider healthSlider;
     [SerializeField] private RectTransform statsUi;
-    [SerializeField] private int maxHealthPoints = 100;
+    [SerializeField] protected int maxHealthPoints = 100;
 
     internal bool alwaysShowHp; //or hide slider until took damage
 
     private readonly Quaternion guiRotation = Quaternion.identity;
 
-    private int healthPoints;
+    protected int healthPoints;
 
     public virtual void Awake()
     {
@@ -35,7 +35,7 @@ public abstract class IDamageable : MonoBehaviour
         healthSlider.value = healthPoints;
     }
 
-    internal bool ReduceHealth(int amount)
+    internal bool ReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3())
     {
         if (!healthSlider.gameObject.active)
             healthSlider.gameObject.SetActive(true);
@@ -45,6 +45,8 @@ public abstract class IDamageable : MonoBehaviour
 
         if (healthPoints <= 0)
             OnDeath();
+
+        OnReduceHealth(amount, projectilePos, nextProjectilePos);
 
         return healthPoints <= 0;
     }
@@ -58,4 +60,5 @@ public abstract class IDamageable : MonoBehaviour
     }
 
     public abstract void OnDeath();
+    public abstract void OnReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3());
 }

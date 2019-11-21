@@ -6,6 +6,7 @@ TagManager:
   tags:
   - MapBounds
   - BotLookThrough
+  - Destruction Piece
   layers:
   - Default
   - TransparentFX
