@@ -20,6 +20,7 @@
 
 		/*float rand(float2 co) 
 		{
+			//return frac(sin( dot(co.xy ,float3(12.9898,78.233,45.5432) )) * 43758.5453);
 			return frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453);
 		}*/
 		float rand(float2 co)
@@ -30,6 +31,33 @@
 			float dt = dot(co.xy, float2(a, b));
 			float sn = dt % 3.14;
 			return frac(sin(sn) * c);
+		}
+
+		float hash(float n)
+		{
+			return frac(sin(n)*43758.5453);
+		}
+
+		float noise(float3 x)
+		{
+			// The noise function returns a value in the range -1.0f -> 1.0f
+
+			float3 p = floor(x);
+			float3 f = frac(x);
+
+			f = f * f*(3.0 - 2.0*f);
+			float n = p.x + p.y*57.0 + 113.0*p.z;
+
+			return lerp(lerp(lerp(hash(n + 0.0), hash(n + 1.0), f.x),
+				lerp(hash(n + 57.0), hash(n + 58.0), f.x), f.y),
+				lerp(lerp(hash(n + 113.0), hash(n + 114.0), f.x),
+					lerp(hash(n + 170.0), hash(n + 171.0), f.x), f.y), f.z);
+		}
+
+		float randomSerieNew2(float x, float freq, float t) {
+			//return step(.1, random(floor(x*freq) - floor(t)));
+			//return randomNew(x * freq - t);
+			return noise(x * freq - t);
 		}
 
 		float randomNew(in float x) {
@@ -226,8 +254,9 @@
 				/*float val = 1.1f - randomSerie(-uv.y,  5, _Time * 333);
 				val = clamp(val, 1, 100);
 				col = col * val;*/
-				float brigthness = 0.45f; //0.5f;
-				float val = brigthness * randomSerieNew(-uv.y, 3, _Time * 150);
+				//float brigthness = 1.6f;//0.45f; //0.5f;
+				//float val = 0.45f * randomSerieNew(-uv.y, 1, _Time * 150);
+				float val = 1.4f * randomSerieNew2(-uv.y, 0.5f, _Time * 50);
 				val = clamp(val, 1, 1.4f); //100f);
 				col = col * val;
 

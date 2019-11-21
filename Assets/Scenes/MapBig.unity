@@ -4327,6 +4327,8 @@ GameObject:
   - component: {fileID: 519420030}
   - component: {fileID: 519420034}
   - component: {fileID: 519420033}
+  - component: {fileID: 519420036}
+  - component: {fileID: 519420037}
   - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
@@ -4527,6 +4529,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectMat: {fileID: 2100000, guid: 2782433ce55023b4bb675a19272294d2, type: 2}
+--- !u!114 &519420036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5528732321b96e84bb79d52adaca81a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scanLineJitter: 0.05
+  _verticalJump: 0.025
+  _horizontalShake: 0
+  _colorDrift: 0
+  _shader: {fileID: 4800000, guid: 980c8536fb45d14409d692af2d8346da, type: 3}
+--- !u!114 &519420037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d64a8ccf9daa12b48919e694ee7881e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _intensity: 0.001
+  _shader: {fileID: 4800000, guid: c8dd3eebf70176943bd861ee9d2f03be, type: 3}
 --- !u!1 &519620348
 GameObject:
   m_ObjectHideFlags: 0
