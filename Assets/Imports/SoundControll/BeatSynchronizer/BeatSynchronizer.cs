@@ -9,18 +9,49 @@ using System.Collections;
 public class BeatSynchronizer : MonoBehaviour {
 
 	public float bpm = 120f;		// Tempo in beats per minute of the audio clip.
-	public float startDelay = 1f;	// Number of seconds to delay the start of audio playback.
+	//public float startDelay = 1f;	// Number of seconds to delay the start of audio playback.
 	public delegate void AudioStartAction(double syncTime);
 	public static event AudioStartAction OnAudioStart;
-	
-	
-	void Start ()
+    double initTime = AudioSettings.dspTime;
+
+    private float startDelay = 0;
+
+    void Start ()
 	{
-		double initTime = AudioSettings.dspTime;
-		GetComponent<AudioSource>().PlayScheduled(initTime + startDelay);
+		initTime = AudioSettings.dspTime;
+
+		/*GetComponent<AudioSource>().PlayScheduled(initTime + startDelay);
 		if (OnAudioStart != null) {
 			OnAudioStart(initTime + startDelay);
-		}
+		}*/
 	}
+
+    private void Update()
+    {
+        startDelay += Time.deltaTime; //= AudioSettings.dspTime;
+    }
+
+    public void init(AudioSource audio)
+    {
+        audio.PlayScheduled(initTime + startDelay);
+        if (OnAudioStart != null)
+        {
+            OnAudioStart(initTime + startDelay);
+        }
+        
+
+        /*audio.Play();
+        if (OnAudioStart != null)
+        {
+            //double startDelay = AudioSettings.dspTime;
+            //audio.PlayScheduled(initTime + startDelay);
+            //OnAudioStart(initTime + startDelay);
+            
+            //audio.PlayScheduled(initTime);
+            //OnAudioStart(initTime);
+
+            OnAudioStart(0);
+        }*/
+    }
 
 }

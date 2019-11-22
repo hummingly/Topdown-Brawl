@@ -11,8 +11,11 @@ public class SoundManager : MonoBehaviour
     private AudioSource music;
     private BeatObserver beatObserver;
     private VolumeObserver volume;
+    private BeatSynchronizer synchronizer;
     private PostProcessVolume postProcess;
 
+    public AudioClip menuClip;
+    public AudioClip gameplayClip;
     public float bloomChangeSpeed = 1;
     public float minBloom = 2;
     public float maxBloom = 10;
@@ -30,6 +33,7 @@ public class SoundManager : MonoBehaviour
         music = GetComponent<AudioSource>();
         volume = GetComponent<VolumeObserver>();
         beatObserver = GetComponent<BeatObserver>();
+        synchronizer = GetComponent<BeatSynchronizer>();
         SceneManager.sceneLoaded += SceneLoadeded;
     }
 
@@ -39,6 +43,10 @@ public class SoundManager : MonoBehaviour
         // Regularly loaded into gameplay from character selection
         if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
+            music.clip = gameplayClip;
+            //music.Play();
+            synchronizer.init(music);
+
             postProcess = Camera.main.GetComponent<PostProcessVolume>();
         }
     }
