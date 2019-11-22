@@ -17,6 +17,13 @@ public class DefaultShootSkill : Skill
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
     }
 
+    protected override  void OnTriggerDown()
+    {
+        //shootInput = inputValue; //1;
+        if (delayTimer <= 0)
+            DoAttack();
+    }
+
     protected override void OnTrigger(float inputValue)
     {
         // may be integrated into the OnRight- / OnZRightTrigger methods

@@ -44,3 +44,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Mask Test
+    uniqueID: 3223499625
+    locked: 0

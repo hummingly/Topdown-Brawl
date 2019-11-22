@@ -51,6 +51,14 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""RightTriggerDown"",
+                    ""type"": ""Value"",
+                    ""id"": ""d2294616-f171-4f1a-9cc9-f62d24ce6dd3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
+                },
+                {
                     ""name"": ""ZRightTrigger"",
                     ""type"": ""Value"",
                     ""id"": ""2f721df3-313a-4941-8a75-cbb69e35b24a"",
@@ -152,6 +160,17 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""action"": ""ZRightTriggerUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7874509f-26b5-40c3-ad1f-177dac61eb39"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightTriggerDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -171,6 +190,22 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""2a536f1e-29a4-4452-9a94-7ebcb023331a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ready"",
+                    ""type"": ""Button"",
+                    ""id"": ""652e6783-ffc1-4e11-9acc-b9548ef875d2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""LeaveTeam"",
+                    ""type"": ""Button"",
+                    ""id"": ""6726a714-eccd-4751-9f31-cb4dd2ee0363"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
@@ -198,6 +233,28 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ef192ba-f2ea-46a1-83d6-254fa579ae1b"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ready"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""75f105bd-9c5e-432d-8621-dbbf1d2fecf7"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeaveTeam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -210,6 +267,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Rotate = m_Gameplay.FindAction("Rotate", throwIfNotFound: true);
         m_Gameplay_RightTrigger = m_Gameplay.FindAction("RightTrigger", throwIfNotFound: true);
+        m_Gameplay_RightTriggerDown = m_Gameplay.FindAction("RightTriggerDown", throwIfNotFound: true);
         m_Gameplay_ZRightTrigger = m_Gameplay.FindAction("ZRightTrigger", throwIfNotFound: true);
         m_Gameplay_ZRightTriggerUp = m_Gameplay.FindAction("ZRightTriggerUp", throwIfNotFound: true);
         m_Gameplay_LeftTrigger = m_Gameplay.FindAction("LeftTrigger", throwIfNotFound: true);
@@ -217,6 +275,8 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
+        m_Menu_Ready = m_Menu.FindAction("Ready", throwIfNotFound: true);
+        m_Menu_LeaveTeam = m_Menu.FindAction("LeaveTeam", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -270,6 +330,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Rotate;
     private readonly InputAction m_Gameplay_RightTrigger;
+    private readonly InputAction m_Gameplay_RightTriggerDown;
     private readonly InputAction m_Gameplay_ZRightTrigger;
     private readonly InputAction m_Gameplay_ZRightTriggerUp;
     private readonly InputAction m_Gameplay_LeftTrigger;
@@ -281,6 +342,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Rotate => m_Wrapper.m_Gameplay_Rotate;
         public InputAction @RightTrigger => m_Wrapper.m_Gameplay_RightTrigger;
+        public InputAction @RightTriggerDown => m_Wrapper.m_Gameplay_RightTriggerDown;
         public InputAction @ZRightTrigger => m_Wrapper.m_Gameplay_ZRightTrigger;
         public InputAction @ZRightTriggerUp => m_Wrapper.m_Gameplay_ZRightTriggerUp;
         public InputAction @LeftTrigger => m_Wrapper.m_Gameplay_LeftTrigger;
@@ -305,6 +367,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 RightTrigger.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTrigger;
                 RightTrigger.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTrigger;
                 RightTrigger.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTrigger;
+                RightTriggerDown.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTriggerDown;
+                RightTriggerDown.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTriggerDown;
+                RightTriggerDown.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnRightTriggerDown;
                 ZRightTrigger.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
                 ZRightTrigger.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
                 ZRightTrigger.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnZRightTrigger;
@@ -330,6 +395,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 RightTrigger.started += instance.OnRightTrigger;
                 RightTrigger.performed += instance.OnRightTrigger;
                 RightTrigger.canceled += instance.OnRightTrigger;
+                RightTriggerDown.started += instance.OnRightTriggerDown;
+                RightTriggerDown.performed += instance.OnRightTriggerDown;
+                RightTriggerDown.canceled += instance.OnRightTriggerDown;
                 ZRightTrigger.started += instance.OnZRightTrigger;
                 ZRightTrigger.performed += instance.OnZRightTrigger;
                 ZRightTrigger.canceled += instance.OnZRightTrigger;
@@ -349,12 +417,16 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     private IMenuActions m_MenuActionsCallbackInterface;
     private readonly InputAction m_Menu_Select;
     private readonly InputAction m_Menu_Move;
+    private readonly InputAction m_Menu_Ready;
+    private readonly InputAction m_Menu_LeaveTeam;
     public struct MenuActions
     {
         private PlayerControlTest m_Wrapper;
         public MenuActions(PlayerControlTest wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Menu_Select;
         public InputAction @Move => m_Wrapper.m_Menu_Move;
+        public InputAction @Ready => m_Wrapper.m_Menu_Ready;
+        public InputAction @LeaveTeam => m_Wrapper.m_Menu_LeaveTeam;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -370,6 +442,12 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Move.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
                 Move.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
                 Move.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnMove;
+                Ready.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                Ready.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                Ready.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
+                LeaveTeam.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
+                LeaveTeam.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
+                LeaveTeam.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
             }
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -380,6 +458,12 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Move.started += instance.OnMove;
                 Move.performed += instance.OnMove;
                 Move.canceled += instance.OnMove;
+                Ready.started += instance.OnReady;
+                Ready.performed += instance.OnReady;
+                Ready.canceled += instance.OnReady;
+                LeaveTeam.started += instance.OnLeaveTeam;
+                LeaveTeam.performed += instance.OnLeaveTeam;
+                LeaveTeam.canceled += instance.OnLeaveTeam;
             }
         }
     }
@@ -390,6 +474,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnRightTrigger(InputAction.CallbackContext context);
+        void OnRightTriggerDown(InputAction.CallbackContext context);
         void OnZRightTrigger(InputAction.CallbackContext context);
         void OnZRightTriggerUp(InputAction.CallbackContext context);
         void OnLeftTrigger(InputAction.CallbackContext context);
@@ -398,5 +483,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     {
         void OnSelect(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnReady(InputAction.CallbackContext context);
+        void OnLeaveTeam(InputAction.CallbackContext context);
     }
 }

@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class Projectile : MonoBehaviour
 {
     private TeamManager teams;
 
+    [SerializeField] private bool melee;
+    [SerializeField] private float meleeAnimDur = 0.25f;
+    [SerializeField] private float destroyAt = 0.15f;
+    [Space]
     [SerializeField] private int damage = 10;
     [Space]
     [SerializeField] private float knockStrength = 20;
@@ -18,6 +23,15 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         teams = FindObjectOfType<TeamManager>();
+        if (melee)
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.Append(GetComponentInChildren<SpriteMask>().transform.DOLocalMoveY(0, meleeAnimDur));
+            //seq.AppendCallback(() => Destroy(gameObject));
+            seq.InsertCallback(destroyAt,() => Destroy(gameObject)); //maybe just disable collider
+
+            //TODO: add easing/fade
+        }
     }
 
     void Update()

@@ -1800,7 +1800,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &362807575
 MonoBehaviour:
@@ -2045,7 +2045,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &423136065
 MonoBehaviour:
@@ -2110,7 +2110,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+  m_PlayerPrefab: {fileID: 4000924214873993329, guid: 8105c4b13a4642b46824c737b2ef05fa,
     type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
@@ -8631,7 +8631,7 @@ PrefabInstance:
     - target: {fileID: 4600040212818116122, guid: f8767aaa4ddaaab488ffefefaaeef1a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4600040212818116122, guid: f8767aaa4ddaaab488ffefefaaeef1a2,
         type: 3}
@@ -9384,7 +9384,7 @@ PrefabInstance:
     - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4000924214873993291, guid: 9fc340f7de9dbd44599c858af6c49732,
         type: 3}
@@ -10055,7 +10055,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1760122209
 GameObject:
@@ -10606,7 +10606,7 @@ Transform:
   - {fileID: 1154641775}
   - {fileID: 1260536248}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1822718980
 GameObject:

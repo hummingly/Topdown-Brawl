@@ -8,6 +8,7 @@ public abstract class Skill : MonoBehaviour
     protected PlayerMovement playerMovement;
 
     protected enum Trigger { Basic, Secondary };
+    protected enum TriggerType { Down, Hold, Up };
     //protected enum Type { Press, Release };
     // put speed and projectile in children because melee skill might not have speed or projectile
     //[SerializeField] private GameObject projectile;
@@ -16,6 +17,7 @@ public abstract class Skill : MonoBehaviour
     [SerializeField] protected int damage;
     [SerializeField] protected float spawnPosFromCenter;
     [SerializeField] protected Trigger trigger;
+    [SerializeField] protected TriggerType triggerType = TriggerType.Hold;
     // for ztrigger, input value.Get<float> is not 0 but a small number
     //[SerializeField] protected float inputTolerance = 0.8f;
 
@@ -45,17 +47,23 @@ public abstract class Skill : MonoBehaviour
 
         Attack(playerMovement.GetLastRot());
     }
-    
+
     protected void OnRightTrigger(InputValue value)
     {
-        if (trigger == Trigger.Basic)
+        if (trigger == Trigger.Basic && triggerType == TriggerType.Hold)
             // depending on other (non-shooting) skills put here directly: shootInput = value.Get<float>();
             OnTrigger(value.Get<float>());
     }
 
+    protected void OnRightTriggerDown(InputValue value)
+    {
+        if (trigger == Trigger.Basic && triggerType == TriggerType.Down)
+            OnTriggerDown();
+    }
+
     protected void OnZRightTrigger(InputValue value)
     {
-        if (trigger == Trigger.Secondary)
+        if (trigger == Trigger.Secondary && triggerType == TriggerType.Hold)
             // depending on other (non-shooting) skills put here directly: shootInput = value.Get<float>();
             OnTrigger(value.Get<float>());
     }
@@ -67,6 +75,7 @@ public abstract class Skill : MonoBehaviour
 
     protected abstract void OnTrigger(float inputValue);
     protected abstract void OnTriggerUp(float inputValue);
+    protected abstract void OnTriggerDown();
 
     protected abstract void Attack(Vector2 shootDir); // Don't shoot where player really faces, but where he tries to look at with stick
 

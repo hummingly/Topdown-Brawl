@@ -63,4 +63,9 @@ public class SnipeSkill : Skill
         if (delayTimer <= 0)
             DoAttack();
     }
+
+    protected override void OnTriggerDown()
+    {
+
+    }
 }

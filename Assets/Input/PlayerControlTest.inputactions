@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "RightTriggerDown",
+                    "type": "Value",
+                    "id": "d2294616-f171-4f1a-9cc9-f62d24ce6dd3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
                     "name": "ZRightTrigger",
                     "type": "Value",
                     "id": "2f721df3-313a-4941-8a75-cbb69e35b24a",
@@ -139,6 +147,17 @@
                     "action": "ZRightTriggerUp",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7874509f-26b5-40c3-ad1f-177dac61eb39",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightTriggerDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -158,6 +177,22 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "2a536f1e-29a4-4452-9a94-7ebcb023331a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Ready",
+                    "type": "Button",
+                    "id": "652e6783-ffc1-4e11-9acc-b9548ef875d2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "LeaveTeam",
+                    "type": "Button",
+                    "id": "6726a714-eccd-4751-9f31-cb4dd2ee0363",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
@@ -183,6 +218,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ef192ba-f2ea-46a1-83d6-254fa579ae1b",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ready",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75f105bd-9c5e-432d-8621-dbbf1d2fecf7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeaveTeam",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
