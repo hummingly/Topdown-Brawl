@@ -13,13 +13,14 @@ public class DestructibleBlock : IDamageable
             GetComponent<Collider2D>().enabled = false;
     }
 
-    public override void OnReduceHealth(int amount, Vector3 projectilePos, Vector3 nextProjectilePos)
+    public override void OnReduceHealth(int damage, Vector3 projectilePos, Vector3 nextProjectilePos)
     {
         if(destruct && destruct.enabled)
         {
             print("actual %: " + (float)healthPoints / maxHealthPoints);
             //print("piece %: " + (float)healthPoints / maxHealthPoints);
-            destruct.activateAndExplodePieces(projectilePos, nextProjectilePos, amount, 0.1f, 0.1f);
+            float radius = ExtensionMethods.Remap(damage, 10, 50, 0.3f, 0.5f);
+            destruct.activateAndExplodePieces(projectilePos, nextProjectilePos, damage, radius, 0.1f);
         }
     }
 

@@ -199,7 +199,7 @@ public class SpriteDestruction : MonoBehaviour
         return mat;
     }
 
-    public void activateAndExplodePieces(Vector2 pos, Vector2 nextPos, int damage, float radius, float maxDestroyPercent)
+    public void activateAndExplodePieces(Vector2 pos, Vector2 nextPos, int force, float radius, float maxDestroyPercent)
     {
         //instead of bullet pos take the piece as center that is nearest (since bullet size can change)... ideally would have contact point but projectile is a trigger
         Vector2 nearestPiecePos = Vector2.zero;
@@ -220,11 +220,31 @@ public class SpriteDestruction : MonoBehaviour
             }
         }
 
+        // ensure nearest piece is most furstest on the edge on this side, so don't start explosion in the middle
+        Vector2 finalPiecePos = nearestPiecePos;
+        float furtestPiecesDist = 0;
+        foreach (Collider2D c in GetComponentsInChildren<Collider2D>())
+        {
+            if (c.enabled)
+            {
+                float dist = Vector2.Distance(c.transform.position, transform.position);
+
+                if (dist > furtestPiecesDist)
+                {
+                    // check if this piece is in angle somewhat to original piece
+                    if (Vector2.Angle(c.transform.position - transform.position, nearestPiecePos - (Vector2)transform.position) < 22.5f)
+                    {
+                        furtestPiecesDist = dist;
+                        finalPiecePos = c.transform.position;
+                    }
+                }
+            }
+        }
 
 
-        Collider2D[] piecesToDetach = Physics2D.OverlapCircleAll(nearestPiecePos, radius);
-
-        /*print(piecesToDetach.Length);
+        Collider2D[] piecesToDetach = Physics2D.OverlapCircleAll(finalPiecePos, radius);
+        print(piecesToDetach.Length);
+        /*
         while (piecesToDetach.Length <= 5 && piecesToDetach.Length < transform.childCount - 1)
         {
             radius += 0.1f;
@@ -247,14 +267,14 @@ public class SpriteDestruction : MonoBehaviour
 
         //TODO: if too little peices come off it feels bad, so make the radius bigger if only some pieces came out
         // or get rid of pieces not connected to anything
-        // OR, easiest way: only start radius search above from an outer edge piece, not in the middle?
+        // OR, easiest way: only start radius search (above) from an outer edge piece, not in the middle?
 
 
         foreach (Rigidbody2D rb in rbs)
         {
             // TODO: add force in direction of bullet, but the more bullet points directly into object the more just send back to bullet
             //rb.AddForce((nextPos-pos).normalized * damage, ForceMode2D.Impulse);
-            rb.AddForce((rb.transform.position - transform.position).normalized * damage, ForceMode2D.Impulse);
+            rb.AddForce((rb.transform.position - transform.position).normalized * force, ForceMode2D.Impulse);
 
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(0.5f);
