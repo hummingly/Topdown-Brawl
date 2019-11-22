@@ -208,9 +208,7 @@ public class BotTest : MonoBehaviour
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (lookAgroFoV / 2) / (rays / 2));
             float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFalloff;
 
-            var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
-
-            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
+            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, ExtensionMethods.bulletLayerIgnored);
             rayHit = rayHit.OrderBy(h => h.distance).ToArray();
 
             //Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.red);
@@ -245,9 +243,8 @@ public class BotTest : MonoBehaviour
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));
             float lookDist = obstacleLookMaxDistance - Mathf.Abs(i) * obstacleLookFalloff;
 
-            var bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
 
-            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, bulletLayerIgnored);
+            RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, rayDir, lookDist, ExtensionMethods.bulletLayerIgnored);
             rayHit = rayHit.OrderBy(h => h.distance).ToArray();
 
             Debug.DrawLine(pointA, pointA + rayDir * lookDist, Color.white);
