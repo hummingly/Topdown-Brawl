@@ -13,7 +13,7 @@ public class PatternCounter : MonoBehaviour {
 	public int beatScalar = 1;
 	public float loopTime = 30f;
 	public AudioSource audioSource;
-	public GameObject[] observers;
+	public BeatObserver[] observers;
 	
 	private float nextBeatSample;
 	private float[] samplePeriods;
@@ -83,10 +83,10 @@ public class PatternCounter : MonoBehaviour {
 			currentSample = (float)AudioSettings.dspTime * audioSource.clip.frequency;
 			
 			if (currentSample >= nextBeatSample) {
-				foreach (GameObject obj in observers) {
+				foreach (BeatObserver obj in observers) {
 					// Since this is a specific pattern of beats, we don't need to track different beat types.
 					// Instead, client can index a custom beat counter to track which beat in the sequence has fired.
-					obj.GetComponent<BeatObserver>().BeatNotify();
+					obj.BeatNotify();
 				}
 				nextBeatSample += samplePeriods[sequenceIndex];
 				sequenceIndex = (++sequenceIndex == beatValues.Length ? 0 : sequenceIndex);

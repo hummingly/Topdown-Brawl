@@ -17,7 +17,7 @@ public class BeatCounter : MonoBehaviour {
 	public BeatType beatType = BeatType.OnBeat;
 	public float loopTime = 30f;
 	public AudioSource audioSource;
-	public GameObject[] observers;
+	public BeatObserver[] observers;
 	
 	private float nextBeatSample;
 	private float samplePeriod;
@@ -90,8 +90,8 @@ public class BeatCounter : MonoBehaviour {
 			currentSample = (float)AudioSettings.dspTime * audioSource.clip.frequency;
 			
 			if (currentSample >= (nextBeatSample + sampleOffset)) {
-				foreach (GameObject obj in observers) {
-					obj.GetComponent<BeatObserver>().BeatNotify(beatType);
+				foreach (BeatObserver obj in observers) {
+					obj.BeatNotify(beatType);
 				}
 				nextBeatSample += samplePeriod;
 			}

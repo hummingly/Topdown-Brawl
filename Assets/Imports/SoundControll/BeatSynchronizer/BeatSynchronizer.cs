@@ -9,23 +9,24 @@ using System.Collections;
 public class BeatSynchronizer : MonoBehaviour {
 
 	public float bpm = 120f;		// Tempo in beats per minute of the audio clip.
-	//public float startDelay = 1f;	// Number of seconds to delay the start of audio playback.
+	public float startDelay = 0f;	// Number of seconds to delay the start of audio playback.
 	public delegate void AudioStartAction(double syncTime);
 	public static event AudioStartAction OnAudioStart;
     double initTime = AudioSettings.dspTime;
 
-    private float startDelay = 0;
+    //private float startDelay = 0;
 
     void Start ()
 	{
 		initTime = AudioSettings.dspTime;
 
-		/*GetComponent<AudioSource>().PlayScheduled(initTime + startDelay);
+		GetComponent<AudioSource>().PlayScheduled(initTime + startDelay);
 		if (OnAudioStart != null) {
 			OnAudioStart(initTime + startDelay);
-		}*/
+		}
 	}
 
+    /*
     private void Update()
     {
         startDelay += Time.deltaTime; //= AudioSettings.dspTime;
@@ -40,9 +41,9 @@ public class BeatSynchronizer : MonoBehaviour {
         }
         
 
-        /*audio.Play();
-        if (OnAudioStart != null)
-        {
+        //audio.Play();
+        //if (OnAudioStart != null)
+        //{
             //double startDelay = AudioSettings.dspTime;
             //audio.PlayScheduled(initTime + startDelay);
             //OnAudioStart(initTime + startDelay);
@@ -50,8 +51,8 @@ public class BeatSynchronizer : MonoBehaviour {
             //audio.PlayScheduled(initTime);
             //OnAudioStart(initTime);
 
-            OnAudioStart(0);
-        }*/
-    }
+        //    OnAudioStart(0);
+        //}
+    }*/
 
 }
