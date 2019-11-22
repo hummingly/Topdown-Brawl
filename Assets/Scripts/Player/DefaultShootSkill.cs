@@ -13,7 +13,8 @@ public class DefaultShootSkill : Skill
         p.GetComponent<Projectile>().SetDamage(damage);
         p.GetComponent<Projectile>().SetOwner(gameObject);
         p.transform.up = shootDir;
-        p.GetComponent<Rigidbody2D>().AddForce(/*transform.up*/ shootDir.normalized * speed, ForceMode2D.Impulse);
+        if(!p.GetComponent<Projectile>().melee)
+            p.GetComponent<Rigidbody2D>().AddForce(/*transform.up*/ shootDir.normalized * speed, ForceMode2D.Impulse);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
     }
 

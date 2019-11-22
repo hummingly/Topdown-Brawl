@@ -4557,6 +4557,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Ui Block
       objectReference: {fileID: 0}
+    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6025093002344493768, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4670,11 +4675,6 @@ PrefabInstance:
     - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,

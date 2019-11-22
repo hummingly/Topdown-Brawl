@@ -6,9 +6,12 @@ public class Projectile : MonoBehaviour
 {
     private TeamManager teams;
 
-    [SerializeField] private bool melee;
+    public bool melee;
+    [SerializeField] private bool moveWithPlayer;
+    [SerializeField] private float moveDistY = 1;
     [SerializeField] private float meleeAnimDur = 0.25f;
-    [SerializeField] private float destroyAt = 0.15f;
+    [SerializeField] private float fadeAt = 0.075f;
+    [SerializeField] private float disableAt = 0.15f;
     [Space]
     [SerializeField] private int damage = 10;
     [Space]
@@ -25,12 +28,20 @@ public class Projectile : MonoBehaviour
         teams = FindObjectOfType<TeamManager>();
         if (melee)
         {
+            if (moveWithPlayer)
+                transform.parent = owner.transform;
+
+            //transform.DOLocalMoveY(moveDistY, meleeAnimDur);
+            transform.DOMove(transform.position + transform.up * moveDistY, meleeAnimDur);
+
             Sequence seq = DOTween.Sequence();
             seq.Append(GetComponentInChildren<SpriteMask>().transform.DOLocalMoveY(0, meleeAnimDur));
+            seq.Insert(fadeAt, GetComponentInChildren<SpriteRenderer>().DOFade(0, meleeAnimDur - fadeAt));
             //seq.AppendCallback(() => Destroy(gameObject));
-            seq.InsertCallback(destroyAt,() => Destroy(gameObject)); //maybe just disable collider
+            seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false); 
+            seq.AppendCallback(() => Destroy(gameObject));
 
-            //TODO: add easing/fade
+            //TODO: add easing
         }
     }
 
@@ -59,10 +70,14 @@ public class Projectile : MonoBehaviour
         if (other.tag == "Destruction Piece" && this.enabled)
         {
             other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, transform.position, (Vector2)transform.position + GetComponent<Rigidbody2D>().velocity * Time.deltaTime);
-            //this.enabled = false;
+            this.enabled = false;
         }
 
-        Destroy(gameObject);
+
+        if (melee)
+            GetComponentInChildren<Collider2D>().enabled = false;
+        else
+            Destroy(gameObject);
 
         var damageAble = other.GetComponent<IDamageable>();
 

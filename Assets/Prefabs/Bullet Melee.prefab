@@ -44,7 +44,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 81488577285238372}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -70,10 +70,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   melee: 1
-  meleeAnimDur: 0.25
-  destroyAt: 0.15
+  moveWithPlayer: 0
+  moveDistY: 1
+  meleeAnimDur: 0.3
+  fadeAt: 0
+  disableAt: 0.2
   damage: 50
-  knockStrength: 50
+  knockStrength: 100
   keepOrgVel: 0.9
   knockStrengthPlayer: 250
   keepOrgVelPlayer: 0

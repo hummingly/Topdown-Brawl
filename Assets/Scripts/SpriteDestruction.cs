@@ -222,11 +222,18 @@ public class SpriteDestruction : MonoBehaviour
 
 
 
-        Collider2D[] coll = Physics2D.OverlapCircleAll(nearestPiecePos, radius);
+        Collider2D[] piecesToDetach = Physics2D.OverlapCircleAll(nearestPiecePos, radius);
+
+        /*print(piecesToDetach.Length);
+        while (piecesToDetach.Length <= 5 && piecesToDetach.Length < transform.childCount - 1)
+        {
+            radius += 0.1f;
+            piecesToDetach = Physics2D.OverlapCircleAll(nearestPiecePos, radius);
+        }*/
 
         List<Rigidbody2D> rbs = new List<Rigidbody2D>();
 
-        foreach (Collider2D c in coll)
+        foreach (Collider2D c in piecesToDetach)
         {
             if (c.transform.IsChildOf(transform))
             {
@@ -237,6 +244,11 @@ public class SpriteDestruction : MonoBehaviour
                 rbs.Add(rb);
             }
         }
+
+        //TODO: if too little peices come off it feels bad, so make the radius bigger if only some pieces came out
+        // or get rid of pieces not connected to anything
+        // OR, easiest way: only start radius search above from an outer edge piece, not in the middle?
+
 
         foreach (Rigidbody2D rb in rbs)
         {
