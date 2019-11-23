@@ -2030,7 +2030,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1fe5f7cb946a74cab93499dea883e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
   startGameplayAnimDur: 1
   spawnBeforeAnimDone: 0.2
 --- !u!4 &423136064
@@ -2059,12 +2058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb8730f9cb84db944b831c75dde0f26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teams:
-  - players: []
-    points: 0
-  - players: []
-    points: 0
-  playerIDs: []
+  teams: []
   teamColors:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.93725497, b: 0, a: 1}
@@ -2072,6 +2066,9 @@ MonoBehaviour:
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
   - {r: 0.8117648, g: 0, b: 1, a: 1}
+  colorStrings: []
+  playerNrs: []
+  playerChars: []
 --- !u!114 &423136066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3242,16 +3239,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 647929324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_RepeatRate: 0.1
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_PointAction: {fileID: 1054132383583890850, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MoveAction: {fileID: 3710738434707379630, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_SubmitAction: {fileID: 2064916234097673511, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_CancelAction: {fileID: -1967631576421560919, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_LeftClickAction: {fileID: 8056856818456041789, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_MiddleClickAction: {fileID: 3279352641294131588, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_RightClickAction: {fileID: 3837173908680883260, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDevicePositionAction: {fileID: 4754684134866288074, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 1025543830046995696, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
+  m_TrackedDeviceSelectAction: {fileID: 2559092417903258184, guid: ca9f5fa95ffab41fb9a615ab714db018,
+    type: 3}
 --- !u!114 &647929326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3261,12 +3277,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 647929324}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: b16c6f78230fa4964a222622d8aae332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+  m_PlayerRoot: {fileID: 0}
 --- !u!4 &647929327
 Transform:
   m_ObjectHideFlags: 0
