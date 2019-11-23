@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public partial class TeamManager : MonoBehaviour
 {
-    private MenuManager menu;
-    private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
     [SerializeField] private String[] colorStrings;
@@ -20,7 +18,6 @@ public partial class TeamManager : MonoBehaviour
 
     private void Awake()
     {
-        menu = FindObjectOfType<MenuManager>();
         int seed = UnityEngine.Random.Range(0, 1000);
         teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
         colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
@@ -34,7 +31,7 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    public void SaveCharacters()
+    public void SaveCharacters(MenuManager menu)
     {
         foreach (GameObject p in playerNrs)
         {
@@ -49,7 +46,7 @@ public partial class TeamManager : MonoBehaviour
     public void InitPlayers()
     {
         Debug.Log("Init Player");
-        spawner = FindObjectOfType<PlayerSpawner>();
+        PlayerSpawner spawner = FindObjectOfType<PlayerSpawner>();
         var input = FindObjectOfType<PlayerInputManager>();
 
         int index = 0;
