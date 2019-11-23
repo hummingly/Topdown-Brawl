@@ -24,7 +24,7 @@ public class PlayerVisuals : MonoBehaviour
         mainColor = col;
     }
 
-    public void SetDashUsedColor()
+    public void SetActionOnCooldownCol()
     {
         var darkColor = mainColor;
         float H;

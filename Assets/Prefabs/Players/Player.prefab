@@ -280,7 +280,6 @@ GameObject:
   - component: {fileID: 4000924214873993291}
   - component: {fileID: 4000924214873993328}
   - component: {fileID: 2380627806415850663}
-  - component: {fileID: 4971230030713657587}
   - component: {fileID: 4000924214873993294}
   - component: {fileID: 4000924214873993295}
   - component: {fileID: 4000924214873993290}
@@ -344,18 +343,6 @@ MonoBehaviour:
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
   maxHealthPoints: 100
---- !u!114 &4971230030713657587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4000924214873993329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15579d550f424342862eeed16fc8694, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &4000924214873993294
 Rigidbody2D:
   serializedVersion: 4
@@ -451,7 +438,7 @@ MonoBehaviour:
   damage: 10
   spawnPosFromCenter: 0.75
   trigger: 0
-  inputTolerance: 0
+  triggerType: 1
   projectile: {fileID: 1650181106410228009, guid: 551f67c285f39684aa17e3f6e79f3ef8,
     type: 3}
   speed: 40

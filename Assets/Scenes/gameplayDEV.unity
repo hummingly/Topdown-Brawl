@@ -2110,7 +2110,7 @@ MonoBehaviour:
       m_Interactions: 
       m_SingletonActionBindings: []
     m_Reference: {fileID: 0}
-  m_PlayerPrefab: {fileID: 4000924214873993329, guid: 8105c4b13a4642b46824c737b2ef05fa,
+  m_PlayerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
     type: 3}
   m_SplitScreen: 0
   m_MaintainAspectRatioInSplitScreen: 0
@@ -4557,11 +4557,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Ui Block
       objectReference: {fileID: 0}
-    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6025093002344493768, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4675,6 +4670,11 @@ PrefabInstance:
     - target: {fileID: 3111097450400357870, guid: e2d95be72cf5d8b409239b6793845645,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905503416697039798, guid: e2d95be72cf5d8b409239b6793845645,
+        type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3047034443696561330, guid: e2d95be72cf5d8b409239b6793845645,

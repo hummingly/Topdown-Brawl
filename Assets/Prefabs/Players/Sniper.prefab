@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-788948831574101464
+--- !u!114 &1034215451731672156
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,16 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 7706905693724581864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e6d78ab0ce71f847a4837b5ace7c8cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 40d68bc5aeb299d498c7b5d699b96e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 1
   damage: 40
   spawnPosFromCenter: 0.75
   trigger: 1
+  triggerType: 2
+  showIndicationOnHold: 1
+  greyPlayerWhileCD: 1
   projectile: {fileID: 1650181106410228009, guid: 551f67c285f39684aa17e3f6e79f3ef8,
     type: 3}
+  aimLaser: {fileID: 5265108531052600770}
   speed: 100
+  bulletsPerShot: 1
+  maxDelayBetweenBullets: 0
+  bulletLikelyDelay: 0
+  accuracy: 0
+  range: 4
+  doesPierce: 0
+  bounceAm: 0
+  splitAm: 0
+  scale: 1
 --- !u!1001 &691708820343130527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,6 +181,18 @@ PrefabInstance:
       objectReference: {fileID: 5600390634810688894}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4d6a397ea9d0af46a2f1b0d39921c87, type: 3}
+--- !u!114 &5265108531052600770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8417807337422585455, guid: c4d6a397ea9d0af46a2f1b0d39921c87,
+    type: 3}
+  m_PrefabInstance: {fileID: 4450510244085965741}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53baca4f1680eec4ea4af81cf0787186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6733530726399029145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -235,6 +260,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -322380456580466538, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: inputTolerance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214354446125, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214354446125, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000924214354446125, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287572743478964963, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.38268384
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287572743478964963, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9238794
+      objectReference: {fileID: 0}
+    - target: {fileID: 8287572743478964963, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -45.000004
+      objectReference: {fileID: 0}
     - target: {fileID: 2032545265659443728, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -243,11 +303,6 @@ PrefabInstance:
     - target: {fileID: 2032545265659443728, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -322380456580466538, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
-        type: 3}
-      propertyPath: inputTolerance
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -280,11 +280,11 @@ GameObject:
   - component: {fileID: 4000924214873993291}
   - component: {fileID: 4000924214873993328}
   - component: {fileID: 2380627806415850663}
-  - component: {fileID: 4971230030713657587}
   - component: {fileID: 4000924214873993294}
   - component: {fileID: 4000924214873993295}
   - component: {fileID: 4000924214873993290}
   - component: {fileID: -322380456580466538}
+  - component: {fileID: 5912071029736522639}
   m_Layer: 0
   m_Name: Player Melee
   m_TagString: Untagged
@@ -327,8 +327,6 @@ MonoBehaviour:
     iFactor: 0.001
     dFactor: 0.25
   accForce: 22
-  dashForce: 300
-  dashCooldown: 0.5
 --- !u!114 &2380627806415850663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,18 +342,6 @@ MonoBehaviour:
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
   maxHealthPoints: 150
---- !u!114 &4971230030713657587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4000924214873993329}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15579d550f424342862eeed16fc8694, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &4000924214873993294
 Rigidbody2D:
   serializedVersion: 4
@@ -452,9 +438,42 @@ MonoBehaviour:
   spawnPosFromCenter: 0.75
   trigger: 0
   triggerType: 0
+  showIndicationOnHold: 0
+  greyPlayerWhileCD: 0
   projectile: {fileID: 81488577285238372, guid: dcedba98bf8dd8c4b9c72349ebbeec12,
     type: 3}
+  aimLaser: {fileID: 0}
   speed: 2
+  bulletsPerShot: 1
+  maxDelayBetweenBullets: 0
+  bulletLikelyDelay: 0
+  accuracy: 0
+  range: 4
+  doesPierce: 0
+  bounceAm: 0
+  splitAm: 0
+  scale: 1
+--- !u!114 &5912071029736522639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000924214873993329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e9d14cbc61cea43bb373ff0d49bae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cooldown: 0.5
+  damage: 0
+  spawnPosFromCenter: 0
+  trigger: 2
+  triggerType: 0
+  showIndicationOnHold: 0
+  greyPlayerWhileCD: 1
+  dashForce: 300
+  doesDamage: 0
 --- !u!1 &4427621900641901306
 GameObject:
   m_ObjectHideFlags: 0

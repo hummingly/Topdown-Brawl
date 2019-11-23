@@ -21,12 +21,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private PlayerStats stats;
-    private PlayerVisuals visuals;
-    private EffectManager effects;
+
 
     [SerializeField] private float accForce;
-    [SerializeField] private float dashForce = 2;
-    [SerializeField] private float dashCooldown = 0.5f;
 
     //[SerializeField] private float maxVelocity;
     //[SerializeField] private float accSpeed;     // speed of acc going to maxAcc
@@ -40,14 +37,10 @@ public class PlayerMovement : MonoBehaviour
     private int breathSpeed;
     private float correction;
 
-    private float dashTimer;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
-        visuals = GetComponentInChildren<PlayerVisuals>();
-        effects = FindObjectOfType<EffectManager>();
 
         // Set init rotation
         lastRotInput = startRot;
@@ -56,9 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        dashTimer -= Time.deltaTime;
-        if(dashTimer <= 0 && visuals)
-            visuals.SetMainColor();
+
     }
 
     private void FixedUpdate()
@@ -135,26 +126,7 @@ public class PlayerMovement : MonoBehaviour
     {
         print("hit a");
     }
-    private void OnLeftTrigger()
-    {
-        if(dashTimer <= 0)
-        {
-            dashTimer = dashCooldown;
-            visuals.SetDashUsedColor();
-
-            // if not using left stick to move, dash to look direction or right stick
-            Vector2 dashDir;
-            if (moveInput != Vector2.zero)
-                dashDir = moveInput;
-            else
-                dashDir = lastRotInput;
-
-            rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
-
-
-            effects.DoDashPartic(transform.position, dashDir);
-        }
-    }
+    
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
@@ -174,9 +146,15 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = val;
     }
+
+
     public Vector2 GetLastRot()
     {
         return lastRotInput;
+    }
+    public Vector2 GetMoveInput()
+    {
+        return moveInput;
     }
 
 

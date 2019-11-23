@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AimLaser : MonoBehaviour
+public class AimLaser : MonoBehaviour // TODO: extend to be a general range indication class
 {
     private LineRenderer lineRenderer;
     [SerializeField] private Transform laserHit;
