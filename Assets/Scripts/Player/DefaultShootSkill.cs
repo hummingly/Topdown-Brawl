@@ -16,9 +16,10 @@ public class DefaultShootSkill : Skill
     [SerializeField] private float accuracy;
     [SerializeField] private float range = 4;
     [SerializeField] private bool doesPierce;
-    [SerializeField] private int bounceAm;
+    [SerializeField] private int bounceAmMax;
+    [SerializeField] private float bounceGain;
     [SerializeField] private int splitAm;
-    [SerializeField] private float scale = 1;
+    [SerializeField] private Vector2 scale = new Vector2(1,1);
 
     private void Start()
     {
@@ -28,11 +29,16 @@ public class DefaultShootSkill : Skill
 
     protected override void Action(Vector2 shootDir)
     {
+        shootDir = ExtensionMethods.RotatePointAroundPivot(shootDir, Vector2.zero, Random.Range(-accuracy, accuracy));
         GameObject p = Instantiate(projectile, (Vector2)transform.position + (shootDir.normalized * spawnPosFromCenter), Quaternion.identity);
         p.GetComponent<Projectile>().SetDamage(damage);
         p.GetComponent<Projectile>().SetOwner(gameObject);
+        p.GetComponent<Projectile>().SetRange(range);
+        p.GetComponent<Projectile>().SetBounce(bounceAmMax, bounceGain);
         p.transform.up = shootDir;
-        if(!p.GetComponent<Projectile>().melee)
+        //p.transform.eulerAngles += new Vector3(0,0,90);//Random.Range(-accuracy, accuracy)
+        p.transform.localScale = scale;
+        if (!p.GetComponent<Projectile>().melee)
             p.GetComponent<Rigidbody2D>().AddForce(/*transform.up*/ shootDir.normalized * speed, ForceMode2D.Impulse);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
     }
