@@ -63,7 +63,7 @@ public class GameLogic : MonoBehaviour
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
             StartCoroutine(InitGameplay());
         }

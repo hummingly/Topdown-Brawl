@@ -165,7 +165,7 @@ public class MenuManager : MonoBehaviour
     {
         teams.SaveCharacters();
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
-        gameState.state = GameStateManager.GameState.Ingame;
+        gameState.Play();
         LoadMap();
     }
 
