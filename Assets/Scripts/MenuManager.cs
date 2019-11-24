@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] private int currentGameModeIndex = 0;
     [SerializeField] private int currentMapIndex = 1;
-    private TeamManager teams;
+    private TeamManager teamManager;
     public List<Character> availableChars = new List<Character>();
 
     // UI Data
@@ -29,7 +29,7 @@ public class MenuManager : MonoBehaviour
 
     void Awake()
     {
-        teams = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<TeamManager>();
     }
 
     private void Start() {
@@ -40,7 +40,6 @@ public class MenuManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: CHECK IF ALL PLAYERS ARE READY
         if (IsReady()) {
             Play();
         }
@@ -75,7 +74,7 @@ public class MenuManager : MonoBehaviour
         var slot = slotGO.GetComponent<PlayerSlotMenuDisplay>();
 
         // only change on own button (everyone can change bot)
-        if (slot.myPlayer == player || slot.isBot)//(getSlotInd(slotGO) == teams.getPlayerId(player) || slot.isBot)
+        if (slot.myPlayer == player || slot.isBot)
         {
             var lastIndex = availableChars.IndexOf(slot.chara);
             lastIndex += dir;
@@ -102,9 +101,9 @@ public class MenuManager : MonoBehaviour
         // only change on own button 
         if (slot.myPlayer == player) //(getSlotInd(slotGO) == teams.getPlayerId(player))
         {
-            teams.MoveTeam(player);
-            slot.SetCol(teams.GetColorOf(player));
-            slot.myPlayer.GetComponent<MenuCursor>().SetColor(teams.GetColorOf(player));
+            teamManager.MoveTeam(player);
+            slot.SetCol(teamManager.GetColorOf(player));
+            slot.myPlayer.GetComponent<MenuCursor>().SetColor(teamManager.GetColorOf(player));
             return;
         }
 
@@ -117,9 +116,9 @@ public class MenuManager : MonoBehaviour
             slot.botDeleteCounter++;
 
             // Already max team, so remove instead (after cycle through all colors)
-            if (slot.botDeleteCounter >= teams.teams.Count)//(teams.getTeamOf(bot) + 1 >= teams.teams.Count)
+            if (slot.botDeleteCounter >= teamManager.Count)
             {
-                teams.Remove(bot);//remove bot cursor in team list
+                teamManager.Remove(bot);//remove bot cursor in team list
 
                 //replace the slot with an empty fill one
                 var index = slot.transform.GetSiblingIndex();
@@ -134,8 +133,8 @@ public class MenuManager : MonoBehaviour
             }
             else
             {
-                teams.MoveTeam(bot);
-                slot.SetCol(teams.GetColorOf(bot));
+                teamManager.MoveTeam(bot);
+                slot.SetCol(teamManager.GetColorOf(bot));
             }
         }
     }
@@ -179,12 +178,12 @@ public class MenuManager : MonoBehaviour
             // Attach cursor to scene and place in the middle of the screen.
             playerCursor.SetParent(cursorParent);
             playerCursor.localPosition = Vector3.zero;
-            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject), teams.GetColorOf(playerCursor.gameObject));
+            playerCursor.GetComponent<MenuCursor>().Setup(teamManager.playerNrs.IndexOf(playerCursor.gameObject), teamManager.GetColorOf(playerCursor.gameObject));
         }
 
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
         slot.SetParent(charSlotParent);
-        slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
+        slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teamManager.GetColorOf(playerCursor.gameObject), isBot, teamManager.playerNrs.IndexOf(playerCursor.gameObject));
         slot.transform.localScale = Vector3.one;
         foreach (Transform child in charSlotParent)
         {
@@ -201,7 +200,7 @@ public class MenuManager : MonoBehaviour
 
     private void Play()
     {
-        teams.SaveCharacters(this);
+        teamManager.SaveCharacters(this);
         FindObjectOfType<GameStateManager>().Play(currentMapIndex + 1);
     }
 

@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
-
 
 public static class ExtensionMethods
 {
@@ -11,25 +8,13 @@ public static class ExtensionMethods
         return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
     }
 
-
     public static float RandNegPos()
     {
         return (Random.Range(0, 2) * 2) - 1;
     }
 
-    /*public static float randNegPos(this float val)
-    {
-        return val * Random.Range(0, 2);
-    }*/
-
-
-    /*public static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles) //https://answers.unity.com/questions/532297/rotate-a-vector-around-a-certain-point.html
-    {
-        return Quaternion.Euler(angles) * (point - pivot) + pivot;
-    }*/
-
-                                              //(float angle, Vector2 point, Vector2 pivot = new Vector2())
-    public static Vector2 RotatePointAroundPivot(Vector2 point, Vector2 pivot, float angle) //https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+    // https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+    public static Vector2 RotatePointAroundPivot(Vector2 point, Vector2 pivot, float angle)
     {
         float s = Mathf.Sin(Mathf.Deg2Rad * angle);
         float c = Mathf.Cos(Mathf.Deg2Rad * angle);
@@ -40,7 +25,6 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    
     public static IList<T> Shuffle<T>(IList<T> collection, int seed)
     {
         Random.InitState(seed);
@@ -53,36 +37,5 @@ public static class ExtensionMethods
         }
         return collection;
     }
-
-    /*
-    public static object[] shuffle(object[] array)
-    {
-        for (int t = 0; t < array.Length; t++)
-        {
-            object tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
-    }
-
-
-    public static T[] shuffle<T>(T[] array)//object[] shuffle(object[] array)
-    {
-        for (int t = 0; t < array.Length; t++)
-        {
-            T tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
-    }
-
-    public static T[] LastItem<T>(this List<T> list)
-    {
-        return list[list.Count - 1];
-    }*/
 }
 

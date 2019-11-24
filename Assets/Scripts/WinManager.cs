@@ -11,7 +11,7 @@ public class WinManager : MonoBehaviour
     [SerializeField] public GameMode gameMode;
     private Team winningTeam;
 
-    public bool OnTeamWon(List<Team> teams)
+    public bool OnTeamWon(IEnumerable<Team> teams)
     {
         switch (gameMode.winCondition)
         {
@@ -30,7 +30,7 @@ public class WinManager : MonoBehaviour
         return winningTeam;
     }
 
-    private bool CheckDefenses(List<Team> teams)
+    private bool CheckDefenses(IEnumerable<Team> teams)
     {
         //print("checking defenses:");
         // (!checks for a team that lost)
@@ -52,8 +52,8 @@ public class WinManager : MonoBehaviour
             }
             if (aliveTeams == 1)
             {
-                int index = teams.FindIndex(t => t.DefenseBase != null);
-                winningTeam = teams[index];
+                var team = Find(teams, t => t.DefenseBase != null);
+                winningTeam = team;
                 return true;
             }
 
@@ -63,17 +63,25 @@ public class WinManager : MonoBehaviour
         return false;
     }
 
-    public bool CheckScores(List<Team> teams)
+    public bool CheckScores(IEnumerable<Team> teams)
     {
         // checks for a team that won
-        //return teams.Exists(t => t.Points >= gameMode.pointsToWin);
-        int index = teams.FindIndex(t => t.Points >= gameMode.pointsToWin);
-        if (index != -1)
+        var team = Find(teams, t => t.Points >= gameMode.pointsToWin);
+        if (team != null)
         {
-            winningTeam = teams[index];
+            winningTeam = team;
             return true;
         }
         return false;
     }
 
+    private Team Find(IEnumerable<Team> teams, Predicate<Team> predicate) {
+        foreach (var t in teams)
+        {
+            if (predicate(t)) {
+                return t;
+            }
+        }
+        return null;
+    }
 }

@@ -6,15 +6,17 @@ using UnityEngine.SceneManagement;
 
 public partial class TeamManager : MonoBehaviour
 {
-    public List<Team> teams = new List<Team>();
+    private List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
     [SerializeField] private String[] colorStrings;
-    //[SerializeField] private GameObject defenseBases;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
     public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
+
+    public int Count => teams.Count;
+    public IEnumerable<Team> Teams => teams;
 
     private void Awake()
     {
@@ -100,16 +102,6 @@ public partial class TeamManager : MonoBehaviour
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
             teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
         }
-        /*
-        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
-        // assumption count bases == teams.count --> TODO!
-        // random assignment --> TODO!
-        for (int t = 0; t < teams.Count; t++)
-        {
-            print("base...");
-            teams[t].setBase(bases[t]);
-        }
-        */
     }
 
     public void AddBot()
@@ -317,10 +309,5 @@ public partial class TeamManager : MonoBehaviour
     public int GetScore(int team)
     {
         return teams[team].Points;
-    }
-
-    public List<Team> GetTeams()
-    {
-        return teams;
     }
 }

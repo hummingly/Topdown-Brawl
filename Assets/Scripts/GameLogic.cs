@@ -1,8 +1,6 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class GameLogic : MonoBehaviour
@@ -49,15 +47,13 @@ public class GameLogic : MonoBehaviour
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
-            if (winManager.OnTeamWon(teamManager.GetTeams()))
+            if (winManager.OnTeamWon(teamManager.Teams))
             {
                 roundRunning = false;
                 GameOver();
             }
         }
     }
-
-
 
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)

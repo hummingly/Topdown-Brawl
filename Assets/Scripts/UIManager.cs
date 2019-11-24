@@ -9,11 +9,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject gameOver;
 
-    private TeamManager teams;
+    private TeamManager teamManager;
 
     void Start()
     {
-        teams = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<TeamManager>();
     }
 
     void Update()
@@ -23,10 +23,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScores()
     {
-        for(int i = 0; i < teams.teams.Count; i++)
+        for(int i = 0; i < teamManager.Count; i++)
         {
             TextMeshProUGUI text = scores[i].GetComponent<TextMeshProUGUI>();
-            text.SetText(teams.GetScore(i).ToString());
+            text.SetText(teamManager.GetScore(i).ToString());
         }
     }
 
@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
     {
         gameOver.SetActive(true);
         TextMeshProUGUI text = gameOver.GetComponentInChildren<TextMeshProUGUI>();
-        var winningTeam = teams.GetTeamName(FindObjectOfType<WinManager>().GetWinningTeam());
+        var winningTeam = teamManager.GetTeamName(FindObjectOfType<WinManager>().GetWinningTeam());
         text.SetText("Team " + winningTeam + " won!");
     }
 }

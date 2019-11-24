@@ -16,7 +16,7 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float spawnPosBlockTime = 0.3f;
 
     private GameLogic gameLogic;
-    private TeamManager teams;
+    private TeamManager teamManager;
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
@@ -25,22 +25,13 @@ public class PlayerSpawner : MonoBehaviour
     void Awake()
     {
         gameLogic = FindObjectOfType<GameLogic>();
-        teams = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<TeamManager>();
         effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
 
-
-        for (int i = 0; i < teams.teams.Count; i++)
+        foreach (var team in teamManager.Teams)
         {
-            //spawnPosTimers.Add(new List<float>(teams.teams[i].players.Count));
-
-            // shouldn't be necessary?
-            var list = new List<float>();
-            for (int j = 0; j < teams.teams[i].Count; j++)
-            {
-                list.Add(0);
-            }
-            spawnPosTimers.Add(list);
+            spawnPosTimers.Add(new List<float>(new float[team.Count]));
         }
     }
 
@@ -142,7 +133,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private Vector2 GetSpawnArea(Transform player)
     {
-        int team = teams.FindPlayerTeam(player.gameObject);
+        int team = teamManager.FindPlayerTeam(player.gameObject);
 
         // Get an open spawn point
         int pos = 0;
