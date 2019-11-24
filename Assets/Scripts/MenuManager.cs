@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour
 {
     private TeamManager teams;
-    private GameStateManager gameState;
 
     public List<Character> availableChars = new List<Character>();
 
@@ -17,15 +16,39 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Transform cursorParent;
     [SerializeField] private GameObject playerSlotPrefab;
 
+    // Map
+    [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
+    public int currentMapInd = 1;
+    [SerializeField] private Sprite[] mapSprites;
+    [SerializeField] private Image mapImg;
+
+    // Game Mode
+    [SerializeField] private GameMode[] allGameModes;
+    private int currentGameModeIndex = 0;
+
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
-        gameState = FindObjectOfType<GameStateManager>();
+    }
+
+    void Start() {
+        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
     }
 
     void Update()
     {
+        if (GetCurrentGameMode().name.Equals("Defense"))
+        {
+            // hardcoded BAAAD
+            currentMapInd = 2;
+            mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+        }
         // TODO: CHECK IF ALL PLAYERS ARE READY
+    }
+
+    public GameMode GetCurrentGameMode()
+    {
+        return allGameModes[currentGameModeIndex];
     }
 
     public void ToggleReady(GameObject player)
@@ -115,14 +138,21 @@ public class MenuManager : MonoBehaviour
 
     public void ToggleMap()
     {
-        gameState.ToggleMap();
+        currentMapInd++;
+        if (currentMapInd > mapRange.y) {
+            currentMapInd = mapRange.x;
+        }
+        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+        // TODO: resize of somehow fit the img? or all same ratio...
     }
 
     public void ToggleGameMode(GameObject button)
     {
-        string name = gameState.ToggleGameMode();
+        currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
+        string name = GetCurrentGameMode().name;
         TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
         textMesh.SetText(name);
+        FindObjectOfType<WinManager>().gameMode = GetCurrentGameMode();
     }
 
     // This is only called when a player or bot has been added successfully by
@@ -165,13 +195,13 @@ public class MenuManager : MonoBehaviour
     {
         teams.SaveCharacters(this);
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
-        gameState.Play();
+        FindObjectOfType<GameStateManager>().Play();
         LoadMap();
     }
 
     public void LoadMap()
     {
-        SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
+        SceneManager.LoadScene(currentMapInd);
     }
 
     public Character GetCharacterOfPlayer(GameObject player)
