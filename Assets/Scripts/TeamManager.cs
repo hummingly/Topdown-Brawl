@@ -122,7 +122,9 @@ public partial class TeamManager : MonoBehaviour
         GameObject bot = new GameObject("Empty Bot Cursor");
         if (teams[team].AddPlayer(bot))
         {
-            FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true);
+            var menuManager = FindObjectOfType<MenuManager>();
+            menuManager.PlayerJoined(bot.transform, true);
+            menuManager.ToggleReady(bot.transform.gameObject);
             bot.transform.parent = null;
             DontDestroyOnLoad(bot);
         }

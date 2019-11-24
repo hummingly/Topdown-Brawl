@@ -75,23 +75,6 @@ public class GameLogic : MonoBehaviour
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
 
-
-
-        // TODO: put all this shit into a camera script !!!
-
-        // Short cam animation before spawn
-        //Camera.main.DOOrthoSize(30, 2);
-        // doesnt work since is controlled by target group, so new vcam
-        /*var newGO = new GameObject("Zoom Cam");
-        newGO.transform.position = new Vector3(0,0, -11);
-        Cinemachine.CinemachineVirtualCamera testCam = newGO.AddComponent<Cinemachine.CinemachineVirtualCamera>();
-        testCam.MoveToTopOfPrioritySubqueue();
-        testCam.transform.DOMove(Vector2.one * 10, 2);
-        testCam.m_Lens.OrthographicSize = 50;
-        //testCam.do;*/
-
-        // TODO: maybe move camera across the map once from left to center, then zoom out
-
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = false;
         Camera.main.DOOrthoSize(10 * mapSize, startGameplayAnimDur).SetEase(Ease.OutCubic);
 

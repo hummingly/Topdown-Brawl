@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,18 @@ public class MenuManager : MonoBehaviour
     void Update()
     {
         // TODO: CHECK IF ALL PLAYERS ARE READY
+        if (IsReady()) {
+            Play();
+        }
+    }
+
+    private bool IsReady() {
+        PlayerSlotMenuDisplay[] slots = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
+        if (slots.Length == 0) {
+            return false;
+        }
+
+        return Array.TrueForAll(slots, s => s.transform.GetComponentInChildren<Toggle>().isOn);
     }
 
     public void ToggleReady(GameObject player)
@@ -186,10 +199,9 @@ public class MenuManager : MonoBehaviour
         slot.transform.SetSiblingIndex(charSlotParent.childCount);
     }
 
-    public void Play()
+    private void Play()
     {
         teams.SaveCharacters(this);
-        FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
         FindObjectOfType<GameStateManager>().Play(currentMapIndex + 1);
     }
 

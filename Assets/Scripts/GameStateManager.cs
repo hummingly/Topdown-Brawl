@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour
@@ -31,6 +32,9 @@ public class GameStateManager : MonoBehaviour
             throw new UnityException();
         }
         _state = GameState.Ingame;
+        // TODO: Move data instead of static gameObject...
+        FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+        // TODO: Timer count down...
         SceneManager.LoadScene(map);
     }
 

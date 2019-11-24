@@ -59,11 +59,9 @@ public class MenuCursor : MonoBehaviour
 
             foreach (RaycastResult hitObj in results)
             {
+                //TODO: bad practise via obj name?
                 switch (hitObj.gameObject.name)
                 {
-                    case "Start Button": //TODO: bad practise via obj name?
-                        menuManager.Play();
-                        break;
                     case "Char Up":
                         menuManager.ToggleCharacter(gameObject, hitObj.gameObject, 1);
                         break;
