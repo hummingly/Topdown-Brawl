@@ -450,9 +450,10 @@ MonoBehaviour:
   accuracy: 0
   range: 4
   doesPierce: 0
-  bounceAm: 0
+  bounceAmMax: 0
+  bounceGain: 0
   splitAm: 0
-  scale: 1
+  scale: {x: 3, y: 3}
 --- !u!114 &5912071029736522639
 MonoBehaviour:
   m_ObjectHideFlags: 0

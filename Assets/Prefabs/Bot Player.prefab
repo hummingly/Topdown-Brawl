@@ -449,7 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.125
   damage: 10
-  spawnPosFromCenter: 0.75
+  spawnPosFromCenter: 1
   trigger: 0
   triggerType: 1
   showIndicationOnHold: 0

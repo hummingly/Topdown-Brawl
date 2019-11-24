@@ -8,6 +8,10 @@ public class EffectManager : MonoBehaviour
     //[SerializeField] private Sprite rect;
     [SerializeField] private GameObject explosionTest;
     [SerializeField] private GameObject dashPartic;
+    [SerializeField] private GameObject bulletCrumblePartic;
+    [SerializeField] private GameObject[] muzzleFlashes;
+    [SerializeField] private float muzzleFlashDur = 0.1f;
+    [SerializeField] private float muzzleScale = 2f;
 
 
     public void DoDashPartic(Vector2 pos, Vector2 playerRot)
@@ -69,4 +73,24 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
+    public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
+    {
+        Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
+    }
+
+    public void muzzle(Transform bullet, GameObject owner)
+    {
+        var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
+
+        m.parent = owner.transform;
+
+        foreach (SpriteRenderer spr in m.GetComponentsInChildren<SpriteRenderer>())
+            spr.DOFade(0, muzzleFlashDur);
+        // TODO: maybe also move individual muzzles in local up?
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(m.DOPunchScale(Vector3.one * muzzleScale, muzzleFlashDur));
+        seq.AppendCallback(() => Destroy(m.gameObject));
+
+    }
 }

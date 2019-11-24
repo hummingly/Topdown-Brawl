@@ -41,6 +41,9 @@ public class DefaultShootSkill : Skill
         if (!p.GetComponent<Projectile>().melee)
             p.GetComponent<Rigidbody2D>().AddForce(/*transform.up*/ shootDir.normalized * speed, ForceMode2D.Impulse);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
+
+        if(!p.GetComponent<Projectile>().melee)
+            effects.muzzle(p.transform, gameObject);
     }
 
   

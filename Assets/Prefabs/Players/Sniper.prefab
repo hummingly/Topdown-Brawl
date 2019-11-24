@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 1
   damage: 0
-  spawnPosFromCenter: 0.75
+  spawnPosFromCenter: 1
   trigger: 1
   triggerType: 2
   showIndicationOnHold: 1
@@ -340,6 +340,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4085434351049863671, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 00b80f5a43f91bb47a1dbdb77b0ac884, type: 3}

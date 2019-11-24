@@ -32,6 +32,14 @@ public class SoundManager : MonoBehaviour
     private float beatTimer;
     private float bloom;
 
+    public float dropStartTransSpd = 10;
+    public float dropEndTransSpd = 5;
+    private float dropTimer;
+    private float drop;
+    private float lens;
+    private float colorAbr;
+    private int dropDir;
+
 
     void Start()
     {
@@ -72,7 +80,19 @@ public class SoundManager : MonoBehaviour
         transform.position = new Vector3(beatTimer, 0, 0);
         bloom = ExtensionMethods.Remap(beatTimer, 0,1,minBloom,maxBloom);
 
-       
+
+        //print(dropDir);
+
+        float dropChangeSpeed = 0;
+        if (dropDir == 1)
+            dropChangeSpeed = dropStartTransSpd;
+        if (dropDir == -1)
+            dropChangeSpeed = dropEndTransSpd;
+        drop += dropDir * Time.deltaTime * dropChangeSpeed;
+        drop = Mathf.Clamp(drop, 0, 1);
+
+        lens = ExtensionMethods.Remap(drop, 0, 1, lensDist.x, lensDist.y);
+        colorAbr = ExtensionMethods.Remap(drop, 0, 1, chromAbrev.x, chromAbrev.y);
 
 
         if ((beatObserverCounter.beatMask & BeatType.OnBeat) == BeatType.OnBeat)
@@ -87,15 +107,8 @@ public class SoundManager : MonoBehaviour
         {
             //print(beatCounterPattern + " " + patternTest[beatCounterPattern]);
 
-            ChromaticAberration chrom = null;
-            LensDistortion lensLayer = null;
-            postProcess.profile.TryGetSettings(out chrom);
-            postProcess.profile.TryGetSettings(out lensLayer);
+            dropDir = patternTest[beatCounterPattern] * 2 - 1;    
 
-            float lens = ExtensionMethods.Remap(patternTest[beatCounterPattern], 0, 1, lensDist.x, lensDist.y);
-            float colorAbr = ExtensionMethods.Remap(patternTest[beatCounterPattern], 0, 1, chromAbrev.x, chromAbrev.y);
-            lensLayer.intensity.value = lens;
-            chrom.intensity.value = colorAbr;
 
             // This last
             beatCounterPattern = (++beatCounterPattern == patternTest.Length ? 0 : beatCounterPattern);
@@ -140,6 +153,12 @@ public class SoundManager : MonoBehaviour
                 lens = lensDist.y;
 
             lensLayer.intensity.value = lens;*/
+
+            lensLayer.intensity.value = lens;
+            chrom.intensity.value = colorAbr;
         }
     }
+
+    //private IEnumerator interpolate()
+
 }

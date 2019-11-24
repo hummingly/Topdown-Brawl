@@ -8,8 +8,10 @@ public class BlockFake3D : MonoBehaviour
     private Transform cam;
 
     [SerializeField] private Color wallColor = Color.grey;
+    /*[SerializeField]*/ private Color shadowColor = new Color(0.2f,0.2f,0.2f);//0.15f //Color.black;
     [SerializeField] private int steps = 2;
     [SerializeField] private float maxOffset = 0.5f;
+    ///*[SerializeField]*/ private float shadowExtraOffset = 0.005f;
 
     private Transform top;
     private Transform bot; // TODO: add multiple layers, not just 1 top 1 bot
@@ -37,6 +39,7 @@ public class BlockFake3D : MonoBehaviour
         {
             PrepareNewSprite(ref bots, "Bot", -1, wallColor);
         }
+        PrepareNewSprite(ref bots, "Bot", -2, shadowColor);
     }
 
 
@@ -60,7 +63,12 @@ public class BlockFake3D : MonoBehaviour
             var dir = -topDir;
             dir = new Vector2(dir.x / transform.localScale.x,
                               dir.y / transform.localScale.y);
+
             dir *= maxOffset * ((float)i / bots.Count);
+
+            // last one is shadow
+            //if (i == bots.Count)
+            //    dir += dir.normalized*shadowExtraOffset;
 
             bots[i - 1].transform.localPosition = dir;
         }

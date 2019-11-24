@@ -75,6 +75,7 @@ public class Projectile : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(fadeSpd);
             seq.InsertCallback(fadeSpd/4, () => GetComponentInChildren<Collider2D>().enabled = false);
+            seq.InsertCallback(fadeSpd/4, () => GetComponentInChildren<ParticleSystem>().Stop());
             seq.AppendCallback(() => Destroy(gameObject));
 
 
@@ -134,7 +135,13 @@ public class Projectile : MonoBehaviour
         if (melee)
             GetComponentInChildren<Collider2D>().enabled = false;
         else
+        {
+            var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
+            FindObjectOfType<EffectManager>().bulletDeathPartic(hitPoint, transform);
+
             Destroy(gameObject);
+        }
+
 
         var damageAble = other.GetComponent<IDamageable>();
 
@@ -186,6 +193,8 @@ public class Projectile : MonoBehaviour
         }
     }
 
+
+    // TODO: combine with onTrigger bcz much the same
     private void OnCollisionEnter2D(Collision2D other)
     {
 
@@ -206,7 +215,12 @@ public class Projectile : MonoBehaviour
             rb.velocity = Vector2.Reflect(lastVel, other.contacts[0].normal);
         }
         else
+        {
+            var hitPoint = other.contacts[0].point;
+            FindObjectOfType<EffectManager>().bulletDeathPartic(hitPoint, transform);
+
             Destroy(gameObject);
+        }
 
 
         var damageAble = other.gameObject.GetComponent<IDamageable>();

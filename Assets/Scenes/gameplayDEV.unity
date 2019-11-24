@@ -1869,6 +1869,16 @@ MonoBehaviour:
     type: 3}
   dashPartic: {fileID: 5282224505969515614, guid: 79c17ab750617fd47ae556387c491f47,
     type: 3}
+  bulletCrumblePartic: {fileID: 1312439423435851881, guid: 881c7f6e6dc039e41b26454eb9bf500d,
+    type: 3}
+  muzzleFlashes:
+  - {fileID: 835956841870828920, guid: 8dc4a41fac2bc1e448a5d5b9b1b6b4b1, type: 3}
+  - {fileID: 835956841870828920, guid: d41d6bc20bff5e5409b06f7604014e97, type: 3}
+  - {fileID: 835956841870828920, guid: 6a496372c059e7e4f812f4caeaeacb70, type: 3}
+  - {fileID: 835956841870828920, guid: 4f044f50c5dc95d4592a0d8278cf9128, type: 3}
+  - {fileID: 835956841870828920, guid: f5f3e06bc33947b40b25f15408e20a5a, type: 3}
+  muzzleFlashDur: 0.15
+  muzzleScale: 1
 --- !u!1 &369632210
 GameObject:
   m_ObjectHideFlags: 0
@@ -4513,7 +4523,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &924296150
 GameObject:
@@ -8631,7 +8641,7 @@ PrefabInstance:
     - target: {fileID: 4600040212818116122, guid: f8767aaa4ddaaab488ffefefaaeef1a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4600040212818116122, guid: f8767aaa4ddaaab488ffefefaaeef1a2,
         type: 3}
