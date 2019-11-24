@@ -70,7 +70,7 @@ Material:
     - _OcclusionStrength: 1
     - _OrthoMax: 20
     - _OrthoMin: 5
-    - _OrthoScale: 19.994917
+    - _OrthoScale: 5
     - _Parallax: 0.02
     - _PixelAmmount: 128
     - _PixelAmmountH: 256
