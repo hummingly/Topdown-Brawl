@@ -31,6 +31,12 @@ public class MenuManager : MonoBehaviour
         teams = FindObjectOfType<TeamManager>();
     }
 
+    private void Start() {
+        // TODO: When all maps are implemented, this function call
+        // won't be necessary.
+        UpdateMapUi();
+    }
+
     void Update()
     {
         // TODO: CHECK IF ALL PLAYERS ARE READY
@@ -184,7 +190,7 @@ public class MenuManager : MonoBehaviour
     {
         teams.SaveCharacters(this);
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
-        FindObjectOfType<GameStateManager>().Play(currentMapIndex);
+        FindObjectOfType<GameStateManager>().Play(currentMapIndex + 1);
     }
 
     public Character GetCharacterOfPlayer(GameObject player)
