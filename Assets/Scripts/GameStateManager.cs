@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -28,11 +26,12 @@ public class GameStateManager : MonoBehaviour
     }
 
     // Starts actual game.
-    public void Play() {
+    public void Play(int map) {
         if (State != GameState.MatchMaking) {
             throw new UnityException();
         }
         _state = GameState.Ingame;
+        SceneManager.LoadScene(map);
     }
 
     // Pauses in-game.

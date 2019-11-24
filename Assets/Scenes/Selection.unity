@@ -2576,7 +2576,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMapInd: 2
 --- !u!114 &723236038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2885,7 +2884,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: -200}
+  m_AnchoredPosition: {x: -62.5, y: -195}
   m_SizeDelta: {x: 175, y: 45}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &803011826
@@ -5006,25 +5005,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599581fe936411b408e561496cbbb7cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentGameModeIndex: 0
+  currentMapIndex: 1
   availableChars:
   - {fileID: 11400000, guid: 64bc184b3a7b85946a62dd3c165c5c0d, type: 2}
   - {fileID: 11400000, guid: 2cad82067caa7734ca185452d3cdd9d3, type: 2}
+  gameModes:
+  - {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
+  - {fileID: 11400000, guid: fbfbbcb7e0e862d45bd57adaa988bf70, type: 2}
+  mapRange: {x: 1, y: 3}
   inputPrompt: {fileID: 351662704}
   botPrompt: {fileID: 796645691}
   charSlotParent: {fileID: 271888753}
   cursorParent: {fileID: 369987028}
   playerSlotPrefab: {fileID: 8413730774314761072, guid: bd427007c34cea14aa2647ba048022c0,
     type: 3}
-  mapRange: {x: 1, y: 3}
-  currentMapInd: 1
   mapSprites:
   - {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
   - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
   - {fileID: 21300000, guid: 00b93a1fc534e1d4086af46e443e9497, type: 3}
   mapImg: {fileID: 1689873875}
-  allGameModes:
-  - {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
-  - {fileID: 11400000, guid: fbfbbcb7e0e862d45bd57adaa988bf70, type: 2}
+  gameModeText: {fileID: 1138137515}
 --- !u!1 &1583700773
 GameObject:
   m_ObjectHideFlags: 0
@@ -5501,7 +5502,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

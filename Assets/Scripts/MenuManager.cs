@@ -1,52 +1,40 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
+    [SerializeField] private int currentGameModeIndex = 0;
+    [SerializeField] private int currentMapIndex = 1;
     private TeamManager teams;
-
     public List<Character> availableChars = new List<Character>();
 
+    // UI Data
+    [SerializeField] private GameMode[] gameModes;
+    [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
+
+    // UI Elements
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
     [SerializeField] private Transform charSlotParent;
     [SerializeField] private Transform cursorParent;
     [SerializeField] private GameObject playerSlotPrefab;
-
-    // Map
-    [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
-    [SerializeField] private int currentMapIndex = 1;
     [SerializeField] private Sprite[] mapSprites;
     [SerializeField] private Image mapImg;
+    [SerializeField] private TextMeshProUGUI gameModeText;
 
-    // Game Mode
-    [SerializeField] private GameMode[] allGameModes;
-    [SerializeField] private int currentGameModeIndex = 0;
+    private GameMode SelectedGameMode => gameModes[currentGameModeIndex];
 
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
     }
 
-    void Start() {
-        mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
-    }
-
     void Update()
     {
-        if (SelectedGameMode.name.Equals("Defense"))
-        {
-            // hardcoded BAAAD
-            currentMapIndex = 2;
-            mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
-        }
         // TODO: CHECK IF ALL PLAYERS ARE READY
     }
-
-    private GameMode SelectedGameMode => allGameModes[currentGameModeIndex];
 
     public void ToggleReady(GameObject player)
     {
@@ -135,21 +123,25 @@ public class MenuManager : MonoBehaviour
 
     public void ToggleMap()
     {
-        currentMapIndex++;
-        if (currentMapIndex > mapRange.y) {
-            currentMapIndex = mapRange.x;
+        if (SelectedGameMode.name.Equals("Defense"))
+        {
+            // TODO: hardcoded BAAAD
+            return;
         }
-        mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
-        // TODO: resize of somehow fit the img? or all same ratio...
+        currentMapIndex = NextIndex(currentMapIndex, mapRange.y, mapRange.x);
+        UpdateMapUi();
     }
 
     public void ToggleGameMode(GameObject button)
     {
-        currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
-        string name = SelectedGameMode.name;
-        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
-        textMesh.SetText(name);
-        FindObjectOfType<WinManager>().gameMode = SelectedGameMode;
+        currentGameModeIndex = NextIndex(currentGameModeIndex, gameModes.Length);
+        UpdateGameModeUi();
+        if (SelectedGameMode.name.Equals("Defense"))
+        {
+            // TODO: hardcoded BAAAD
+            currentMapIndex = 2;
+            UpdateMapUi();
+        }
     }
 
     // This is only called when a player or bot has been added successfully by
@@ -192,13 +184,7 @@ public class MenuManager : MonoBehaviour
     {
         teams.SaveCharacters(this);
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
-        FindObjectOfType<GameStateManager>().Play();
-        LoadMap();
-    }
-
-    public void LoadMap()
-    {
-        SceneManager.LoadScene(currentMapIndex);
+        FindObjectOfType<GameStateManager>().Play(currentMapIndex);
     }
 
     public Character GetCharacterOfPlayer(GameObject player)
@@ -212,5 +198,25 @@ public class MenuManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    private void UpdateGameModeUi()
+    {
+        gameModeText.SetText(SelectedGameMode.name);
+        FindObjectOfType<WinManager>().gameMode = SelectedGameMode;
+    }
+
+    private void UpdateMapUi()
+    {
+        mapImg.sprite = mapSprites[currentMapIndex];
+    }
+
+    private int NextIndex(int index, int max, int min = 0)
+    {
+        if (index >= max - 1)
+        {
+            return min;
+        }
+        return index + 1;
     }
 }
