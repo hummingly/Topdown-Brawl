@@ -18,13 +18,13 @@ public class MenuManager : MonoBehaviour
 
     // Map
     [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
-    public int currentMapInd = 1;
+    [SerializeField] private int currentMapIndex = 1;
     [SerializeField] private Sprite[] mapSprites;
     [SerializeField] private Image mapImg;
 
     // Game Mode
     [SerializeField] private GameMode[] allGameModes;
-    private int currentGameModeIndex = 0;
+    [SerializeField] private int currentGameModeIndex = 0;
 
     void Awake()
     {
@@ -32,24 +32,21 @@ public class MenuManager : MonoBehaviour
     }
 
     void Start() {
-        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+        mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
     }
 
     void Update()
     {
-        if (GetCurrentGameMode().name.Equals("Defense"))
+        if (SelectedGameMode.name.Equals("Defense"))
         {
             // hardcoded BAAAD
-            currentMapInd = 2;
-            mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+            currentMapIndex = 2;
+            mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
         }
         // TODO: CHECK IF ALL PLAYERS ARE READY
     }
 
-    public GameMode GetCurrentGameMode()
-    {
-        return allGameModes[currentGameModeIndex];
-    }
+    private GameMode SelectedGameMode => allGameModes[currentGameModeIndex];
 
     public void ToggleReady(GameObject player)
     {
@@ -138,21 +135,21 @@ public class MenuManager : MonoBehaviour
 
     public void ToggleMap()
     {
-        currentMapInd++;
-        if (currentMapInd > mapRange.y) {
-            currentMapInd = mapRange.x;
+        currentMapIndex++;
+        if (currentMapIndex > mapRange.y) {
+            currentMapIndex = mapRange.x;
         }
-        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+        mapImg.sprite = mapSprites[currentMapIndex - mapRange.x];
         // TODO: resize of somehow fit the img? or all same ratio...
     }
 
     public void ToggleGameMode(GameObject button)
     {
         currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
-        string name = GetCurrentGameMode().name;
+        string name = SelectedGameMode.name;
         TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
         textMesh.SetText(name);
-        FindObjectOfType<WinManager>().gameMode = GetCurrentGameMode();
+        FindObjectOfType<WinManager>().gameMode = SelectedGameMode;
     }
 
     // This is only called when a player or bot has been added successfully by
@@ -201,7 +198,7 @@ public class MenuManager : MonoBehaviour
 
     public void LoadMap()
     {
-        SceneManager.LoadScene(currentMapInd);
+        SceneManager.LoadScene(currentMapIndex);
     }
 
     public Character GetCharacterOfPlayer(GameObject player)
