@@ -75,6 +75,10 @@ MonoBehaviour:
   meleeAnimDur: 0.3
   fadeAt: 0
   disableAt: 0.2
+  dmgOnCollAfterKnockFor: 0.2
+  extraDmgOnWallHit: 20
+  extraDmgVelThresh: 1
+  extraDmgMaxAngle: 60
   minMaxDist: {x: 3, y: 12}
   minMaxDmg: {x: 10, y: 50}
   knockStrength: 100

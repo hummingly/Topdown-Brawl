@@ -37,6 +37,12 @@ public class PlayerMovement : MonoBehaviour
     private int breathSpeed;
     private float correction;
 
+    private GameObject knockOwner;
+    private float meleeKnockTimer;
+    private int extraDmgOnWallHit;
+    private float extraDmgVelThresh;
+    private float extraDmgMaxAngle;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,7 +55,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-
+        meleeKnockTimer -= Time.deltaTime;
+        //print(meleeKnockTimer > 0);
     }
 
     private void FixedUpdate()
@@ -306,6 +313,41 @@ public class PlayerMovement : MonoBehaviour
             Vector2 pushDir = (Vector2)transform.position - collision.ClosestPoint(transform.position); // maybe instead solid collider? so that I can get hit point... but then player  can't really go "into" spikes
             rb.AddForce(pushDir * dmgObj.knockback, ForceMode2D.Impulse);
         }
+    }
+
+
+    public void tookMeleeDmg(GameObject owner, float t, int dmg, float velThresh, float maxAngle)
+    {
+        knockOwner = owner;
+        meleeKnockTimer = t;
+        extraDmgOnWallHit = dmg;
+        extraDmgVelThresh = velThresh;
+        extraDmgMaxAngle = maxAngle;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // no collision with person who knocked
+        if (collision.gameObject == knockOwner)
+            return;
+
+        if (meleeKnockTimer >= 0)
+        {
+            // print(collision.gameObject.name);
+
+            FindObjectOfType<EffectManager>().meleeBulletDeathPartic(collision.GetContact(0).point, -collision.GetContact(0).normal);
+
+            // damage me if hit wall fast in angle
+            if (rb.velocity.magnitude >= extraDmgVelThresh && Vector2.Angle(-collision.GetContact(0).normal, rb.velocity) <= extraDmgMaxAngle)
+                stats.ReduceHealth(extraDmgOnWallHit);
+
+            // damage other thing if a damageable cube or same team
+            if (collision.gameObject.GetComponent<IDamageable>() && FindObjectOfType<TeamManager>().GetTeamOf(collision.gameObject) == FindObjectOfType<TeamManager>().GetTeamOf(gameObject))
+                collision.gameObject.GetComponent<IDamageable>().ReduceHealth(extraDmgOnWallHit);
+        }
+
+
+
     }
 
     /*

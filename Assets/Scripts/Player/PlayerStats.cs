@@ -30,15 +30,9 @@ public class PlayerStats : IDamageable
         effects.AddShake(2f);
         effects.Stop(0.05f);
 
-        print("hey");
 
         if (damagedLastBy)
-        {
-            print("hey2");
-            print(damagedLastBy.name);
             FindObjectOfType<GameLogic>().IncreaseScore(damagedLastBy);
-
-        }
 
         playerSpawner.PlayerDied(this);
     }

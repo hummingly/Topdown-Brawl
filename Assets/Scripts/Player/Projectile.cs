@@ -15,6 +15,10 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float meleeAnimDur = 0.25f;
     [SerializeField] private float fadeAt = 0.075f;
     [SerializeField] private float disableAt = 0.15f;
+    [SerializeField] private float dmgOnCollAfterKnockFor = 0.2f;
+    [SerializeField] private int extraDmgOnWallHit = 20;
+    [SerializeField] private float extraDmgVelThresh = 1;
+    [SerializeField] private float extraDmgMaxAngle = 45;
     [Space]
     private int damage = 10;
     [SerializeField] private Vector2 minMaxDist = new Vector2(3, 12);
@@ -134,11 +138,23 @@ public class Projectile : MonoBehaviour
         }
 
 
+        var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
+
         if (melee)
+        {
+            FindObjectOfType<EffectManager>().meleeBulletDeathPartic(hitPoint, transform);
+            //GetComponentInChildren<Collider2D>().enabled = false;
+            //Destroy(gameObject);
+
             GetComponentInChildren<Collider2D>().enabled = false;
+            GetComponentInChildren<SpriteMask>().transform.DOKill();
+            GetComponentInChildren<SpriteRenderer>().DOKill();
+            Sequence seq = DOTween.Sequence();
+            seq.Append(GetComponentInChildren<SpriteRenderer>().DOFade(0, 0.1f));
+            seq.AppendCallback(() => Destroy(gameObject));
+        }
         else
         {
-            var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
             FindObjectOfType<EffectManager>().bulletDeathPartic(hitPoint, transform);
 
             Destroy(gameObject);
@@ -159,6 +175,10 @@ public class Projectile : MonoBehaviour
 
                 damageAble.ReduceHealth(damage, owner);
 
+                if(melee)
+                {
+                    damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
+                }
             }
         }
 

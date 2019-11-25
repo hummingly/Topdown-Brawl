@@ -89,6 +89,8 @@ MonoBehaviour:
     type: 3}
   bulletCrumblePartic: {fileID: 1312439423435851881, guid: 881c7f6e6dc039e41b26454eb9bf500d,
     type: 3}
+  meleeCrumblePartic: {fileID: 4564625899703968821, guid: fb399037f56b99645abd84f79c072045,
+    type: 3}
   muzzleFlashes:
   - {fileID: 835956841870828920, guid: 8dc4a41fac2bc1e448a5d5b9b1b6b4b1, type: 3}
   - {fileID: 835956841870828920, guid: d41d6bc20bff5e5409b06f7604014e97, type: 3}
