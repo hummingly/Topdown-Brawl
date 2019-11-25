@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     private TeamManager teams;
     private Rigidbody2D rb;
 
+    //[ColorUsage(true, true)] public Color shouldbeHDR = Color.white;
+
     public bool melee;
     [SerializeField] private bool moveWithPlayer;
     [SerializeField] private float moveDistY = 1;
