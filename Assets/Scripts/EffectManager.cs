@@ -6,13 +6,33 @@ using DG.Tweening;
 public class EffectManager : MonoBehaviour
 {
     //[SerializeField] private Sprite rect;
-    [SerializeField] private GameObject explosionTest;
+    [SerializeField] private GameObject deathExplosion;
+    [SerializeField] private GameObject respawnAnim;
     [SerializeField] private GameObject dashPartic;
     [SerializeField] private GameObject bulletCrumblePartic;
     [SerializeField] private GameObject[] muzzleFlashes;
     [SerializeField] private float muzzleFlashDur = 0.1f;
     [SerializeField] private float muzzleScale = 2f;
+    [Space]
+    //[SerializeField] private float killShakeStr = 2f;
+    //[SerializeField] private float killShakeVibrate = 2f;
+    //[SerializeField] private float killShakeDur = 1f;
 
+    [SerializeField] private float maxoffset = 2; //shake of 2 would be very brutal... (transform.x + 2)
+    [SerializeField] private float traumaFallOff = 0.03333f;
+    [SerializeField] private float powerOfAllShakes = 2;
+    [SerializeField] private float frequency = 1;
+
+    private bool paused;
+
+    private float trauma;
+    private float shake;
+    private Cinemachine.CinemachineBasicMultiChannelPerlin _perlin;
+
+    private void Awake()
+    {
+        _perlin = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
+    }
 
     public void DoDashPartic(Vector2 pos, Vector2 playerRot)
     {
@@ -52,7 +72,7 @@ public class EffectManager : MonoBehaviour
         //TODO: use an object pool instead of instantiating so much (or maybe at least prefab?)
 
 
-        var exp = Instantiate(explosionTest, pos, Quaternion.identity).transform;
+        var exp = Instantiate(respawnAnim, pos, Quaternion.identity).transform;
         exp.eulerAngles = new Vector3(0, 0, Random.Range(0, 360));
         var sort = 100 + Random.Range(0, 100);
         var sprite = exp.GetComponent<SpriteRenderer>();
@@ -71,6 +91,11 @@ public class EffectManager : MonoBehaviour
         seq.AppendCallback(() => Destroy(exp.gameObject));
 
         //TODO: add easing       
+    }
+
+    public void playerDeathExplosion(Vector2 pos)
+    {
+        Instantiate(deathExplosion, pos, Quaternion.identity);
     }
 
     public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
@@ -92,5 +117,102 @@ public class EffectManager : MonoBehaviour
         seq.Append(m.DOPunchScale(Vector3.one * muzzleScale, muzzleFlashDur));
         seq.AppendCallback(() => Destroy(m.gameObject));
 
+    }
+
+
+
+
+
+    // TODO: make shake 2D again, so can direct it
+    public void AddShake(float str)
+    {
+        trauma += str;
+    }
+
+    /*public void AddShake(Vector2 dir, float strength) //dir is only 1,0  0,-1  1,1 etc
+    {
+        // Makes sure always 1 or 0 (?)
+        if (dir.x < 0) dir.x = -dir.x;
+        if (dir.x > 0) dir.x = 1;
+        if (dir.y < 0) dir.y = -dir.y;
+        if (dir.y > 0) dir.y = 1;
+        trauma = new Vector2(trauma.x + (dir.x * strength), trauma.y + (dir.y * strength));
+    }*/
+
+    // Update shake
+    private void Update()
+    {
+        trauma -= traumaFallOff * Time.deltaTime;
+        trauma = Mathf.Clamp(trauma, 0, 1);
+        shake = Mathf.Pow(trauma, powerOfAllShakes);
+
+        shake *= maxoffset;
+    }
+
+    // Show shake
+    private void LateUpdate()
+    {
+        _perlin.m_AmplitudeGain = shake;
+        _perlin.m_FrequencyGain = frequency;
+        // if too smooth, use cinemachine camera offset and move it manually
+    }
+
+    /*
+    public void playerShotShake()
+    {
+        StartCoroutine(ShakeCamera(1, 1, 0.1f));
+    }
+
+    public void playerHitShake()
+    {
+        StartCoroutine(ShakeCamera(2, 2, 0.2f));
+    }
+
+    public void playerDeathShake()
+    {
+        StartCoroutine(ShakeCamera(10,10,0.25f));
+    }
+
+    public void gameOverShake()
+    {
+        StartCoroutine(ShakeCamera(20,20,0.5f));
+    }
+
+    private IEnumerator ShakeCamera(float amp, float freq, float time)
+    {
+        _perlin.m_AmplitudeGain = amp;
+        _perlin.m_FrequencyGain = freq;
+        yield return new WaitForSeconds(time);
+        CameraReset();
+        //TODO: if not smooth enough reset, use trauma ... NVM need it anway to stack shakes
+    }
+
+    private void CameraReset()
+    {
+        _perlin.m_AmplitudeGain = 0;
+        _perlin.m_FrequencyGain = 0;
+    }*/
+
+
+    public void Stop(float duration)
+    {
+        Stop(duration, 0.0f);
+    }
+
+    public void Stop(float duration, float timeScale)
+    {
+        if (paused)
+            return;
+
+        Time.timeScale = timeScale;
+        StartCoroutine(Wait(duration));
+    }
+
+    IEnumerator Wait(float duration)
+    {
+        paused = true;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1.0f;
+        paused = false;
     }
 }
