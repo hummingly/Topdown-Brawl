@@ -14,6 +14,7 @@ public abstract class IDamageable : MonoBehaviour
     private readonly Quaternion guiRotation = Quaternion.identity;
 
     protected int healthPoints;
+    protected GameObject damagedLastBy;
 
     public virtual void Awake()
     {
@@ -35,8 +36,11 @@ public abstract class IDamageable : MonoBehaviour
         healthSlider.value = healthPoints;
     }
 
-    internal bool ReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3())
+    internal bool ReduceHealth(int amount, GameObject dmgSource = null, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3())
     {
+        if(dmgSource)
+            damagedLastBy = dmgSource;
+
         if (!healthSlider.gameObject.active)
             healthSlider.gameObject.SetActive(true);
 

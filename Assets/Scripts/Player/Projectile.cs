@@ -129,7 +129,7 @@ public class Projectile : MonoBehaviour
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.tag == "Destruction Piece" && this.enabled)
         {
-            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
+            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
             this.enabled = false;
         }
 
@@ -157,12 +157,8 @@ public class Projectile : MonoBehaviour
                 if (damageAble.GetComponent<BotTest>())
                     damageAble.GetComponent<BotTest>().GotHit(owner); //order important so bot loses agro on death
 
-                bool didKill = damageAble.ReduceHealth(damage);
+                damageAble.ReduceHealth(damage, owner);
 
-                if (didKill)
-                {
-                    FindObjectOfType<GameLogic>().IncreaseScore(owner);
-                }
             }
         }
 
@@ -203,7 +199,7 @@ public class Projectile : MonoBehaviour
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.gameObject.tag == "Destruction Piece" && this.enabled)
         {
-            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
+            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
             this.enabled = false;
         }
 
@@ -237,12 +233,7 @@ public class Projectile : MonoBehaviour
                 if (damageAble.GetComponent<BotTest>())
                     damageAble.GetComponent<BotTest>().GotHit(owner); //order important so bot loses agro on death
 
-                bool didKill = damageAble.ReduceHealth(damage);
-
-                if (didKill)
-                {
-                    FindObjectOfType<GameLogic>().IncreaseScore(owner);
-                }
+                damageAble.ReduceHealth(damage, owner);
             }
         }
 

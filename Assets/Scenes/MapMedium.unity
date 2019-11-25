@@ -9984,7 +9984,7 @@ MonoBehaviour:
   movement: 0
   direction: {x: -1, y: 0, z: 0}
   speed: 1.5
-  distance: 15
+  distance: 25
   crusherBounceEase:
     serializedVersion: 2
     m_Curve: []
@@ -11844,7 +11844,7 @@ MonoBehaviour:
   movement: 0
   direction: {x: 1, y: 0, z: 0}
   speed: 1.5
-  distance: 15
+  distance: 25
   crusherBounceEase:
     serializedVersion: 2
     m_Curve: []
