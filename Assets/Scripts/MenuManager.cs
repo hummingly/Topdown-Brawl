@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,7 +13,7 @@ public class MenuManager : MonoBehaviour
 
     // UI Data
     [SerializeField] private GameMode[] gameModes;
-    [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
+    [SerializeField] private string[] maps;
 
     // UI Elements
     [SerializeField] private GameObject inputPrompt;
@@ -26,6 +26,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameModeText;
 
     private GameMode SelectedGameMode => gameModes[currentGameModeIndex];
+    private String SelectedMap => maps[currentMapIndex];
 
     void Awake()
     {
@@ -146,7 +147,7 @@ public class MenuManager : MonoBehaviour
             // TODO: hardcoded BAAAD
             return;
         }
-        currentMapIndex = NextIndex(currentMapIndex, mapRange.y, mapRange.x);
+        currentMapIndex = NextIndex(currentMapIndex, maps.Length);
         UpdateMapUi();
     }
 
@@ -157,7 +158,7 @@ public class MenuManager : MonoBehaviour
         if (SelectedGameMode.name.Equals("Defense"))
         {
             // TODO: hardcoded BAAAD
-            currentMapIndex = 2;
+            currentMapIndex = 1;
             UpdateMapUi();
         }
     }
@@ -201,7 +202,7 @@ public class MenuManager : MonoBehaviour
     private void Play()
     {
         teamManager.SaveCharacters(this);
-        FindObjectOfType<GameStateManager>().Play(currentMapIndex + 1);
+        FindObjectOfType<GameStateManager>().Play(SelectedMap);
     }
 
     public Character GetCharacterOfPlayer(GameObject player)
@@ -228,11 +229,11 @@ public class MenuManager : MonoBehaviour
         mapImg.sprite = mapSprites[currentMapIndex];
     }
 
-    private int NextIndex(int index, int max, int min = 0)
+    private int NextIndex(int index, int max)
     {
         if (index >= max - 1)
         {
-            return min;
+            return 0;
         }
         return index + 1;
     }
