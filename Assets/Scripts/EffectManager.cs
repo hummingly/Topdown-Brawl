@@ -39,6 +39,11 @@ public class EffectManager : MonoBehaviour
     private void Awake()
     {
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<SpriteRenderer>();
+
+        //maximum grid lights at one time
+        Vector4[] array = new Vector4[1000];
+        grid.material.SetVectorArray("lightingObjects", array);
+
         _perlin = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
     }
 
@@ -169,7 +174,14 @@ public class EffectManager : MonoBehaviour
         shake = Mathf.Pow(trauma, powerOfAllShakes);
 
         shake *= maxoffset;
+    }
 
+    private void LateUpdate()
+    {
+        // Show shake
+        _perlin.m_AmplitudeGain = shake;
+        _perlin.m_FrequencyGain = frequency;
+        // if too smooth, use cinemachine camera offset and move it manually
 
 
 
@@ -203,69 +215,6 @@ public class EffectManager : MonoBehaviour
         {
             grid.material.SetInt("maxLightingObjects", 0);
         }
-    }
-
-    private void LateUpdate()
-    {
-        // Show shake
-        _perlin.m_AmplitudeGain = shake;
-        _perlin.m_FrequencyGain = frequency;
-        // if too smooth, use cinemachine camera offset and move it manually
-
-
-
-        //foreach(SpriteRenderer s in objectsLigthGrid)
-        //    if (!s) objectsLigthGrid.Remove(s);
-        //objectsLigthGrid = objectsLigthGrid.Where(item => item != null).ToList();
-        /*for(var i = objectsLigthGrid.Count - 1; i > -1; i--)
-        {
-            if (objectsLigthGrid[i] == null)
-            {
-                objectsLigthGrid.RemoveAt(i);
-                objectsLigthCenters.RemoveAt(i);
-            }
-        }
-
-        // doesnt work in late update bcz shader?
-        if (objectsLigthGrid.Count > 0)
-        {
-            //Vector4[] array = new Vector4[objectsLigthGrid.Count];
-            List<Vector4> list = new List<Vector4>();
-
-            // Make grid brigth where players are... and bullets too?
-            for (int i = 0; i < objectsLigthGrid.Count; i++)
-            {
-                //check if the objects are still existent / enabled
-                if (!objectsLigthGrid[i].enabled)
-                    continue;
-
-                //Vector4 localPoint = transform.InverseTransformPoint(objectsLigthGrid[i].transform.root.position); //needed?
-                //localPoint.Scale(transform.localScale);
-                //localPoint.w = 1;
-
-                ////https://www.alanzucconi.com/2016/01/27/arrays-shaders-heatmaps-in-unity3d/
-                //grid.material.SetVector("lightingObjects" + i.ToString(), localPoint);
-
-                //https://stackoverflow.com/questions/45098671/how-to-define-an-array-of-floats-in-shader-properties
-                //array[i] = localPoint;
-                //list.Add(localPoint);
-
-                //list.Add(objectsLigthGrid[i].transform.root.position);
-                //print(objectsLigthGrid[i].transform.root.name + " " + objectsLigthGrid[i].transform.root.position);
-                list.Add(objectsLigthCenters[i].position);
-                print(objectsLigthCenters[i].name + " " + objectsLigthGrid[i].transform.position);
-            }
-            Vector4[] array = list.ToArray();
-            grid.material.SetInt("maxLightingObjects", array.Length);
-            grid.material.SetVectorArray("lightingObjects", array);
-        }
-        else
-        {
-            grid.material.SetInt("maxLightingObjects", 0);
-        }*/
-
-
-       
     }
 
     public void addGridLigth(SpriteRenderer s, Transform t)

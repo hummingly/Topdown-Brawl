@@ -72,7 +72,7 @@ public class Projectile : MonoBehaviour
 
             //TODO: add easing
         }
-        //else FindObjectOfType<EffectManager>().addGridLigth(GetComponentInChildren<SpriteRenderer>(), transform);
+        else FindObjectOfType<EffectManager>().addGridLigth(GetComponentInChildren<SpriteRenderer>(), transform);
     }
 
     void Update()
