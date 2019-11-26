@@ -12,44 +12,46 @@
 
 ### Menu
 
-- by clicking on a free slot you can join the game
-- if you already joined, a bot will be added
-- by clicking on a filled slot / character you can change its team
-- by clicking on the arrows you can change the class
+- by clicking any button on the controller you can join
+- by clicking on an empty slot you can add a bot
+- by clicking on a your character you can change your team (color)
+- by clicking on the arrows you can change your class
 - by clicking on the picture of the map you can change the map
 - click on the game mode to toggle the game mode, suitable maps will automatically be selected
 
 ### Controls
 
-- players can walk and fire attacks around them (rotate along the z-axis)
-- ps4/xbox controllers supported only
+- players can walk and fire attacks around them
+- controllers are used to play
 - use left stick to move, right stick to look around / aim
 - use B to navigate in menu
 - use RB to shoot
-- use RT to use your special skill
-- use LB for a dash
+- use RT to use your special shooting skill (if available in class)
+- use LB to use your special movement skill (if available in class)
 
 ### Game Modes
 
 - in deatchmatch mode you have to kill as much enemies as possible
 - the team that has reached a certain amount of kills, wins the round
-- in defense mode you have to defend your base which is a purple block near your spawn area
+- in defense mode you have to defend your base which is a block near your spawn area
 - at the same time you have to destroy the block of the enemy team
 - the team that destroys the other team's block first wins
 
 ### Classes
 
-- Normal shooter: shooting skill with short cooldown, long range, medium damage and medium speed of projectiles
+- Normal shooter: shooting skill with short cooldown, medium range, damage and speed of projectiles
 - Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range
-- Melee: a tough class with a melee attack with high knockback
-- Bouncer: shooting skill with a shorter range but bouncing bullets
+- Melee: a tough and slightly faster class with a melee attack that knockbacks back others (and additional damage on pushing into walls)
+- Bouncer: shooting skill with a shorter range but bouncing bullets, going further each bounce
 
 ## Game Mechanics
 
 - too much to write, see unity
+- (wat?)
 
 ## Game Art
 
 - blocky and simple
 - low resolution pixel game
 - various filters on screen while game is running
+- emulate an arcade game / old monitor (mostly analog TV effects)
