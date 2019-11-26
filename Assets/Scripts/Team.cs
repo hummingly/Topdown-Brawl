@@ -10,29 +10,12 @@ public partial class TeamManager
     {
         private readonly List<GameObject> players;
         public readonly int Capacity;
-        public int Points { get; set; }
         public Color Color { get; set; }
-
-        private DestructibleTeamBlock defenseBase;
-
-        public DestructibleTeamBlock DefenseBase
-        {
-            get => defenseBase;
-            set
-            {
-                defenseBase = value;
-                if (defenseBase != null)
-                {
-                    Debug.Log("DefenseBase set!");
-                }
-            }
-        }
 
         public Team(int teamSize, Color color)
         {
             Capacity = teamSize;
             players = new List<GameObject>(Capacity);
-            Points = 0;
             Color = color;
         }
 

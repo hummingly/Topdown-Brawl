@@ -52,14 +52,17 @@ public class Projectile : MonoBehaviour
             if (!sameTeam)
             {
                 if (damageAble.GetComponent<BotTest>())
+                {
                     damageAble.GetComponent<BotTest>().GotHit(owner); //order important so bot loses agro on death
-
+                }
                 bool didKill = damageAble.ReduceHealth(damage);
 
                 if (didKill)
                 {
                     if (damageAble.CompareTag("Player"))
+                    {
                         FindObjectOfType<GameLogic>().IncreaseScore(owner);
+                    }
                 }
             }
         }
@@ -74,7 +77,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.GetComponent<PlayerMovement>())
             {
-                if(teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
+                if (teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.AddForce(knockDir * knockStrengthPlayer, ForceMode2D.Impulse); //TODO: instead of value for objects & for enemys: factor in mas and drag

@@ -47,7 +47,7 @@ public class GameLogic : MonoBehaviour
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
-            if (winManager.OnTeamWon(teamManager.Teams))
+            if (winManager.OnTeamWon())
             {
                 roundRunning = false;
                 GameOver();
@@ -85,15 +85,19 @@ public class GameLogic : MonoBehaviour
         if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
             print("init bases");
-            GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
-            teamManager.InitDefenseBases(defenseBasesParent);
+            DestructibleTeamBlock[] defenseBases = GameObject.FindGameObjectWithTag("DefenseBases").transform.GetComponentsInChildren<DestructibleTeamBlock>();
+            winManager.SetDefenseBases(defenseBases, teamManager.Count);
         }
         roundRunning = true;
     }
 
     public void IncreaseScore(GameObject player)
     {
-        teamManager.IncreaseScore(player);
+        int team = teamManager.FindPlayerTeam(player);
+        if (team <= -1) {
+            throw new UnityException();
+        }
+        winManager.IncreaseKillScore(team);
         // display new score in UI
         uiManager.UpdateScores();
     }

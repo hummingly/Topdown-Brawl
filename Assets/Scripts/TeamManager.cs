@@ -93,16 +93,6 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-
-    public void InitDefenseBases(GameObject parent)
-    {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
-        }
-    }
-
     public void AddBot()
     {
         int team = FindSmallestTeam();
@@ -295,18 +285,8 @@ public partial class TeamManager : MonoBehaviour
         return colorStrings[index];
     }
 
-    public void IncreaseScore(GameObject player)
+    public string GetTeamName(int team)
     {
-        int team = FindPlayerTeam(player);
-        if (team <= -1)
-        {
-            throw new Exception("Score can be only increased in a match with a player on one team!");
-        }
-        teams[team].Points++;
-    }
-
-    public int GetScore(int team)
-    {
-        return teams[team].Points;
+        return colorStrings[team];
     }
 }

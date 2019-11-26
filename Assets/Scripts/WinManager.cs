@@ -1,98 +1,96 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static TeamManager;
 
 public class WinManager : MonoBehaviour
 {
     [SerializeField] private GameMode gameMode;
-    private Team winningTeam;
+    private int winningTeam;
+    // At the moment we will only keep the score per team.
+    private int[] killTeamScores;
+    private DestructibleTeamBlock[] defenseTeamBlocks;
+
     public int MaxTeamSize => gameMode.maxTeamSize;
     public int MaxTeamCount => gameMode.maxTeams;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
-    public GameMode GameMode
-    {
-        set
-        {
-            gameMode = value;
-        }
+
+    public void SetGameMode(GameMode mode, int teams) {
+        gameMode = mode;
+        killTeamScores = new int[teams];
     }
 
-    public bool OnTeamWon(IEnumerable<Team> teams)
+    public bool OnTeamWon()
     {
         switch (gameMode.winCondition)
         {
             case GameMode.WinCondition.Kills:
-                return CheckScores(teams);
+                var k = CheckScores();
+                if (k > -1) {
+                    winningTeam = k;
+                    return true;
+                }
+                return false;
             case GameMode.WinCondition.Defense:
-                return CheckDefenses(teams);
+                var d = CheckDefenses();
+                if (d > -1) {
+                    winningTeam = d;
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
-
     }
 
-    public Team GetWinningTeam()
+    public int GetWinningTeam()
     {
         return winningTeam;
     }
 
-    private bool CheckDefenses(IEnumerable<Team> teams)
+    private int CheckDefenses()
     {
-        //print("checking defenses:");
-        // (!checks for a team that lost)
-        // start checking when teams are set
-        if (teams != null)
+        var livingTeams = 0;
+        var lastIndex = 0;
+        for (int i = 0; i < defenseTeamBlocks.Length; i++)
         {
-            int aliveTeams = 0;
-            foreach (Team t in teams)
-            {
-                if (t.DefenseBase.GetHealth() <= 0)
-                {
-                    //print(t.Color);
-                    t.DefenseBase = null;
-                }
-                else
-                {
-                    aliveTeams++;
-                }
+            if (defenseTeamBlocks[i].IsDeath) {
+                defenseTeamBlocks[i] = null;
+            } else {
+                livingTeams++;
+                lastIndex = i;
             }
-            if (aliveTeams == 1)
-            {
-                var team = Find(teams, t => t.DefenseBase != null);
-                winningTeam = team;
-                return true;
-            }
-
-            return false;
         }
-        //print("returned false without checking");
-        return false;
+        if (livingTeams == 1) {
+            return lastIndex;
+        }
+        return -1;
     }
 
-    public bool CheckScores(IEnumerable<Team> teams)
+    public int CheckScores()
     {
         // checks for a team that won
-        var team = Find(teams, t => t.Points >= gameMode.pointsToWin);
-        if (team != null)
-        {
-            winningTeam = team;
-            return true;
-        }
-        return false;
+        return Array.FindIndex(killTeamScores, t => t >= gameMode.pointsToWin);
     }
 
-    private Team Find(IEnumerable<Team> teams, Predicate<Team> predicate)
-    {
-        foreach (var t in teams)
+    // Later we could track deaths and assists too.
+    public void IncreaseKillScore(int team) {
+        killTeamScores[team] += 1;
+    }
+
+    private void DestroyTeamDefense(int team) {
+        defenseTeamBlocks[team] = null;
+    }
+
+    public void SetDefenseBases(DestructibleTeamBlock[] defenseBases, int team) {
+        defenseTeamBlocks = new DestructibleTeamBlock[team];
+        var len = Math.Min(team, defenseBases.Length);
+        for (int i = 0; i < len; i++)
         {
-            if (predicate(t))
-            {
-                return t;
-            }
+            defenseTeamBlocks[i] = defenseBases[i];
         }
-        return null;
+    }
+
+    public int GetTeamKillScore(int team) {
+        return killTeamScores[team];
     }
 }

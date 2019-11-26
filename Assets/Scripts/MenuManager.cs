@@ -34,9 +34,9 @@ public class MenuManager : MonoBehaviour
     }
 
     private void Start() {
-        // TODO: When all maps are implemented, this function call
-        // won't be necessary.
+        // TODO: When data is restructed and maps finished, remove this.
         UpdateMapUi();
+        UpdateGameModeUi();
     }
 
     void Update()
@@ -221,7 +221,7 @@ public class MenuManager : MonoBehaviour
     private void UpdateGameModeUi()
     {
         gameModeText.SetText(SelectedGameMode.name);
-        FindObjectOfType<WinManager>().GameMode = SelectedGameMode;
+        FindObjectOfType<WinManager>().SetGameMode(SelectedGameMode, teamManager.Count);
     }
 
     private void UpdateMapUi()
