@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +7,18 @@ using static TeamManager;
 
 public class WinManager : MonoBehaviour
 {
-    // TODO make private
-    [SerializeField] public GameMode gameMode;
+    [SerializeField] private GameMode gameMode;
     private Team winningTeam;
+    public int MaxTeamSize => gameMode.maxTeamSize;
+    public int MaxTeamCount => gameMode.maxTeams;
+    public GameMode.WinCondition WinCondition => gameMode.winCondition;
+    public GameMode GameMode
+    {
+        set
+        {
+            gameMode = value;
+        }
+    }
 
     public bool OnTeamWon(IEnumerable<Team> teams)
     {
@@ -75,10 +84,12 @@ public class WinManager : MonoBehaviour
         return false;
     }
 
-    private Team Find(IEnumerable<Team> teams, Predicate<Team> predicate) {
+    private Team Find(IEnumerable<Team> teams, Predicate<Team> predicate)
+    {
         foreach (var t in teams)
         {
-            if (predicate(t)) {
+            if (predicate(t))
+            {
                 return t;
             }
         }

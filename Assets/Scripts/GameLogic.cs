@@ -82,7 +82,7 @@ public class GameLogic : MonoBehaviour
 
         print("init players");
         teamManager.InitPlayers();
-        if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
+        if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
             print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");

@@ -24,12 +24,11 @@ public partial class TeamManager : MonoBehaviour
         teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
         colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
 
-        // TODO: remove public field reference
-        GameMode gameMode = GetComponent<WinManager>().gameMode;
-        teams = new List<Team>(gameMode.maxTeams);
-        for (int i = 0; i < gameMode.maxTeams; i++)
+        var winManager = GetComponent<WinManager>();
+        teams = new List<Team>(winManager.MaxTeamCount);
+        for (int i = 0; i < winManager.MaxTeamCount; i++)
         {
-            teams.Add(new Team(gameMode.maxTeamSize, GetColor(i)));
+            teams.Add(new Team(winManager.MaxTeamSize, GetColor(i)));
         }
     }
 
