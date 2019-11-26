@@ -12,6 +12,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
     public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
     public List<Character> playerChars = new List<Character>(); 
 
+    [SerializeField] private bool debugFastJoin;
     [SerializeField] private Color[] teamColors;
     [SerializeField] private string[] colorStrings;
     private PlayerSpawner spawner;
@@ -116,6 +117,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
 				currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
+                FindObjectOfType<EffectManager>().addGridLigth(currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
             }
         }
     }
@@ -150,7 +152,11 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
 
             FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
 
-            //TODO: check which player? write string P1 for example
+            if(debugFastJoin)
+            {
+                AddBot(0);
+                menu.Play();
+            }
         }
 
         //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene

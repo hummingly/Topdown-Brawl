@@ -2530,6 +2530,7 @@ MonoBehaviour:
   teams: []
   playerNrs: []
   playerChars: []
+  debugFastJoin: 0
   teamColors:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.93725497, b: 0, a: 1}

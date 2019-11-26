@@ -58,8 +58,8 @@ public class GameLogic : MonoBehaviour
 
 
 
-        // changed from one scene to another
-        private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
+    // changed from one scene to another
+    private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
         if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
