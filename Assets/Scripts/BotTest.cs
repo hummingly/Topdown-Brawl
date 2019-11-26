@@ -76,12 +76,12 @@ public class BotTest : MonoBehaviour
 
     void Start()
     {
-        var myTeam = teams.GetTeamOf(gameObject);
+        var myTeam = teams.FindPlayerTeam(gameObject);
         var allEntities = FindObjectsOfType<PlayerMovement>();
 
         foreach (PlayerMovement pm in allEntities)
         {
-            if (teams.GetTeamOf(pm.gameObject) != myTeam)
+            if (teams.FindPlayerTeam(pm.gameObject) != myTeam)
                 possibleTargets.Add(pm.gameObject);
         }
     }

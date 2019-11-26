@@ -17,11 +17,13 @@ public class MenuCursor : MonoBehaviour
 
     private GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
+    private MenuManager menuManager;
 
 
     void Start()
     {
         gr = FindObjectOfType<GraphicRaycaster>();
+        menuManager = FindObjectOfType<MenuManager>();
     }
 
     public void Setup(int playerNr, Color teamColor)
@@ -66,37 +68,41 @@ public class MenuCursor : MonoBehaviour
             var emptySlot = true;
             GameObject addBotButton = null;
 
-            foreach(RaycastResult hitObj in results)
+            foreach (RaycastResult hitObj in results)
             {
-                if (hitObj.gameObject.name == "Start Button") //TODO: bad practise via obj name?
-                    FindObjectOfType<MenuManager>().Play();
-
-                if (hitObj.gameObject.name == "Char Up")
-                    FindObjectOfType<MenuManager>().ToggleCharacter(gameObject, hitObj.gameObject, 1);
-
-                if (hitObj.gameObject.name == "Char Down")
-                    FindObjectOfType<MenuManager>().ToggleCharacter(gameObject, hitObj.gameObject, - 1);
-
-
-                if (hitObj.gameObject.name == "Change Team Button")
+                switch (hitObj.gameObject.name)
                 {
-                    FindObjectOfType<MenuManager>().TogglePlayerTeam(gameObject, hitObj.gameObject);
-                    emptySlot = false;
+                    case "Start Button": //TODO: bad practise via obj name?
+                        menuManager.Play();
+                        break;
+                    case "Char Up":
+                        menuManager.ToggleCharacter(gameObject, hitObj.gameObject, 1);
+                        break;
+                    case "Char Down":
+                        menuManager.ToggleCharacter(gameObject, hitObj.gameObject, -1);
+                        break;
+                    case "Change Team Button":
+                        menuManager.TogglePlayerTeam(gameObject, hitObj.gameObject);
+                        emptySlot = false;
+                        break;
+                    case "Map Button Toggle":
+                        menuManager.ToggleMap();
+                        break;
+                    case "Add Bot Button":
+                        addBotButton = hitObj.gameObject;
+                        break;
+                    case "Game Mode Toggle":
+                        menuManager.ToggleGameMode(hitObj.gameObject);
+                        break;
                 }
 
-                if (hitObj.gameObject.name == "Map Button Toggle")
-                    FindObjectOfType<MenuManager>().ToggleMap();
-
-
-                if (hitObj.gameObject.name == "Add Bot Button")
-                    addBotButton = hitObj.gameObject;
+                if (addBotButton && emptySlot)
+                    FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
             }
-            
-            if (addBotButton && emptySlot)
-                FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
         }
 
     }
+
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();

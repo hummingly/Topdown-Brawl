@@ -65,4 +65,9 @@ public abstract class IDamageable : MonoBehaviour
 
     public abstract void OnDeath();
     public abstract void OnReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3());
+    
+    public int GetHealth()
+    {
+        return healthPoints;
+    }
 }

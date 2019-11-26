@@ -172,7 +172,7 @@ public class Projectile : MonoBehaviour
 
         if (damageAble)
         {
-            var sameTeam = teams.GetTeamOf(owner) == teams.GetTeamOf(damageAble.gameObject);
+            var sameTeam = teams.FindPlayerTeam(owner) == teams.FindPlayerTeam(damageAble.gameObject);
 
             // only damage enemys (-1 case isn't caught)
             if (!sameTeam)
@@ -201,7 +201,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.GetComponent<PlayerMovement>())
             {
-                if(teams.GetTeamOf(owner) != teams.GetTeamOf(damageAble.gameObject))
+                if(teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.velocity *= keepOrgVelPlayer; // doesnt work well since player always changed velocity...
@@ -252,7 +252,7 @@ public class Projectile : MonoBehaviour
 
         if (damageAble)
         {
-            var sameTeam = teams.GetTeamOf(owner) == teams.GetTeamOf(damageAble.gameObject);
+            var sameTeam = teams.FindPlayerTeam(owner) == teams.FindPlayerTeam(damageAble.gameObject);
 
             // only damage enemys (-1 case isn't caught)
             if (!sameTeam)
@@ -276,7 +276,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.gameObject.GetComponent<PlayerMovement>())
             {
-                if (teams.GetTeamOf(owner) != teams.GetTeamOf(damageAble.gameObject))
+                if (teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.velocity *= keepOrgVelPlayer; // doesnt work well since player always changed velocity...
