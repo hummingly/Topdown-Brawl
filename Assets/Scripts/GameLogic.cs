@@ -108,8 +108,8 @@ public class GameLogic : MonoBehaviour
             print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
-            roundRunning = true;
         }
+        roundRunning = true;
     }
 
 
