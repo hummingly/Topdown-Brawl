@@ -42,17 +42,70 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    public static IList<T> Shuffle<T>(IList<T> collection, int seed)
+    public static int[] Shuffle(int[] array)//object[] shuffle(object[] array)
     {
-        Random.InitState(seed);
-        for (int t = 0; t < collection.Count; t++)
+        for (int t = 0; t < array.Length; t++)
         {
-            T tmp = collection[t];
-            int r = Random.Range(t, collection.Count);
-            collection[t] = collection[r];
-            collection[r] = tmp;
+            int tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
         }
-        return collection;
+        return array;
     }
+
+    public static Color[] Shuffle(Color[] array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            Color tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+    public static List<GameObject> Shuffle(List<GameObject> array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Count; t++)
+        {
+            GameObject tmp = array[t];
+            int r = Random.Range(t, array.Count);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+    /*
+    public static object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            object tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+
+    public static T[] shuffle<T>(T[] array)//object[] shuffle(object[] array)
+    {
+        for (int t = 0; t < array.Length; t++)
+        {
+            T tmp = array[t];
+            int r = Random.Range(t, array.Length);
+            array[t] = array[r];
+            array[r] = tmp;
+        }
+        return array;
+    }
+
+    public static T[] LastItem<T>(this List<T> list)
+    {
+        return list[list.Count - 1];
+    }*/
 }
 

@@ -15,15 +15,11 @@ public class GameLogic : MonoBehaviour
 
     private UIManager uiManager;
     private TeamManager teams;
-    private TeamManager teamManager;
-    private WinManager winManager;
 
     private float mapSize;
 
     [SerializeField] private float startGameplayAnimDur = 1;
     [SerializeField] private float spawnBeforeAnimDone = 0.2f;
-
-    private bool roundRunning;
 
 
     private void Awake()
@@ -34,7 +30,6 @@ public class GameLogic : MonoBehaviour
             instance = this; 
 
         teams = GetComponent<TeamManager>();
-        teamManager = GetComponent<TeamManager>();
 
         SceneManager.sceneLoaded += SceneLoadeded;
 
@@ -45,21 +40,6 @@ public class GameLogic : MonoBehaviour
     {
         //gameMode.useTeams = true;
         gameMode.pointsToWin = 8;
-        winManager = GetComponent<WinManager>();
-    }
-
-    void Update()
-    {
-        //GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame doesn't help because InitGameplay is Coroutine
-        if (roundRunning) // bases are initialized
-        {
-            //if bigger than gamemode max then won
-            if (winManager.OnTeamWon(teamManager.GetTeams()))
-            {
-                roundRunning = false;
-                GameOver();
-            }
-        }
     }
 
 
@@ -106,24 +86,23 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-        print("init players");
-        teamManager.InitPlayers();
-        if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
-        {
-            print("init bases");
-            GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
-            teamManager.InitDefenseBases(defenseBasesParent);
-            roundRunning = true;
-        }
+
+        teams.InitPlayers();
     }
 
 
     public void IncreaseScore(GameObject player)
     {
-        teamManager.IncreaseScore(player);
+        teams.increaseScore(player);
 
         // display new score in UI
         uiManager.UpdateScores();
+
+        //if bigger than gamemode max then won
+        if (teams.SomeTeamWon(gameMode.pointsToWin))
+        {
+            GameOver();
+        }
     }
 
     public void GameOver()
