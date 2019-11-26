@@ -40,9 +40,9 @@
 ### Classes
 
 - Normal shooter: shooting skill with short cooldown, medium range, damage and speed of projectiles
-- Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range
+- Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range, the longer the shot the higher the damage
 - Melee: a tough and slightly faster class with a melee attack that knockbacks back others (and additional damage on pushing into walls)
-- Bouncer: shooting skill with a shorter range but bouncing bullets, going further each bounce
+- (beta ;) Bouncer: shooting skill with a shorter range but bouncing bullets, going further each bounce
 
 ## Game Mechanics
 
