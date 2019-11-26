@@ -18,6 +18,8 @@ public class PlayerVisuals : MonoBehaviour
         
     }
 
+
+
     public void InitColor(Color col)
     {
         SetColorAll(col);

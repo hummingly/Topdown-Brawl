@@ -67,11 +67,12 @@ public class Projectile : MonoBehaviour
             seq.Append(GetComponentInChildren<SpriteMask>().transform.DOLocalMoveY(0, meleeAnimDur));
             seq.Insert(fadeAt, GetComponentInChildren<SpriteRenderer>().DOFade(0, meleeAnimDur - fadeAt));
             //seq.AppendCallback(() => Destroy(gameObject));
-            seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false); 
+            seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false);
             seq.AppendCallback(() => Destroy(gameObject));
 
             //TODO: add easing
         }
+        //else FindObjectOfType<EffectManager>().addGridLigth(GetComponentInChildren<SpriteRenderer>(), transform);
     }
 
     void Update()

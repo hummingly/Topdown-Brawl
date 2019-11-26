@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class EffectManager : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private float powerOfAllShakes = 2;
     [SerializeField] private float frequency = 1;
 
+    private SpriteRenderer grid;
+    //private List<GameObject> objectsLigthGrid = new List<GameObject>();
+    //private List<SpriteRenderer> objectsLigthGrid = new List<SpriteRenderer>();
+    private List<GridLigth> gridLights = new List<GridLigth>();
+
     private bool paused;
 
     private float trauma;
@@ -32,8 +38,10 @@ public class EffectManager : MonoBehaviour
 
     private void Awake()
     {
+        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<SpriteRenderer>();
         _perlin = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
     }
+
 
     public void DoDashPartic(Vector2 pos, Vector2 playerRot)
     {
@@ -161,14 +169,109 @@ public class EffectManager : MonoBehaviour
         shake = Mathf.Pow(trauma, powerOfAllShakes);
 
         shake *= maxoffset;
+
+
+
+
+        for (var i = gridLights.Count - 1; i > -1; i--)
+        {
+            if (gridLights[i].centerTransform == null)
+                gridLights.RemoveAt(i);
+        }
+
+        // doesnt work in late update bcz shader?
+        if (gridLights.Count > 0)
+        {
+            //could also use a float array and just do j+=2 in shader
+            List<Vector4> list = new List<Vector4>();
+
+            // Make grid brigth where stuff is
+            for (int i = 0; i < gridLights.Count; i++)
+            {
+                //check if the objects are still existent / enabled
+                if (!gridLights[i].spriteRend.enabled) //TODO: look at brigthnes of spriterenderer
+                    continue;
+
+                list.Add(gridLights[i].centerTransform.position);
+            }
+
+            Vector4[] array = list.ToArray();
+            grid.material.SetInt("maxLightingObjects", array.Length);
+            grid.material.SetVectorArray("lightingObjects", array);
+        }
+        else
+        {
+            grid.material.SetInt("maxLightingObjects", 0);
+        }
     }
 
-    // Show shake
     private void LateUpdate()
     {
+        // Show shake
         _perlin.m_AmplitudeGain = shake;
         _perlin.m_FrequencyGain = frequency;
         // if too smooth, use cinemachine camera offset and move it manually
+
+
+
+        //foreach(SpriteRenderer s in objectsLigthGrid)
+        //    if (!s) objectsLigthGrid.Remove(s);
+        //objectsLigthGrid = objectsLigthGrid.Where(item => item != null).ToList();
+        /*for(var i = objectsLigthGrid.Count - 1; i > -1; i--)
+        {
+            if (objectsLigthGrid[i] == null)
+            {
+                objectsLigthGrid.RemoveAt(i);
+                objectsLigthCenters.RemoveAt(i);
+            }
+        }
+
+        // doesnt work in late update bcz shader?
+        if (objectsLigthGrid.Count > 0)
+        {
+            //Vector4[] array = new Vector4[objectsLigthGrid.Count];
+            List<Vector4> list = new List<Vector4>();
+
+            // Make grid brigth where players are... and bullets too?
+            for (int i = 0; i < objectsLigthGrid.Count; i++)
+            {
+                //check if the objects are still existent / enabled
+                if (!objectsLigthGrid[i].enabled)
+                    continue;
+
+                //Vector4 localPoint = transform.InverseTransformPoint(objectsLigthGrid[i].transform.root.position); //needed?
+                //localPoint.Scale(transform.localScale);
+                //localPoint.w = 1;
+
+                ////https://www.alanzucconi.com/2016/01/27/arrays-shaders-heatmaps-in-unity3d/
+                //grid.material.SetVector("lightingObjects" + i.ToString(), localPoint);
+
+                //https://stackoverflow.com/questions/45098671/how-to-define-an-array-of-floats-in-shader-properties
+                //array[i] = localPoint;
+                //list.Add(localPoint);
+
+                //list.Add(objectsLigthGrid[i].transform.root.position);
+                //print(objectsLigthGrid[i].transform.root.name + " " + objectsLigthGrid[i].transform.root.position);
+                list.Add(objectsLigthCenters[i].position);
+                print(objectsLigthCenters[i].name + " " + objectsLigthGrid[i].transform.position);
+            }
+            Vector4[] array = list.ToArray();
+            grid.material.SetInt("maxLightingObjects", array.Length);
+            grid.material.SetVectorArray("lightingObjects", array);
+        }
+        else
+        {
+            grid.material.SetInt("maxLightingObjects", 0);
+        }*/
+
+
+       
+    }
+
+    public void addGridLigth(SpriteRenderer s, Transform t)
+    {
+        GridLigth l = new GridLigth(s, t);
+        gridLights.Add(l);
     }
 
     /*

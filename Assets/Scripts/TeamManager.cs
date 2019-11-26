@@ -113,6 +113,7 @@ public class TeamManager : MonoBehaviour // Singleton instead of static, so can 
                 teams[t].players[p] = currPlayer;
                 spawner.PlayerJoined(currPlayer.transform);
                 currPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currPlayer));
+                FindObjectOfType<EffectManager>().addGridLigth(currPlayer.GetComponentInChildren<SpriteRenderer>(), currPlayer.transform);
             }
         }
 

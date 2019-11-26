@@ -28,8 +28,10 @@ public class MovingObject : MonoBehaviour
     private Vector2 lastDir;
 
 
+
     void Start()
     {
+        //FindObjectOfType<EffectManager>().addGridLigth(GetComponentInChildren<SpriteRenderer>(), transform);
         if (GetComponent<Rigidbody2D>())
         {
             rb = GetComponent<Rigidbody2D>();

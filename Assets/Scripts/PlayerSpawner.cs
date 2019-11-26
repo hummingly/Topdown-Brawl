@@ -66,7 +66,7 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject CreatePlayer()
     {
         var player = Instantiate(playerPrefab, Vector2.zero, Quaternion.identity).transform;
-
+        
         return player.gameObject;
     }
     public GameObject CreateBot()
