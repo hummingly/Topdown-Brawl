@@ -5,57 +5,51 @@
 - top down 2D battle game
 - two teams fight against each other on the same map (screen/device)
 - teams are equal in size and can consist of 1 to 3 players
-- a game is played several rounds on a map
-- each player can choose a role
+- as placeholder bots can be added to the game
+- each player can choose a role (normal shooter, sniper, melee, bouncer)
+- there are two game modes: death match and defense
+- there are three maps available (large, medium and small)
+
+### Menu
+
+- by clicking on a free slot you can join the game
+- if you already joined, a bot will be added
+- by clicking on a filled slot / character you can change its team
+- by clicking on the arrows you can change the class
+- by clicking on the picture of the map you can change the map
+- click on the game mode to toggle the game mode, suitable maps will automatically be selected
 
 ### Controls
 
 - players can walk and fire attacks around them (rotate along the z-axis)
-- ps4/xbox controllers
+- ps4/xbox controllers supported only
+- use left stick to move, right stick to look around / aim
+- use B to navigate in menu
+- use RB to shoot
+- use RT to use your special skill
+- use LB for a dash
 
-### Win Conditions
+### Game Modes
 
-- win more rounds than the enemy team in a game
-- win rounds by achieving map objective
+- in deatchmatch mode you have to kill as much enemies as possible
+- the team that has reached a certain amount of kills, wins the round
+- in defense mode you have to defend your base which is a purple block near your spawn area
+- at the same time you have to destroy the block of the enemy team
+- the team that destroys the other team's block first wins
+
+### Classes
+
+- Normal shooter: shooting skill with short cooldown, long range, medium damage and medium speed of projectiles
+- Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range
+- Melee: a tough class with a melee attack with high knockback
+- Bouncer: shooting skill with a shorter range but bouncing bullets
 
 ## Game Mechanics
 
-- health points
-- respawn after each death
-- death penalty (longer respawn time)
-- fighting enemies to kill them
-- map objective
-- roles have unique skills
+- too much to write, see unity
 
 ## Game Art
 
 - blocky and simple
 - low resolution pixel game
-
-## Roadmap
-
-### Core Gameplay
-
-This is the initial plan to have a playable game and a foundation on which more can be built and experimented.
-
-1. Finish Basic Game (Loop)
-   - [ ] scene transitions
-   - [ ] start menu with play button
-   - [x] shooter vs. shooter
-   - [ ] round ends after a player dies
-   - [ ] display ending screen after finishing 1 round
-   - [ ] ending screen shows score
-2. Initial Role System
-   - [ ] add fighter role
-   - [ ] add role selection to start menu
-   - [ ] add one special skill to shooter and fighter
-   - [ ] add cooldowns for basic attacks and skills
-3. Map Objectives
-   - [ ] create new map with different goal (flag capturing?)
-   - [ ] add map selection to start menu
-   - [ ] experiment with map environment objects (e.g. walls, powerups) interactions
-4. Teams
-   - [ ] 2 teams
-   - [ ] differentiate skills and basic attack between allies and enemies
-   - [ ] add team selection to start menu
-   - [ ] adjust player and camera movement
+- various filters on screen while game is running
