@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,14 @@ public class MenuManager : MonoBehaviour
     {
         // CHECK IF ALL PLAYERS READY
     }
+
+    public void ToggleGameMode(GameObject button)
+    {
+        string name = gameState.ToggleGameMode();
+        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
+        textMesh.SetText(name);
+    }
+
 
 
 
@@ -154,7 +163,7 @@ public class MenuManager : MonoBehaviour
         //for player on joining if full (but with bots or empty GOs)
         if(!isBot)
         {
-            var currentPlayerCount = teams.getTotalPlayers();
+            var currentPlayerCount = teams.GetTotalPlayers();
             if (currentPlayerCount > 1) currentPlayerCount--; //since just joined one
 
             if (currentPlayerCount < 6) //TODO: add max player size dynamically... and enforce it too

@@ -8,6 +8,7 @@ TagManager:
   - BotLookThrough
   - Destruction Piece
   - Grid
+  - DefenseBases
   layers:
   - Default
   - TransparentFX

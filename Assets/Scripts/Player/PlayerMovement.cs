@@ -342,7 +342,7 @@ public class PlayerMovement : MonoBehaviour
                 stats.ReduceHealth(extraDmgOnWallHit);
 
             // damage other thing if a damageable cube or same team
-            if (collision.gameObject.GetComponent<IDamageable>() && FindObjectOfType<TeamManager>().GetTeamOf(collision.gameObject) == FindObjectOfType<TeamManager>().GetTeamOf(gameObject))
+            if (collision.gameObject.GetComponent<IDamageable>() && FindObjectOfType<TeamManager>().FindPlayerTeam(collision.gameObject) == FindObjectOfType<TeamManager>().FindPlayerTeam(gameObject))
                 collision.gameObject.GetComponent<IDamageable>().ReduceHealth(extraDmgOnWallHit);
         }
 

@@ -1914,7 +1914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &369632211
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2182,10 +2182,10 @@ RectTransform:
   m_Father: {fileID: 369632211}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 145, y: -25}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &460403713
 GameObject:
@@ -6959,10 +6959,10 @@ RectTransform:
   m_Father: {fileID: 369632211}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 85, y: -25}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1154641774
 GameObject:
@@ -6974,8 +6974,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1154641775}
   m_Layer: 0
-  m_Name: Destructible Objective Test
-  m_TagString: Untagged
+  m_Name: DefenseBases
+  m_TagString: DefenseBases
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7916,9 +7916,9 @@ GameObject:
   - component: {fileID: 1249933565}
   - component: {fileID: 1249933569}
   - component: {fileID: 1249933567}
-  - component: {fileID: 1249933566}
   - component: {fileID: 1249933570}
   - component: {fileID: 1249933568}
+  - component: {fileID: 1249933571}
   m_Layer: 0
   m_Name: Block (6)
   m_TagString: Untagged
@@ -7941,21 +7941,6 @@ Transform:
   m_Father: {fileID: 1154641775}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1249933566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249933564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87b7d0cd8f60bb4e93f95b080e56dc7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthSlider: {fileID: 1853825485}
-  statsUi: {fileID: 1853825484}
-  maxHealthPoints: 500
 --- !u!114 &1249933567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8061,6 +8046,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splitPoints: 800
+--- !u!114 &1249933571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249933564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c74491a15b4a24c80dac44b3dcd294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSlider: {fileID: 1853825485}
+  statsUi: {fileID: 1853825484}
+  maxHealthPoints: 500
 --- !u!1 &1260536247
 GameObject:
   m_ObjectHideFlags: 0
@@ -9498,10 +9498,10 @@ RectTransform:
   m_Father: {fileID: 369632211}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 25, y: -25}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1405139714
 GameObject:
@@ -12589,9 +12589,9 @@ GameObject:
   - component: {fileID: 1840763943}
   - component: {fileID: 1840763947}
   - component: {fileID: 1840763945}
-  - component: {fileID: 1840763944}
   - component: {fileID: 1840763948}
   - component: {fileID: 1840763946}
+  - component: {fileID: 1840763944}
   m_Layer: 0
   m_Name: Block (5)
   m_TagString: Untagged
@@ -12623,7 +12623,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1840763942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87b7d0cd8f60bb4e93f95b080e56dc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 83c74491a15b4a24c80dac44b3dcd294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 933680732}
