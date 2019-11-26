@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class BotTest : MonoBehaviour
 {
-    private TeamManager teams;
+    private TeamManager teamManager;
     private PlayerMovement playerMovement;
     private Skill skill;
 
@@ -28,7 +27,7 @@ public class BotTest : MonoBehaviour
     [SerializeField] private float maxRandAimOffset;
     [Space]
 
-    [SerializeField] private Vector2 playerChaseOffsetMinMax = new Vector2(3,6);
+    [SerializeField] private Vector2 playerChaseOffsetMinMax = new Vector2(3, 6);
     //[SerializeField] private float playerChaseOffsetRnd = 0.5f;
     [SerializeField] private float playerChaseOffsetChangeSpd = 1f;
     [SerializeField] private float maxStrafe = 2f;
@@ -49,7 +48,6 @@ public class BotTest : MonoBehaviour
 
     //TODO: add object avoidance via raycast, or just use an A* implementation
 
-
     private bool isChasing; //else wandering
     private bool gotHitAndNotInRange;
     private Vector2 moveDir;
@@ -61,28 +59,30 @@ public class BotTest : MonoBehaviour
 
     void Awake()
     {
-        teams = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<TeamManager>();
         playerMovement = GetComponent<PlayerMovement>();
         skill = GetComponent<DefaultShootSkill>();
 
 
         // if hasn't been added bcz testing in dev scene
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")
         {
-            FindObjectOfType<TeamManager>().AddToSmallestTeam(gameObject);
-            GetComponentInChildren<PlayerVisuals>().InitColor(FindObjectOfType<TeamManager>().GetColorOf(gameObject));
+            teamManager.AddToSmallestTeam(gameObject);
+            GetComponentInChildren<PlayerVisuals>().InitColor(teamManager.GetColorOf(gameObject));
         }
     }
 
     void Start()
     {
-        var myTeam = teams.FindPlayerTeam(gameObject);
+        var myTeam = teamManager.FindPlayerTeam(gameObject);
         var allEntities = FindObjectsOfType<PlayerMovement>();
 
         foreach (PlayerMovement pm in allEntities)
         {
-            if (teams.FindPlayerTeam(pm.gameObject) != myTeam)
+            if (teamManager.FindPlayerTeam(pm.gameObject) != myTeam)
+            {
                 possibleTargets.Add(pm.gameObject);
+            }
         }
     }
 
@@ -99,9 +99,13 @@ public class BotTest : MonoBehaviour
         moveObstAdjust = Mathf.Clamp(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust);
         // inverted, when big then small
         if (moveObstAdjust > 0)
+        {
             moveObstAdjust = possibleMaxAdjust - moveObstAdjust;
+        }
         if (moveObstAdjust < 0)
-            moveObstAdjust =-possibleMaxAdjust + moveObstAdjust;
+        {
+            moveObstAdjust = -possibleMaxAdjust + moveObstAdjust;
+        }
         moveObstAdjust = ExtensionMethods.Remap(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
 
 
@@ -127,12 +131,16 @@ public class BotTest : MonoBehaviour
 
                 Vector2 wanderGeneralDir = moveDir;
                 if (wanderTend == WanderTendency.MapCenter)
+                {
                     wanderGeneralDir = (Vector3.zero - transform.position).normalized;
+                }
                 if (wanderTend == WanderTendency.RandomEnemy)
                 {
-                    var target = teams.GetRandomEnemy(gameObject);
-                    if(target)
+                    var target = teamManager.GetRandomEnemy(gameObject);
+                    if (target)
+                    {
                         wanderGeneralDir = (target.transform.position - transform.position).normalized;
+                    }
                 }
 
 
@@ -158,13 +166,17 @@ public class BotTest : MonoBehaviour
         }
         else // Chase and shoot
         {
-            if(target && !target.GetComponent<PlayerMovement>().enabled)
+            if (target && !target.GetComponent<PlayerMovement>().enabled)
+            {
                 isChasing = false;
-            
-            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
-                gotHitAndNotInRange = false;
+            }
 
-            if (gotHitAndNotInRange ||(target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
+            {
+                gotHitAndNotInRange = false;
+            }
+
+            if (gotHitAndNotInRange || (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
             {
                 // basically when chase try not to move to player but to point that is from player to bot, normalized n distance away... 
                 var targetPos = target.position;
@@ -203,7 +215,7 @@ public class BotTest : MonoBehaviour
     {
         Vector2 pointA = transform.position;
 
-        for(int i = -rays/2; i < rays/2; i++)
+        for (int i = -rays / 2; i < rays / 2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (lookAgroFoV / 2) / (rays / 2));
             float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFalloff;
@@ -218,18 +230,18 @@ public class BotTest : MonoBehaviour
             // look at the first ray that doesn't hit myself (so look at the first wall or enemy)
             for (int j = 0; j < rayHit.Length; j++)
             {
-                if(rayHit[j].transform != transform)
+                if (rayHit[j].transform != transform)
                 {
                     var entityThere = rayHit[j].collider.GetComponent<PlayerMovement>();
 
                     if (entityThere && possibleTargets.Contains(entityThere.gameObject)) //!rayHit[j].collider.GetComponent<BotTest>())
+                    {
                         return rayHit[j].transform;
-
+                    }
                     break;
                 }
             }
         }
-
         return null;
     }
 
@@ -238,7 +250,7 @@ public class BotTest : MonoBehaviour
         float steerDir = 0;
 
         Vector2 pointA = transform.position;
-        
+
         for (int i = -obstacleRays / 2; i < obstacleRays / 2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));
@@ -267,8 +279,6 @@ public class BotTest : MonoBehaviour
         //return Mathf.Clamp(steerDir, -1, 1); //TODO: more nuisance to how many obstacles in each dir and where to steer to
     }
 
-
-
     public void GotHit(GameObject hitBy)
     {
         if (!isChasing)
@@ -285,7 +295,6 @@ public class BotTest : MonoBehaviour
     {
         isChasing = false;
     }
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {

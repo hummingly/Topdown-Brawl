@@ -8,22 +8,21 @@ public partial class TeamManager
     [Serializable]
     public class Team : IEnumerable
     {
+        public string Name { get; set; }
+        public Color Color { get; set; }
         private readonly List<GameObject> players;
         public readonly int Capacity;
-        public Color Color { get; set; }
-
-        public Team(int teamSize, Color color)
-        {
-            Capacity = teamSize;
-            players = new List<GameObject>(Capacity);
-            Color = color;
-        }
-
         public int Count => players.Count;
-
         public bool IsEmpty => players.Count == 0;
-
         public bool IsFull => players.Count == Capacity;
+
+        public Team(int maxTeamSize, string name, Color color)
+        {
+            Name = name;
+            Color = color;
+            Capacity = maxTeamSize;
+            players = new List<GameObject>(Capacity);
+        }
 
         public GameObject Get(int index)
         {
@@ -34,7 +33,7 @@ public partial class TeamManager
             return null;
         }
 
-        public bool AddPlayer(GameObject player)
+        public bool Add(GameObject player)
         {
             if (players.Count < Capacity && player != null)
             {
@@ -44,12 +43,12 @@ public partial class TeamManager
             return false;
         }
 
-        public bool RemovePlayer(GameObject player)
+        public bool Remove(GameObject player)
         {
             return players.Remove(player);
         }
 
-        public bool ReplacePlayer(GameObject oldPlayer, GameObject newPlayer)
+        public bool Replace(GameObject oldPlayer, GameObject newPlayer)
         {
             if (newPlayer == null)
             {
@@ -91,12 +90,12 @@ public partial class TeamManager
             return players.FindAll(predicate);
         }
 
-        public bool HasPlayer(GameObject player)
+        public bool Has(GameObject player)
         {
             return players.Contains(player);
         }
 
-        public bool ExistsPlayer(Predicate<GameObject> predicate)
+        public bool Exists(Predicate<GameObject> predicate)
         {
             return players.Exists(predicate);
         }

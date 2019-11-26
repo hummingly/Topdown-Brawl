@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using static TeamManager;
 
 public class WinManager : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class WinManager : MonoBehaviour
 
     public int MaxTeamSize => gameMode.maxTeamSize;
     public int MaxTeamCount => gameMode.maxTeams;
+    public int[] TeamKills => killTeamScores;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
 
     public void SetGameMode(GameMode mode, int teams) {

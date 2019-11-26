@@ -28,27 +28,31 @@ public class MenuManager : MonoBehaviour
     private GameMode SelectedGameMode => gameModes[currentGameModeIndex];
     private String SelectedMap => maps[currentMapIndex];
 
-    void Awake()
+    private void Awake()
     {
         teamManager = FindObjectOfType<TeamManager>();
     }
 
-    private void Start() {
+    private void Start()
+    {
         // TODO: When data is restructed and maps finished, remove this.
         UpdateMapUi();
         UpdateGameModeUi();
     }
 
-    void Update()
+    private void Update()
     {
-        if (IsReady()) {
+        if (IsReady())
+        {
             Play();
         }
     }
 
-    private bool IsReady() {
+    private bool IsReady()
+    {
         PlayerSlotMenuDisplay[] slots = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
-        if (slots.Length == 0) {
+        if (slots.Length == 0)
+        {
             return false;
         }
 
@@ -201,21 +205,21 @@ public class MenuManager : MonoBehaviour
 
     private void Play()
     {
-        teamManager.SaveCharacters(this);
+        SaveCharacters();
         FindObjectOfType<GameStateManager>().Play(SelectedMap);
     }
 
-    public Character GetCharacterOfPlayer(GameObject player)
+    private void SaveCharacters()
     {
         PlayerSlotMenuDisplay[] characters = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
-        foreach (PlayerSlotMenuDisplay character in characters)
+        foreach (GameObject p in teamManager.playerNrs)
         {
-            if (character != null && character.myPlayer == player)
+            var character = Array.Find(characters, c => c != null && c.myPlayer == p);
+            if (character.chara != null)
             {
-                return character.chara;
+                teamManager.playerChars.Add(character.chara);
             }
         }
-        return null;
     }
 
     private void UpdateGameModeUi()

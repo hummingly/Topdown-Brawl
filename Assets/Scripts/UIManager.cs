@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -9,34 +7,24 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject gameOver;
 
-    private TeamManager teamManager;
-    private WinManager winManager;
-
-    void Start()
-    {
-        teamManager = FindObjectOfType<TeamManager>();
-        winManager = FindObjectOfType<WinManager>();
-    }
-
     void Update()
     {
 
     }
 
-    public void UpdateScores()
+    public void UpdateScores(int[] teamKillScores)
     {
-        for(int i = 0; i < teamManager.Count; i++)
+        for(int i = 0; i < teamKillScores.Length; i++)
         {
             TextMeshProUGUI text = scores[i].GetComponent<TextMeshProUGUI>();
-            text.SetText(winManager.GetTeamKillScore(i).ToString());
+            text.SetText(teamKillScores[i].ToString());
         }
     }
 
-    public void SetGameOverUI()
+    public void SetGameOverUI(string winningTeam)
     {
         gameOver.SetActive(true);
         TextMeshProUGUI text = gameOver.GetComponentInChildren<TextMeshProUGUI>();
-        var winningTeam = teamManager.GetTeamName(winManager.GetWinningTeam());
         text.SetText("Team " + winningTeam + " won!");
     }
 }

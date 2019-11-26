@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,7 +12,7 @@ public partial class TeamManager : MonoBehaviour
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
-    public List<InputDevice> playerDevices = new List<InputDevice>();
+    private List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
 
     public int Count => teams.Count;
@@ -28,19 +28,7 @@ public partial class TeamManager : MonoBehaviour
         teams = new List<Team>(winManager.MaxTeamCount);
         for (int i = 0; i < winManager.MaxTeamCount; i++)
         {
-            teams.Add(new Team(winManager.MaxTeamSize, GetColor(i)));
-        }
-    }
-
-    public void SaveCharacters(MenuManager menu)
-    {
-        foreach (GameObject p in playerNrs)
-        {
-            Character character = menu.GetCharacterOfPlayer(p);
-            if (character != null)
-            {
-                playerChars.Add(character);
-            }
+            teams.Add(new Team(winManager.MaxTeamSize, colorStrings[i], teamColors[i]));
         }
     }
 
@@ -86,7 +74,7 @@ public partial class TeamManager : MonoBehaviour
                      * although this can be forced explicitly by manually assigning devices to a player when calling PlayerInput.
                      * Instantiate or by calling InputUser.PerformPairingWithDevice on the InputUser of a PlayerInput */
                 }
-                team.ReplacePlayer(player, currentPlayer);
+                team.Replace(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
             }
@@ -101,7 +89,7 @@ public partial class TeamManager : MonoBehaviour
             return;
         }
         GameObject bot = new GameObject("Empty Bot Cursor");
-        if (teams[team].AddPlayer(bot))
+        if (teams[team].Add(bot))
         {
             var menuManager = FindObjectOfType<MenuManager>();
             menuManager.PlayerJoined(bot.transform, true);
@@ -151,11 +139,11 @@ public partial class TeamManager : MonoBehaviour
         // Bots are just added immediately.
         if (player.GetComponent<MenuCursor>() == null)
         {
-            return teams[team].AddPlayer(player);
+            return teams[team].Add(player);
         }
 
         // When no spot could be found on the team, return false immediately.
-        if (!teams[team].AddPlayer(player) && !teams[team].ReplaceBot(player))
+        if (!teams[team].Add(player) && !teams[team].ReplaceBot(player))
         {
             return false;
         }
@@ -187,16 +175,16 @@ public partial class TeamManager : MonoBehaviour
         int nextTeam = teams.FindIndex(currentTeam + 1 % teams.Capacity, t => t.Count < t.Capacity);
         if (nextTeam > -1)
         {
-            teams[currentTeam].RemovePlayer(player);
-            teams[nextTeam].AddPlayer(player);
+            teams[currentTeam].Remove(player);
+            teams[nextTeam].Add(player);
             return;
         }
         // Look for empty slot in team before the current team.
         int previousTeam = teams.FindIndex(0, currentTeam, t => t.Count < t.Capacity);
         if (previousTeam > -1)
         {
-            teams[currentTeam].RemovePlayer(player);
-            teams[previousTeam].AddPlayer(player);
+            teams[currentTeam].Remove(player);
+            teams[previousTeam].Add(player);
         }
     }
 
@@ -204,7 +192,7 @@ public partial class TeamManager : MonoBehaviour
     {
         foreach (Team team in teams)
         {
-            if (team.HasPlayer(player))
+            if (!team.Has(player))
             {
                 List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
@@ -229,7 +217,7 @@ public partial class TeamManager : MonoBehaviour
     {
         // Returns a list of teams which could add a player (empty spot or replace
         // bot). If the list is empty, all teams are already filled with players.
-        List<Team> openTeams = teams.FindAll(t => t.Count < t.Capacity || t.ExistsPlayer(p => p.GetComponent<MenuCursor>() == null));
+        List<Team> openTeams = teams.FindAll(t => t.Count < t.Capacity || t.Exists(p => p.GetComponent<MenuCursor>() == null));
         if (openTeams.Count == 0)
         {
             return -1;
@@ -251,38 +239,23 @@ public partial class TeamManager : MonoBehaviour
     // Returns the index of the player's team or -1 if the player has no team.
     public int FindPlayerTeam(GameObject player)
     {
-        return teams.FindIndex(t => t.HasPlayer(player));
+        return teams.FindIndex(t => t.Has(player));
     }
 
     public void Remove(GameObject player)
     {
         foreach (Team team in teams)
         {
-            if (team.RemovePlayer(player))
+            if (team.Remove(player))
             {
                 break;
             }
         }
     }
 
-    public Color GetColor(int index)
-    {
-        if (index > -1)
-        {
-            return teamColors[index];
-        }
-        return new Color(0.0f, 0.0f, 0.0f, 1.0f);
-    }
-
     public Color GetColorOf(GameObject player)
     {
         return teams[FindPlayerTeam(player)].Color;
-    }
-
-    public string GetTeamName(Team team)
-    {
-        var index = teams.FindIndex(t => t == team);
-        return colorStrings[index];
     }
 
     public string GetTeamName(int team)

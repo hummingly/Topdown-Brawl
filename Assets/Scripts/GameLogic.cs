@@ -6,8 +6,6 @@ using DG.Tweening;
 public class GameLogic : MonoBehaviour
 {
     private static GameLogic instance;
-    public static GameLogic Instance { get { return instance; } }
-
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
@@ -43,7 +41,6 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        //GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame doesn't help because InitGameplay is Coroutine
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
@@ -99,12 +96,12 @@ public class GameLogic : MonoBehaviour
         }
         winManager.IncreaseKillScore(team);
         // display new score in UI
-        uiManager.UpdateScores();
+        uiManager.UpdateScores(winManager.TeamKills);
     }
 
     public void GameOver()
     {
-        uiManager.SetGameOverUI();
+        uiManager.SetGameOverUI(teamManager.GetTeamName(winManager.GetWinningTeam()));
         Time.timeScale = 0;
     }
 }
