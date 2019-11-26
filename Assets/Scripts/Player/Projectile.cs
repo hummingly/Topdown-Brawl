@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     private TeamManager teams;
     private Rigidbody2D rb;
+    private TrailCopyConstraint trail;
 
     //[ColorUsage(true, true)] public Color shouldbeHDR = Color.white;
 
@@ -23,6 +24,7 @@ public class Projectile : MonoBehaviour
     private int damage = 10;
     [SerializeField] private Vector2 minMaxDist = new Vector2(3, 12);
     [SerializeField] private Vector2 minMaxDmg = new Vector2(10, 50);
+    [SerializeField] private Vector2 minMaxScale = new Vector2(1, 3);
     [Space]
     [SerializeField] private float knockStrength = 20;
     [SerializeField] private float keepOrgVel = 0.8f;
@@ -36,6 +38,7 @@ public class Projectile : MonoBehaviour
     private GameObject owner;
     private float destroyRange;
     private Vector2 startPos;
+    private Vector2 startScale;
     private int bounceAmmount;
     private float bounceGain;
     private float extendTravelDist;
@@ -44,7 +47,9 @@ public class Projectile : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        trail = GetComponentInChildren<TrailCopyConstraint>();
         startPos = transform.position;
+        startScale = transform.localScale;
     }
 
     void Start()
@@ -89,30 +94,32 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        // for snipe dmg depending on distance
+        if (damage == 0)
+        {
+            float dist = Vector2.Distance(startPos, transform.position);
+            float multi = ExtensionMethods.Remap(dist, minMaxDist.x, minMaxDist.y, minMaxScale.x, minMaxScale.y);
+            transform.localScale = startScale * multi;
+            trail.setMulti(multi);
+        }
+    }
+
     private void FixedUpdate()
     {
         lastVel = rb.velocity;
     }
 
-    public void SetOwner(GameObject owner)
+    public void SetInfo(int damage, GameObject owner, float range, int am, float gain, Vector2 scale)
     {
         this.owner = owner;
-    }
-
-    public void SetDamage(int damage)
-    {
         this.damage = damage;
-    }
-
-    public void SetRange(float range)
-    {
         this.destroyRange = range;
-    }
-
-    public void SetBounce(int am, float gain)
-    {
         this.bounceAmmount = am;
         this.bounceGain = gain;
+        transform.localScale = scale;
+        startScale = scale;
     }
 
 

@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorCopyConstraint : MonoBehaviour
-{
+public class TrailCopyConstraint : MonoBehaviour //TODO: ColorCopyConstraint in general
+{ 
     //[SerializeField] Renderer rend;
     //[SerializeField] Renderer fixTo;
 
     [SerializeField] TrailRenderer rend;
     [SerializeField] SpriteRenderer fixTo;
 
-    float[] alphaOffsets;
+    private float[] alphaOffsets;
+
+    private float startWidth;
+    private float multi = 1;
 
     private void Awake()
     {
+        startWidth = rend.widthMultiplier;
+
         alphaOffsets = new float[rend.colorGradient.alphaKeys.Length];
 
         for (int i = 0; i < rend.colorGradient.alphaKeys.Length; i++)
@@ -77,5 +82,15 @@ public class ColorCopyConstraint : MonoBehaviour
         gradient.SetKeys(rend.colorGradient.colorKeys, alphaKeys);
 
         rend.colorGradient = gradient;
+
+
+
+        //rend.widthCurve = startWidth * 1;
+        rend.widthMultiplier = startWidth * multi;
+    }
+
+    public void setMulti(float am)
+    {
+        multi = am;
     }
 }

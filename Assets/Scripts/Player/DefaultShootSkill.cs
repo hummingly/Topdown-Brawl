@@ -23,21 +23,20 @@ public class DefaultShootSkill : Skill
 
     private void Start()
     {
-        if(showIndicationOnHold)
+        if (showIndicationOnHold)
+        {
             aimLaser = gameObject.GetComponentInChildren<AimLaser>();
+            aimLaser.setDist(range);
+        }
     }
 
     protected override void Action(Vector2 shootDir)
     {
         shootDir = ExtensionMethods.RotatePointAroundPivot(shootDir, Vector2.zero, Random.Range(-accuracy, accuracy));
         GameObject p = Instantiate(projectile, (Vector2)transform.position + (shootDir.normalized * spawnPosFromCenter), Quaternion.identity);
-        p.GetComponent<Projectile>().SetDamage(damage);
-        p.GetComponent<Projectile>().SetOwner(gameObject);
-        p.GetComponent<Projectile>().SetRange(range);
-        p.GetComponent<Projectile>().SetBounce(bounceAmMax, bounceGain);
+        p.GetComponent<Projectile>().SetInfo(damage, gameObject, range, bounceAmMax, bounceGain, scale);
         p.transform.up = shootDir;
         //p.transform.eulerAngles += new Vector3(0,0,90);//Random.Range(-accuracy, accuracy)
-        p.transform.localScale = scale;
         if (!p.GetComponent<Projectile>().melee)
             p.GetComponent<Rigidbody2D>().AddForce(/*transform.up*/ shootDir.normalized * speed, ForceMode2D.Impulse);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), p.GetComponent<Collider2D>());
