@@ -57,6 +57,7 @@ MonoBehaviour:
   zoomBefore: 0.5
   stayAfterDeath: 0.5
   spawnPosBlockTime: 0.3
+  playerCameraRadius: 2
 --- !u!114 &1629654588299491852
 MonoBehaviour:
   m_ObjectHideFlags: 0

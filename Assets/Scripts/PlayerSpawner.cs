@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using DG.Tweening;
 
 public class PlayerSpawner : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float zoomBefore = 0.3f;
     [SerializeField] private float stayAfterDeath = 0.3f;
     [SerializeField] private float spawnPosBlockTime = 0.3f;
+
+    [SerializeField] private float playerCameraRadius = 1f;
 
     private GameLogic gameLogic;
     private TeamManager teams;
@@ -95,27 +98,38 @@ public class PlayerSpawner : MonoBehaviour
         camTargetGroup.RemoveMember(player.transform);
 
 
-        //after playering dying still keep a palceholder at that position, so that doesn't suddenly change
+        //after player dying still keep a palceholder at that position for a sec, so that doesn't suddenly change (bad hack: also move that placehodler to camera pos for smooth blend)
         var placeholder = new GameObject().transform;
         placeholder.position = player.transform.position;
-        camTargetGroup.AddMember(placeholder, 1, 1);
+        camTargetGroup.AddMember(placeholder, 1, playerCameraRadius); 
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(stayAfterDeath);
+        seq.Append(placeholder.DOMove(Camera.main.transform.position, stayAfterDeath/2));
+        seq.AppendCallback(() => camTargetGroup.RemoveMember(placeholder));
+        //TODO: add ease
 
         yield return new WaitForSeconds(stayAfterDeath);
-        camTargetGroup.RemoveMember(placeholder);
+        //camTargetGroup.RemoveMember(placeholder);
 
 
 
 
-        // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn
+        // Shortly before player spawns already add a placeholder, so the camera can zoom out & show respawn (bad hack: also move that placehodler to spawn pos for smooth blend)
         yield return new WaitForSeconds(respawnTime - stayAfterDeath - zoomBefore);
         var spawnPos = GetSpawnArea(player.transform);
         placeholder = new GameObject().transform;
-        placeholder.position = spawnPos;
-        camTargetGroup.AddMember(placeholder, 1, 1);
+        //placeholder.position = spawnPos;
+        placeholder.position = Camera.main.transform.position;
+        camTargetGroup.AddMember(placeholder, 1, playerCameraRadius);
 
+        Sequence seq2 = DOTween.Sequence();
+        seq2.Append(placeholder.DOMove(spawnPos, zoomBefore));
+        seq2.AppendCallback(() => camTargetGroup.RemoveMember(placeholder));
+        //TODO: add ease
 
         yield return new WaitForSeconds(zoomBefore);
-        camTargetGroup.RemoveMember(placeholder);
+        //camTargetGroup.RemoveMember(placeholder);
 
         SetPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue);
@@ -130,7 +144,7 @@ public class PlayerSpawner : MonoBehaviour
     private void SpawnPlayer(Transform player, Vector2 pos)
     {
         player.position = pos;
-        camTargetGroup.AddMember(player.transform, 1, 1);
+        camTargetGroup.AddMember(player.transform, 1, playerCameraRadius);
 
         effectManager.SquareParticle(player.position);
     }

@@ -381,6 +381,11 @@ PrefabInstance:
       propertyPath: torquePID.pFactor
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2380627806415850663, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+        type: 3}
+      propertyPath: maxHealthPoints
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4000924214873993294, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
         type: 3}
       propertyPath: m_LinearDrag
