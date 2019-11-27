@@ -171,7 +171,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "LeaveTeam",
+                    "name": "Leave",
                     "type": "Button",
                     "id": "6726a714-eccd-4751-9f31-cb4dd2ee0363",
                     "expectedControlType": "",
@@ -220,7 +220,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LeaveTeam",
+                    "action": "Leave",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

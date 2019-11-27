@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -7,24 +7,27 @@ public class GameStateManager : MonoBehaviour
 {
     // SceneManager was already taken... (?) maybe MapManager, but should also do menu etc
     public enum GameState { Start, MatchMaking, Ingame, Pause, End };
-    private GameState state = GameState.MatchMaking;
+    private GameState state = GameState.Start;
     public GameState State => state;
 
     // Loads Start Scene.
-    public void Restart() {
+    public void Restart()
+    {
         // Game must be paused first.
-        if (State == GameState.Ingame) {
+        if (State == GameState.Ingame)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
         state = GameState.Start;
-        // TODO: Add Start Screen.
-        // SceneManager.LoadScene("Start");
+        SceneManager.LoadScene("Start");
     }
 
     // Loads Match Making Scene.
-    public void MakeMatch() {
-        if (State != GameState.Start) {
+    public void MakeMatch()
+    {
+        if (State != GameState.Start)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
@@ -33,21 +36,25 @@ public class GameStateManager : MonoBehaviour
     }
 
     // Starts actual game.
-    public void Play(string map) {
-        if (State != GameState.MatchMaking) {
+    public void Play(string map)
+    {
+        if (State != GameState.MatchMaking)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
-        state = GameState.Ingame;
-        // TODO: Move data instead of static gameObject...
         FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
-        // TODO: Timer count down...
-        StartCoroutine(LoadSceneAsync(map));
+        state = GameState.Ingame;
+        // TODO: Timer count down..
+        var list = new GameObject[] { FindObjectOfType<MatchData>().gameObject, gameObject };
+        StartCoroutine(LoadSceneAsync(map, list));
     }
 
     // Pauses in-game.
-    public void Pause() {
-        if (State != GameState.Ingame) {
+    public void Pause()
+    {
+        if (State != GameState.Ingame)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
@@ -55,8 +62,10 @@ public class GameStateManager : MonoBehaviour
         // TODO: Add Pause Overlay.
     }
 
-    public void Resume() {
-        if (State != GameState.Ingame) {
+    public void Resume()
+    {
+        if (State != GameState.Ingame)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
@@ -64,8 +73,10 @@ public class GameStateManager : MonoBehaviour
     }
 
     // Shows End game statistics and replay/restart functionality.
-    public void EndGame() {
-        if (State != GameState.Ingame) {
+    public void EndGame()
+    {
+        if (State != GameState.Ingame)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
@@ -74,20 +85,25 @@ public class GameStateManager : MonoBehaviour
 
     // Returns to Match Making Scene with previously selected game mode and
     // team composition.
-    public void Replay() {
-        if (State != GameState.End) {
+    public void Replay()
+    {
+        if (State != GameState.End)
+        {
             Debug.Log("Invalid State Transition");
             return;
         }
         state = GameState.MatchMaking;
     }
 
-    IEnumerator LoadSceneAsync(string scene)
+    IEnumerator LoadSceneAsync(string scene, GameObject gameObject)
+    {
+        return LoadSceneAsync(scene, new GameObject[] { gameObject });
+    }
+
+    IEnumerator LoadSceneAsync(string scene, IEnumerable<GameObject> gameObjects)
     {
         // Set the current Scene to be able to unload it later
         Scene currentScene = SceneManager.GetActiveScene();
-
-        var data = FindObjectOfType<MatchData>();
 
         // The Application loads the Scene in the background at the same time as the current Scene.
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
@@ -99,7 +115,10 @@ public class GameStateManager : MonoBehaviour
         }
 
         // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
-        SceneManager.MoveGameObjectToScene(data.gameObject, SceneManager.GetSceneByName(scene));
+        foreach (var o in gameObjects)
+        {
+            SceneManager.MoveGameObjectToScene(o, SceneManager.GetSceneByName(scene));
+        }
         // Unload the previous Scene
         SceneManager.UnloadSceneAsync(currentScene);
     }

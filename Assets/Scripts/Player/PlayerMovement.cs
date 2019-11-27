@@ -355,4 +355,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     */
+
+    private void OnLeave(InputValue value)
+    {
+        Debug.Log("Return to Start Screen.");
+        FindObjectOfType<GameStateManager>().Restart();
+    }
 }

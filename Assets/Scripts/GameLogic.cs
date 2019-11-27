@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 public class GameLogic : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameLogic : MonoBehaviour
     // TODO: Get rid of teamManager.
     private TeamManager teamManager;
     private MatchData matchData;
+    public static GameLogic Instance { get { return instance; } }
 
     [SerializeField] private float startGameplayAnimDur = 1;
     [SerializeField] private float spawnBeforeAnimDone = 0.2f;
@@ -55,7 +57,7 @@ public class GameLogic : MonoBehaviour
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
-        if (GetComponent<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
             StartCoroutine(InitGameplay());
         }
@@ -100,7 +102,11 @@ public class GameLogic : MonoBehaviour
 
     public void GameOver()
     {
-        GetComponent<GameStateManager>().EndGame();
+        FindObjectOfType<GameStateManager>().EndGame();
+        var playerInput = FindObjectsOfType<PlayerInput>();
+        foreach (var p in playerInput) {
+            p.SwitchCurrentActionMap("Menu");
+        }
         uiManager.SetGameOverUI(teamManager.GetTeamName(matchData.Score.GetWinningTeam()));
         Time.timeScale = 0;
     }

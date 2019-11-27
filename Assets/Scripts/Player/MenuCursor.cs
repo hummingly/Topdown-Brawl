@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -102,7 +102,7 @@ public class MenuCursor : MonoBehaviour
         FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
     }
 
-    private void OnLeaveTeam(InputValue value)
+    private void OnLeave(InputValue value)
     {
         Debug.Log("Leaving Team.");
     }
