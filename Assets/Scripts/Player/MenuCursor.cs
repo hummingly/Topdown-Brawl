@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuCursor : MonoBehaviour
@@ -14,9 +15,23 @@ public class MenuCursor : MonoBehaviour
 
     private Vector2 moveInput;
 
-    private GraphicRaycaster gr;
+    [SerializeField] internal GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
     private MatchMaker menuManager;
+
+    // private void Awake()
+    // {
+    //     SceneManager.sceneLoaded += SceneLoadeded;
+    // }
+
+    // private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
+    // {
+    //     if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.MatchMaking)
+    //     {
+    //         gr = FindObjectOfType<GraphicRaycaster>();
+    //         menuManager = FindObjectOfType<MatchMaker>();
+    //     }
+    // }
 
     void Start()
     {
@@ -45,6 +60,8 @@ public class MenuCursor : MonoBehaviour
     {
         if (gr == null)
         {
+            gr = FindObjectOfType<GraphicRaycaster>();
+            Debug.Log(gr);
             return;
         }
 
@@ -99,7 +116,15 @@ public class MenuCursor : MonoBehaviour
 
     private void OnReady(InputValue value)
     {
-        FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
+        Debug.Log("Ready");
+        var state = FindObjectOfType<GameStateManager>();
+        if (state.State == GameStateManager.GameState.Start) {
+            state.MakeMatch();
+            // gr = FindObjectOfType<GraphicRaycaster>();
+            // menuManager = FindObjectOfType<MatchMaker>();
+        } else if (state.State == GameStateManager.GameState.MatchMaking) {
+            FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
+        }
     }
 
     private void OnLeave(InputValue value)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [Serializable]
 public partial class TeamManager : MonoBehaviour
@@ -10,7 +11,7 @@ public partial class TeamManager : MonoBehaviour
     private List<Team> teams = new List<Team>();
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
-    private List<InputDevice> playerDevices = new List<InputDevice>();
+    public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
 
     public int Count => teams.Count;
@@ -18,7 +19,8 @@ public partial class TeamManager : MonoBehaviour
 
     // TODO: Currently the game mode can be changed while team selection.
     // Maybe have game mode and map selection first?
-    public void Setup(int maxTeamCount, int maxTeamSize, string[] names, Color[] teamColors) {
+    public void Setup(int maxTeamCount, int maxTeamSize, string[] names, Color[] teamColors)
+    {
         teams = new List<Team>(maxTeamCount);
         for (int i = 0; i < maxTeamCount; i++)
         {
@@ -93,33 +95,16 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    private void OnPlayerJoined(PlayerInput player)
+    internal void AddPlayerInput(PlayerInput player)
     {
-        Debug.Log("Player joined");
-        //if in menu scene do new teams
-        //else if gameplay: no new teams, instead just spawn prefab for exising players
-        if (SceneManager.GetActiveScene().name == "Selection")
+        if (AddToSmallestTeam(player.gameObject))
         {
-            // first just add all to a new team
-            if (AddToSmallestTeam(player.gameObject))
-            {
-                FindObjectOfType<MatchMaker>().PlayerJoined(player.transform);
-            }
-            //TODO: check which player? write string P1 for example
-            return;
-        }
-
-        //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
-        if (SceneManager.GetActiveScene().name == "gameplayDEV")
-        {
-            // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
-
-            // for testing add to a new team each new player
-            if (AddToSmallestTeam(player.gameObject))
-            {
-                FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
-                player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
-            }
+            // var cursor = player.gameObject.GetComponent<MenuCursor>();
+            //     Debug.Log(cursor.gr);
+            // if (cursor.gr == null) {
+            //     cursor.gr = FindObjectOfType<GraphicRaycaster>();
+            // }
+            FindObjectOfType<MatchMaker>().PlayerJoined(player.transform);
         }
     }
 

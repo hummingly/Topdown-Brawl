@@ -1,4 +1,5 @@
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,34 @@ public class GameStateManager : MonoBehaviour
     public enum GameState { Start, MatchMaking, Ingame, Pause, End };
     private GameState state = GameState.Start;
     public GameState State => state;
+
+    private void OnPlayerJoined(PlayerInput player)
+    {
+        var teamManager = FindObjectOfType<TeamManager>();
+        Debug.Log("Player joined");
+        //if in menu scene do new teams
+        //else if gameplay: no new teams, instead just spawn prefab for exising players
+        if (SceneManager.GetActiveScene().name == "Selection")
+        {
+            // first just add all to a new team
+            teamManager.AddPlayerInput(player);
+            //TODO: check which player? write string P1 for example
+            return;
+        }
+
+        //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
+        if (SceneManager.GetActiveScene().name == "gameplayDEV")
+        {
+            // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
+
+            // for testing add to a new team each new player
+            if (teamManager.AddToSmallestTeam(player.gameObject))
+            {
+                FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
+                player.GetComponentInChildren<PlayerVisuals>().InitColor(teamManager.GetColorOf(player.gameObject));
+            }
+        }
+    }
 
     // Loads Start Scene.
     public void Restart()
@@ -32,7 +61,12 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         state = GameState.MatchMaking;
-        SceneManager.LoadScene("Selection");
+        var playerInputs = FindObjectsOfType<PlayerInput>();
+        foreach (var p in playerInputs)
+        {
+            Destroy(p);
+        }
+        StartCoroutine(LoadSceneAsync("Selection", gameObject));
     }
 
     // Starts actual game.
