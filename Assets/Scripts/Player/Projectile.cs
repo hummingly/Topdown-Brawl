@@ -148,7 +148,7 @@ public class Projectile : MonoBehaviour
         {
             float dist = Vector2.Distance(startPos, transform.position);
             damage = Mathf.RoundToInt(ExtensionMethods.Remap(dist, minMaxDist.x, minMaxDist.y, minMaxDmg.x, minMaxDmg.y));
-            print(dist + " " + damage);
+            //print(dist + " " + damage);
         }
 
 

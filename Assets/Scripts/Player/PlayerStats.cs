@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 public class PlayerStats : IDamageable
 {
@@ -24,9 +24,9 @@ public class PlayerStats : IDamageable
 
         if(GetComponent<BotTest>())
             GetComponent<BotTest>().StopChasing();
+        
 
-
-        effects.playerDeathExplosion(transform.position);
+        effects.playerDeathExplosion(transform.position, (Gamepad) GetComponent<PlayerInput>().devices[0]);
         effects.AddShake(2f);
         effects.Stop(0.05f);
 

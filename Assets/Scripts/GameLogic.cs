@@ -105,11 +105,11 @@ public class GameLogic : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
 
-        print("init players");
+        //print("init players");
         teamManager.InitPlayers();
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
         {
-            print("init bases");
+            //print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }

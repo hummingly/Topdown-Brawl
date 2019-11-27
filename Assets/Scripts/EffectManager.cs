@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class EffectManager : MonoBehaviour
 {
@@ -110,10 +111,14 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
-    public void playerDeathExplosion(Vector2 pos)
+
+    public void playerDeathExplosion(Vector2 pos, Gamepad gamepad)// int deviceId)
     {
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
+
+        //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
+        //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
     }
 
     public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
@@ -292,11 +297,30 @@ public class EffectManager : MonoBehaviour
         StartCoroutine(Wait(duration));
     }
 
-    IEnumerator Wait(float duration)
+    private IEnumerator Wait(float duration)
     {
         paused = true;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1.0f;
         paused = false;
+    }
+
+
+
+    private void rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
+    {
+        //Gamepad.all[device].SetMotorSpeeds(startLow, startHight);
+        StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow, startHigh));
+    }
+
+    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow , float startHigh)
+    {
+        // get less rumble over time, or jsut turn on / off?
+
+        gamepad.SetMotorSpeeds(startLow, startHigh);
+
+        yield return new WaitForSecondsRealtime(fallOfDur);
+
+        gamepad.SetMotorSpeeds(0, 0);
     }
 }

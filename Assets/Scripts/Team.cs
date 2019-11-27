@@ -23,7 +23,7 @@ public partial class TeamManager
                 defenseBase = value;
                 if (defenseBase != null)
                 {
-                    Debug.Log("DefenseBase set!");
+                    //Debug.Log("DefenseBase set!");
                 }
             }
         }
