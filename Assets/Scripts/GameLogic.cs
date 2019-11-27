@@ -11,8 +11,6 @@ public class GameLogic : MonoBehaviour
     private TeamManager teamManager;
     private MatchData matchData;
 
-    private float mapSize;
-
     [SerializeField] private float startGameplayAnimDur = 1;
     [SerializeField] private float spawnBeforeAnimDone = 0.2f;
     private bool roundRunning;
@@ -57,17 +55,17 @@ public class GameLogic : MonoBehaviour
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (GetComponent<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
             StartCoroutine(InitGameplay());
         }
     }
 
-    private IEnumerator InitGameplay()
+    public IEnumerator InitGameplay()
     {
         uiManager = FindObjectOfType<UIManager>();
 
-        mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
+        var mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = false;
         Camera.main.DOOrthoSize(10 * mapSize, startGameplayAnimDur).SetEase(Ease.OutCubic);
@@ -102,6 +100,7 @@ public class GameLogic : MonoBehaviour
 
     public void GameOver()
     {
+        GetComponent<GameStateManager>().EndGame();
         uiManager.SetGameOverUI(teamManager.GetTeamName(matchData.Score.GetWinningTeam()));
         Time.timeScale = 0;
     }

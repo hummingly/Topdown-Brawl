@@ -7,8 +7,8 @@ public class GameStateManager : MonoBehaviour
 {
     // SceneManager was already taken... (?) maybe MapManager, but should also do menu etc
     public enum GameState { Start, MatchMaking, Ingame, Pause, End };
-    private GameState _state = GameState.MatchMaking;
-    public GameState State => _state;
+    private GameState state = GameState.MatchMaking;
+    public GameState State => state;
 
     // Loads Start Scene.
     public void Restart() {
@@ -17,7 +17,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.Start;
+        state = GameState.Start;
         // TODO: Add Start Screen.
         // SceneManager.LoadScene("Start");
     }
@@ -28,7 +28,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.MatchMaking;
+        state = GameState.MatchMaking;
         SceneManager.LoadScene("Selection");
     }
 
@@ -38,7 +38,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.Ingame;
+        state = GameState.Ingame;
         // TODO: Move data instead of static gameObject...
         FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
         // TODO: Timer count down...
@@ -51,7 +51,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.Pause;
+        state = GameState.Pause;
         // TODO: Add Pause Overlay.
     }
 
@@ -60,7 +60,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.Ingame;
+        state = GameState.Ingame;
     }
 
     // Shows End game statistics and replay/restart functionality.
@@ -69,7 +69,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.End;
+        state = GameState.End;
     }
 
     // Returns to Match Making Scene with previously selected game mode and
@@ -79,7 +79,7 @@ public class GameStateManager : MonoBehaviour
             Debug.Log("Invalid State Transition");
             return;
         }
-        _state = GameState.MatchMaking;
+        state = GameState.MatchMaking;
     }
 
     IEnumerator LoadSceneAsync(string scene)
