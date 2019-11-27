@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.InputSystem;
 
 public static class ExtensionMethods
 {
@@ -48,7 +47,7 @@ public static class ExtensionMethods
         return Shuffle(collection, seed);
     }
 
-        public static IList<T> Shuffle<T>(IList<T> collection, int seed)
+    public static IList<T> Shuffle<T>(IList<T> collection, int seed)
     {
         Random.InitState(seed);
         for (int t = 0; t < collection.Count; t++)
@@ -59,6 +58,28 @@ public static class ExtensionMethods
             collection[r] = tmp;
         }
         return collection;
+    }
+
+    public static float getGamepadAmp(Gamepad gamepad)
+    {
+        //Debug.Log(gamepad.ToString());
+        //Debug.Log(gamepad.name);
+        //Debug.Log(gamepad.description);
+
+        if (gamepad.name.Equals("DualShock4GamepadHID"))
+        {
+            //Debug.Log("ps4");
+            return 1;
+        }
+        if (gamepad.name.Equals("XInputControllerWindows"))
+        {
+            //Debug.Log("third party xbox");
+            return 0.4f;
+        }
+
+        //TODO: more generic solution? currently modeled mainly for ps4 controller
+
+        return 1;
     }
 }
 

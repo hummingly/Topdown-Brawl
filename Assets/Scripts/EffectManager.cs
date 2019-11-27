@@ -121,6 +121,9 @@ public class EffectManager : MonoBehaviour
         {
             //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
             //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
+            //rumble(gamepad, 0.2f, 0.5f, 0.5f); // just set both ? well still differences in controllers... maybe third party has only one motor so its just more vibration?
+
+            rumble(gamepad, 0.2f, 0.75f, 0.75f);
         }
     }
 
@@ -313,17 +316,20 @@ public class EffectManager : MonoBehaviour
     private void rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
     {
         //Gamepad.all[device].SetMotorSpeeds(startLow, startHight);
-        StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow, startHigh));
+
+        float amp = ExtensionMethods.getGamepadAmp(gamepad);
+        StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }
 
     private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow , float startHigh)
     {
-        // get less rumble over time, or jsut turn on / off?
+        // TODO: maybe set less rumble over time? currently on/off
 
         gamepad.SetMotorSpeeds(startLow, startHigh);
 
         yield return new WaitForSecondsRealtime(fallOfDur);
 
-        gamepad.SetMotorSpeeds(0, 0);
+        //gamepad.SetMotorSpeeds(0, 0);
+        gamepad.ResetHaptics();
     }
 }
