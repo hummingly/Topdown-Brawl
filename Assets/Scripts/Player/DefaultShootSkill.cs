@@ -43,7 +43,9 @@ public class DefaultShootSkill : Skill
 
         if (!p.GetComponent<Projectile>().melee)
         {
-            effects.muzzle(p.transform, gameObject);
+            float dmg = damage;
+            if (dmg == 0) dmg = 75;
+            effects.muzzle(dmg, p.transform, gameObject);
 
             effects.AddShake(0.25f);
         }

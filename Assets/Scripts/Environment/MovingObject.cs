@@ -31,7 +31,6 @@ public class MovingObject : MonoBehaviour
 
     void Start()
     {
-        //FindObjectOfType<EffectManager>().addGridLigth(GetComponentInChildren<SpriteRenderer>(), transform);
         if (GetComponent<Rigidbody2D>())
         {
             rb = GetComponent<Rigidbody2D>();

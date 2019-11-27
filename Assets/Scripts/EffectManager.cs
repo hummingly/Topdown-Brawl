@@ -112,7 +112,8 @@ public class EffectManager : MonoBehaviour
 
     public void playerDeathExplosion(Vector2 pos)
     {
-        Instantiate(deathExplosion, pos, Quaternion.identity);
+        var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
+        //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
     }
 
     public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
@@ -133,7 +134,7 @@ public class EffectManager : MonoBehaviour
         Instantiate(meleeCrumblePartic, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
     }
 
-    public void muzzle(Transform bullet, GameObject owner)
+    public void muzzle(float dmg, Transform bullet, GameObject owner)
     {
         var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
 
@@ -147,6 +148,8 @@ public class EffectManager : MonoBehaviour
         seq.Append(m.DOPunchScale(Vector3.one * muzzleScale, muzzleFlashDur));
         seq.AppendCallback(() => Destroy(m.gameObject));
 
+        //addGridLigth(0.5f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m);
+        addGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
     }
 
 
@@ -231,10 +234,11 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public void addGridLigth(float i, float r, SpriteRenderer s, Transform t)
+    public GridLigth addGridLigth(float i, float r, SpriteRenderer s, Transform t)
     {
         GridLigth l = new GridLigth(i, r, s, t);
         gridLights.Add(l);
+        return l;
     }
 
     /*

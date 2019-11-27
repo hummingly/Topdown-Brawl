@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     private TeamManager teams;
     private Rigidbody2D rb;
     private TrailCopyConstraint trail;
+    private EffectManager effects;
 
     //[ColorUsage(true, true)] public Color shouldbeHDR = Color.white;
 
@@ -43,11 +44,13 @@ public class Projectile : MonoBehaviour
     private float bounceGain;
     private float extendTravelDist;
     private Vector3 lastVel;
+    private GridLigth light;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         trail = GetComponentInChildren<TrailCopyConstraint>();
+        effects = FindObjectOfType<EffectManager>();
         startPos = transform.position;
         startScale = transform.localScale;
     }
@@ -71,12 +74,23 @@ public class Projectile : MonoBehaviour
             seq.AppendCallback(() => Destroy(gameObject));
 
             //TODO: add easing
+
+            effects.addGridLigth(0.15f, 4f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
-        else FindObjectOfType<EffectManager>().addGridLigth(0.2f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+        else
+            //light = effects.addGridLigth(0.2f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+            light = effects.addGridLigth(damage*0.01f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+            //light = effects.addGridLigth(transform.localScale.x*0.1f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
     }
 
     void Update()
     {
+        // Laser
+        if(damage == 0)
+        {
+            light = effects.addGridLigth(transform.localScale.x * 0.025f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+        }
+
         if (Vector2.Distance(startPos, transform.position) - extendTravelDist >= destroyRange)
         {
             rb.velocity *= fadeSlowdown; //slow down speed, more ideally OVER TIME
@@ -150,7 +164,7 @@ public class Projectile : MonoBehaviour
 
         if (melee)
         {
-            FindObjectOfType<EffectManager>().meleeBulletDeathPartic(hitPoint, transform);
+            effects.meleeBulletDeathPartic(hitPoint, transform);
             //GetComponentInChildren<Collider2D>().enabled = false;
             //Destroy(gameObject);
 
@@ -163,7 +177,7 @@ public class Projectile : MonoBehaviour
         }
         else
         {
-            FindObjectOfType<EffectManager>().bulletDeathPartic(hitPoint, transform);
+            effects.bulletDeathPartic(hitPoint, transform);
 
             Destroy(gameObject);
         }
@@ -243,7 +257,7 @@ public class Projectile : MonoBehaviour
         else
         {
             var hitPoint = other.contacts[0].point;
-            FindObjectOfType<EffectManager>().bulletDeathPartic(hitPoint, transform);
+            effects.bulletDeathPartic(hitPoint, transform);
 
             Destroy(gameObject);
         }
