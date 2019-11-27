@@ -66,8 +66,8 @@ Shader "Custom/GridShader"
 
 				uniform int maxLightingObjects = 1000;
 				uniform vector lightingObjects[1000]; //carefull, size cant be changed
-				//float highlightRanges[1000]; 
-				//float intensities[1000];
+				uniform float highlightRanges[1000];
+				uniform float intensities[1000];
 
 				float totalBrigthness = 0;
 
@@ -78,15 +78,12 @@ Shader "Custom/GridShader"
 
 					//TODO: instead of looping in shader write a texture from monobehaviour and pass this on to shader
 					for (int j = 0; j < maxLightingObjects; j++)
-					{
-						if (lightingObjects[j].x != 0 && lightingObjects[j].y != 0) //prevents flicker at center, but when shooting its still too slow
+					{				
+						float dist = distance(i.worldPos, lightingObjects[j].xy);
+						if (dist < highlightRanges[j])
 						{
-							float dist = distance(i.worldPos, lightingObjects[j].xy);
-							if (dist < _HighlightRange)
-							{
-								color.rgb += (_HighlightRange - dist) / _HotspotIntensity; //the nearer the brigther
-								//break; //no overlapping lights?
-							}
+							color.rgb += (highlightRanges[j] - dist) * intensities[j]; //the nearer the brigther
+							//break; //no overlapping lights?
 						}
 					}
 

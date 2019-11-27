@@ -117,7 +117,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
 				currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
-                FindObjectOfType<EffectManager>().addGridLigth(currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
+                FindObjectOfType<EffectManager>().addGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
             }
         }
     }

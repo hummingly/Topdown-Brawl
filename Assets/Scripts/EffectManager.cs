@@ -42,7 +42,10 @@ public class EffectManager : MonoBehaviour
 
         //maximum grid lights at one time
         Vector4[] array = new Vector4[1000];
+        float[] arrayF = new float[1000];
         grid.material.SetVectorArray("lightingObjects", array);
+        grid.material.SetFloatArray("highlightRanges", arrayF);
+        grid.material.SetFloatArray("intensities", arrayF);
 
         _perlin = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
     }
@@ -185,17 +188,22 @@ public class EffectManager : MonoBehaviour
 
 
 
+        // Light on grid (TODO: actualy do real shadows with rays)
         for (var i = gridLights.Count - 1; i > -1; i--)
         {
             if (gridLights[i].centerTransform == null)
                 gridLights.RemoveAt(i);
         }
 
-        // doesnt work in late update bcz shader?
+        foreach(GridLigth g in gridLights)
+            g.updateIntensity();
+    
         if (gridLights.Count > 0)
         {
-            //could also use a float array and just do j+=2 in shader
-            List<Vector4> list = new List<Vector4>();
+            //could also use a float array and just do j+=2 in shader, for less memory
+            List<Vector4> listPos = new List<Vector4>();
+            List<float> listRan = new List<float>();
+            List<float> listInt = new List<float>();
 
             // Make grid brigth where stuff is
             for (int i = 0; i < gridLights.Count; i++)
@@ -204,12 +212,18 @@ public class EffectManager : MonoBehaviour
                 if (!gridLights[i].spriteRend.enabled) //TODO: look at brigthnes of spriterenderer
                     continue;
 
-                list.Add(gridLights[i].centerTransform.position);
+                listPos.Add(gridLights[i].centerTransform.position);
+                listRan.Add(gridLights[i].range);
+                listInt.Add(gridLights[i].intensity);
             }
 
-            Vector4[] array = list.ToArray();
-            grid.material.SetInt("maxLightingObjects", array.Length);
-            grid.material.SetVectorArray("lightingObjects", array);
+            Vector4[] arrayPos = listPos.ToArray();
+            float[] arrayRan = listRan.ToArray();
+            float[] arrayInt = listInt.ToArray();
+            grid.material.SetInt("maxLightingObjects", arrayPos.Length);
+            grid.material.SetVectorArray("lightingObjects", arrayPos);
+            grid.material.SetFloatArray("highlightRanges", arrayRan);
+            grid.material.SetFloatArray("intensities", arrayInt);
         }
         else
         {
@@ -217,9 +231,9 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public void addGridLigth(SpriteRenderer s, Transform t)
+    public void addGridLigth(float i, float r, SpriteRenderer s, Transform t)
     {
-        GridLigth l = new GridLigth(s, t);
+        GridLigth l = new GridLigth(i, r, s, t);
         gridLights.Add(l);
     }
 

@@ -7,14 +7,22 @@ public class GridLigth
 
     public Transform centerTransform;
     public SpriteRenderer spriteRend;
-    //float intensity;
-    //float range;
+    public float maxIntensity;
+    public float intensity;
+    public float range;
 
 
-    public GridLigth(SpriteRenderer s, Transform t)
+    public GridLigth(float i, float r, SpriteRenderer s, Transform t)
     {
+        maxIntensity = i;
+        intensity = i;
+        range = r;
         spriteRend = s;
         centerTransform = t;
     }
 
+    public void updateIntensity()
+    {
+        intensity = maxIntensity * spriteRend.color.a;
+    }
 }
