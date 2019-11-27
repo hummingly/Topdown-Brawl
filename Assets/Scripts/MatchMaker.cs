@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class MatchMaker : MonoBehaviour
 {
     [SerializeField] private int currentGameModeIndex = 0;
     [SerializeField] private int currentMapIndex = 1;

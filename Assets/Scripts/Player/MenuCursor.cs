@@ -16,12 +16,12 @@ public class MenuCursor : MonoBehaviour
 
     private GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
-    private MenuManager menuManager;
+    private MatchMaker menuManager;
 
     void Start()
     {
         gr = FindObjectOfType<GraphicRaycaster>();
-        menuManager = FindObjectOfType<MenuManager>();
+        menuManager = FindObjectOfType<MatchMaker>();
     }
 
     public void Setup(int playerNr, Color teamColor)
@@ -99,7 +99,7 @@ public class MenuCursor : MonoBehaviour
 
     private void OnReady(InputValue value)
     {
-        FindObjectOfType<MenuManager>().ToggleReady(gameObject);
+        FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
     }
 
     private void OnLeaveTeam(InputValue value)

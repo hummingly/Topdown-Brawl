@@ -26,7 +26,7 @@ public class MatchData : MonoBehaviour
 
     [SerializeField] private string map = "";
     [SerializeField] private string mode = "";
-    [SerializeField] private WinManager score;
+    [SerializeField] private ScoreKeeper score;
     [SerializeField] private TeamManager teamManager;
 
     public string Map => map;
@@ -35,13 +35,13 @@ public class MatchData : MonoBehaviour
 
     public TeamManager TeamManager => teamManager;
 
-    public WinManager Score => score;
+    public ScoreKeeper Score => score;
 
     public void Setup(string map, GameMode gameMode, TeamManager teamManager)
     {
         this.map = map;
         this.mode = gameMode.name;
-        score = new WinManager(
+        score = new ScoreKeeper(
             new MatchRules(gameMode.winCondition, gameMode.pointsToWin, gameMode.maxTeamSize, teamManager.Count)
         );
         this.teamManager = teamManager;

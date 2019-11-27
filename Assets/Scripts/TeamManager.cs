@@ -85,7 +85,7 @@ public partial class TeamManager : MonoBehaviour
         GameObject bot = new GameObject("Empty Bot Cursor");
         if (teams[team].Add(bot))
         {
-            var menuManager = FindObjectOfType<MenuManager>();
+            var menuManager = FindObjectOfType<MatchMaker>();
             menuManager.PlayerJoined(bot.transform, true);
             menuManager.ToggleReady(bot.transform.gameObject);
             bot.transform.parent = null;
@@ -103,7 +103,7 @@ public partial class TeamManager : MonoBehaviour
             // first just add all to a new team
             if (AddToSmallestTeam(player.gameObject))
             {
-                FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
+                FindObjectOfType<MatchMaker>().PlayerJoined(player.transform);
             }
             //TODO: check which player? write string P1 for example
             return;

@@ -1,7 +1,7 @@
 ﻿using System;
 
 [Serializable]
-public class WinManager
+public class ScoreKeeper
 {
     private MatchData.MatchRules matchRules;
     private int winningTeam;
@@ -13,7 +13,7 @@ public class WinManager
     public GameMode.WinCondition WinCondition => matchRules.WinCondition;
     public int GetWinningTeam() => winningTeam;
 
-    public WinManager(MatchData.MatchRules matchRules)
+    public ScoreKeeper(MatchData.MatchRules matchRules)
     {
         this.matchRules = matchRules;
         killTeamScores = new int[matchRules.TeamCount];
