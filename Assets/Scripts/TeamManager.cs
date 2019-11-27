@@ -40,7 +40,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         for (int i = 0; i < teams.Count; i++)
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
+            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();

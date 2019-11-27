@@ -21,7 +21,7 @@ public class GameStateManager : MonoBehaviour
     void Start()
     {
         mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
-        currentGameModeIndex = 0;
+        currentGameModeIndex = 1; //start with defense, cuz focus on team play
     }
 
     void Update()

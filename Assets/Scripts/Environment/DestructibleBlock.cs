@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestructibleBlock : IDamageable
+public class DestructibleBlock : IDamageable //TODO: add option to own a block by a team
 {
     SpriteDestruction destruct;
 
@@ -17,7 +17,7 @@ public class DestructibleBlock : IDamageable
     {
         if(destruct && destruct.enabled)
         {
-            print("actual %: " + (float)healthPoints / maxHealthPoints);
+            //print("actual %: " + (float)healthPoints / maxHealthPoints);
             //print("piece %: " + (float)healthPoints / maxHealthPoints);
             float radius = ExtensionMethods.Remap(damage, 10, 50, 0.3f, 0.5f);
             destruct.activateAndExplodePieces(projectilePos, nextProjectilePos, damage, radius, 0.1f);

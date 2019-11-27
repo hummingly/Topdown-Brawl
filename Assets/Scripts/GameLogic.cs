@@ -70,6 +70,10 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator InitGameplay()
     {
+        if (winManager.gameMode.winCondition != GameMode.WinCondition.Defense)
+            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
+
+
         uiManager = FindObjectOfType<UIManager>();
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
@@ -109,6 +113,8 @@ public class GameLogic : MonoBehaviour
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
+
+
         roundRunning = true;
     }
 

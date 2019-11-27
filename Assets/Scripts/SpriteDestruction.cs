@@ -199,46 +199,45 @@ public class SpriteDestruction : MonoBehaviour
         return mat;
     }
 
-    public void activateAndExplodePieces(Vector2 pos, Vector2 nextPos, int force, float radius, float maxDestroyPercent)
+    public void activateAndExplodePieces(Vector2 pos, Vector2 nextPos, int dmgForce, float radius, float maxDestroyPercent)
     {
+        List<Collider2D> remainingPieces = new List<Collider2D>();
+        foreach (Collider2D c in GetComponentsInChildren<Collider2D>())
+            if (c.enabled) remainingPieces.Add(c);
+        
+
         //instead of bullet pos take the piece as center that is nearest (since bullet size can change)... ideally would have contact point but projectile is a trigger
         Vector2 nearestPiecePos = Vector2.zero;
         float nearestPiecesDist = float.MaxValue;
 
         //c.ClosestPoint
-        foreach (Collider2D c in GetComponentsInChildren<Collider2D>())
+        foreach (Collider2D c in remainingPieces)
         {
-            if (c.enabled)
+            float dist = Vector2.Distance(c.transform.position, pos);
+            //print(c.transform.position);
+            if (dist < nearestPiecesDist)
             {
-                float dist = Vector2.Distance(c.transform.position, pos);
-                //print(c.transform.position);
-                if (dist < nearestPiecesDist)
-                {
-                    nearestPiecesDist = dist;
-                    nearestPiecePos = c.transform.position;
-                }
+                nearestPiecesDist = dist;
+                nearestPiecePos = c.transform.position;
             }
         }
 
         // ensure nearest piece is most furstest on the edge on this side, so don't start explosion in the middle
         Vector2 finalPiecePos = nearestPiecePos;
         float furtestPiecesDist = 0;
-        foreach (Collider2D c in GetComponentsInChildren<Collider2D>())
-        {
-            if (c.enabled)
-            {
-                float dist = Vector2.Distance(c.transform.position, transform.position);
+        foreach (Collider2D c in remainingPieces)
+        {           
+            float dist = Vector2.Distance(c.transform.position, transform.position);
 
-                if (dist > furtestPiecesDist)
+            if (dist > furtestPiecesDist)
+            {
+                // check if this piece is in angle somewhat to original piece
+                if (Vector2.Angle(c.transform.position - transform.position, nearestPiecePos - (Vector2)transform.position) < 22.5f)
                 {
-                    // check if this piece is in angle somewhat to original piece
-                    if (Vector2.Angle(c.transform.position - transform.position, nearestPiecePos - (Vector2)transform.position) < 22.5f)
-                    {
-                        furtestPiecesDist = dist;
-                        finalPiecePos = c.transform.position;
-                    }
+                    furtestPiecesDist = dist;
+                    finalPiecePos = c.transform.position;
                 }
-            }
+            }  
         }
 
 
@@ -250,6 +249,15 @@ public class SpriteDestruction : MonoBehaviour
             radius += 0.1f;
             piecesToDetach = Physics2D.OverlapCircleAll(nearestPiecePos, radius);
         }*/
+
+        // safety check so it can never be destroyed, but still having health
+
+        if (piecesToDetach.Length + 5 >= remainingPieces.Count)
+        {
+            //print("should happen");
+            return;
+        }
+
 
         List<Rigidbody2D> rbs = new List<Rigidbody2D>();
 
@@ -274,7 +282,7 @@ public class SpriteDestruction : MonoBehaviour
         {
             // TODO: add force in direction of bullet, but the more bullet points directly into object the more just send back to bullet
             //rb.AddForce((nextPos-pos).normalized * damage, ForceMode2D.Impulse);
-            rb.AddForce((rb.transform.position - transform.position).normalized * force, ForceMode2D.Impulse);
+            rb.AddForce((rb.transform.position - transform.position).normalized * dmgForce, ForceMode2D.Impulse);
 
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(0.5f);
@@ -282,6 +290,8 @@ public class SpriteDestruction : MonoBehaviour
             seq.AppendCallback(() => Destroy(rb.gameObject));
         }
     }
+
+
     public void destroy()
     {
         List<Rigidbody2D> rbs = new List<Rigidbody2D>();

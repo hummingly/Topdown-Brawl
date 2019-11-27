@@ -13,9 +13,9 @@ public partial class TeamManager
         public int Points { get; set; }
         public Color Color { get; set; }
 
-        private DestructibleTeamBlock defenseBase;
+        private DestructibleBlock defenseBase;
 
-        public DestructibleTeamBlock DefenseBase
+        public DestructibleBlock DefenseBase
         {
             get => defenseBase;
             set
