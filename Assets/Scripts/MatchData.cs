@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // DataStructure passed between MatchMaking, Ingame and End States/Scenes.
-public class MatchData : MonoBehaviour
+public partial class MatchData : MonoBehaviour
 {
     [Serializable]
     public struct MatchRules
