@@ -24,8 +24,8 @@ public class PlayerStats : IDamageable
 
         if(GetComponent<BotTest>())
             GetComponent<BotTest>().StopChasing();
-        else
-            effects.playerDeathExplosion(transform.position, (Gamepad) GetComponent<PlayerInput>().devices[0]);
+        
+        effects.playerDeathExplosion(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
         effects.AddShake(2f);
         effects.Stop(0.05f);
 

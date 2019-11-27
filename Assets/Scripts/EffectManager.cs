@@ -112,13 +112,16 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void playerDeathExplosion(Vector2 pos, Gamepad gamepad)// int deviceId)
+    public void playerDeathExplosion(Vector2 pos, Gamepad gamepad = null)// int deviceId)
     {
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
 
-        //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
-        //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
+        if(gamepad != null)
+        {
+            //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
+            //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
+        }
     }
 
     public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
