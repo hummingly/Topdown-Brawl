@@ -1,27 +1,27 @@
 ﻿using System;
-using UnityEngine;
 
-public class WinManager : MonoBehaviour
+[Serializable]
+public class WinManager
 {
-    [SerializeField] private GameMode gameMode;
+    private MatchData.MatchRules matchRules;
     private int winningTeam;
-    // At the moment we will only keep the score per team.
-    private int[] killTeamScores;
-    private DestructibleTeamBlock[] defenseTeamBlocks;
+    // TODO: Also keep track for invidual players.
+    private int[] killTeamScores = new int[2];
+    private DestructibleTeamBlock[] defenseTeamBlocks = new DestructibleTeamBlock[2];
 
-    public int MaxTeamSize => gameMode.maxTeamSize;
-    public int MaxTeamCount => gameMode.maxTeams;
     public int[] TeamKills => killTeamScores;
-    public GameMode.WinCondition WinCondition => gameMode.winCondition;
+    public GameMode.WinCondition WinCondition => matchRules.WinCondition;
+    public int GetWinningTeam() => winningTeam;
 
-    public void SetGameMode(GameMode mode, int teams) {
-        gameMode = mode;
-        killTeamScores = new int[teams];
+    public WinManager(MatchData.MatchRules matchRules)
+    {
+        this.matchRules = matchRules;
+        killTeamScores = new int[matchRules.TeamCount];
     }
 
     public bool OnTeamWon()
     {
-        switch (gameMode.winCondition)
+        switch (WinCondition)
         {
             case GameMode.WinCondition.Kills:
                 var k = CheckScores();
@@ -42,11 +42,6 @@ public class WinManager : MonoBehaviour
         }
     }
 
-    public int GetWinningTeam()
-    {
-        return winningTeam;
-    }
-
     private int CheckDefenses()
     {
         var livingTeams = 0;
@@ -54,7 +49,7 @@ public class WinManager : MonoBehaviour
         for (int i = 0; i < defenseTeamBlocks.Length; i++)
         {
             if (defenseTeamBlocks[i].IsDeath) {
-                defenseTeamBlocks[i] = null;
+                DestroyTeamDefense(i);
             } else {
                 livingTeams++;
                 lastIndex = i;
@@ -69,7 +64,7 @@ public class WinManager : MonoBehaviour
     public int CheckScores()
     {
         // checks for a team that won
-        return Array.FindIndex(killTeamScores, t => t >= gameMode.pointsToWin);
+        return Array.FindIndex(killTeamScores, t => t >= matchRules.MaxPoints);
     }
 
     // Later we could track deaths and assists too.

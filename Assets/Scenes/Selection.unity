@@ -2317,7 +2317,6 @@ GameObject:
   - component: {fileID: 723236033}
   - component: {fileID: 723236037}
   - component: {fileID: 723236036}
-  - component: {fileID: 723236038}
   m_Layer: 0
   m_Name: Game Logic (Static)
   m_TagString: Untagged
@@ -2337,20 +2336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb8730f9cb84db944b831c75dde0f26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamColors:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 0.93725497, b: 0, a: 1}
-  - {r: 0, g: 0.9450981, b: 1, a: 1}
-  - {r: 0.24705884, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.5529412, b: 0, a: 1}
-  - {r: 0.8117648, g: 0, b: 1, a: 1}
-  colorStrings:
-  - WHITE
-  - YELLOW
-  - CYAN
-  - GREEN
-  - ORANGE
-  - PURPLE
   playerNrs: []
   playerChars: []
 --- !u!114 &723236034
@@ -2441,19 +2426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &723236038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723236032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36529850a526d4544b2b5fd4b51aa078, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameMode: {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
 --- !u!1 &765712798
 GameObject:
   m_ObjectHideFlags: 0
@@ -4525,6 +4497,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465987144}
   m_CullTransparentMesh: 0
+--- !u!1001 &1504374112
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3686358038647527768, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_Name
+      value: MatchData
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 308.793
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 181.07784
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -210.48885
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686358038647527769, guid: 888c331575c61a443b5d9e7771588877,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 888c331575c61a443b5d9e7771588877, type: 3}
 --- !u!1 &1519064508
 GameObject:
   m_ObjectHideFlags: 0
@@ -4721,6 +4762,20 @@ MonoBehaviour:
   availableChars:
   - {fileID: 11400000, guid: 64bc184b3a7b85946a62dd3c165c5c0d, type: 2}
   - {fileID: 11400000, guid: 2cad82067caa7734ca185452d3cdd9d3, type: 2}
+  teamColors:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.93725497, b: 0, a: 1}
+  - {r: 0, g: 0.9450981, b: 1, a: 1}
+  - {r: 0.24705884, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.5529412, b: 0, a: 1}
+  - {r: 0.8117648, g: 0, b: 1, a: 1}
+  colorStrings:
+  - WHITE
+  - YELLOW
+  - CYAN
+  - GREEN
+  - ORANGE
+  - PURPLE
   gameModes:
   - {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
   - {fileID: 11400000, guid: fbfbbcb7e0e862d45bd57adaa988bf70, type: 2}

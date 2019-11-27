@@ -4,12 +4,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
+[Serializable]
 public partial class TeamManager : MonoBehaviour
 {
     private List<Team> teams = new List<Team>();
-    [SerializeField] private Color[] teamColors;
-    [SerializeField] private String[] colorStrings;
-
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
     private List<InputDevice> playerDevices = new List<InputDevice>();
@@ -18,17 +16,13 @@ public partial class TeamManager : MonoBehaviour
     public int Count => teams.Count;
     public IEnumerable<Team> Teams => teams;
 
-    private void Awake()
-    {
-        int seed = UnityEngine.Random.Range(0, 1000);
-        teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
-        colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
-
-        var winManager = GetComponent<WinManager>();
-        teams = new List<Team>(winManager.MaxTeamCount);
-        for (int i = 0; i < winManager.MaxTeamCount; i++)
+    // TODO: Currently the game mode can be changed while team selection.
+    // Maybe have game mode and map selection first?
+    public void Setup(int maxTeamCount, int maxTeamSize, string[] names, Color[] teamColors) {
+        teams = new List<Team>(maxTeamCount);
+        for (int i = 0; i < maxTeamCount; i++)
         {
-            teams.Add(new Team(winManager.MaxTeamSize, colorStrings[i], teamColors[i]));
+            teams.Add(new Team(maxTeamSize, names[i], teamColors[i]));
         }
     }
 
@@ -260,6 +254,6 @@ public partial class TeamManager : MonoBehaviour
 
     public string GetTeamName(int team)
     {
-        return colorStrings[team];
+        return teams[team].Name;
     }
 }

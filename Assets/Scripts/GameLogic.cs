@@ -7,8 +7,9 @@ public class GameLogic : MonoBehaviour
 {
     private static GameLogic instance;
     private UIManager uiManager;
+    // TODO: Get rid of teamManager.
     private TeamManager teamManager;
-    private WinManager winManager;
+    private MatchData matchData;
 
     private float mapSize;
 
@@ -36,7 +37,7 @@ public class GameLogic : MonoBehaviour
 
     void Start()
     {
-        winManager = GetComponent<WinManager>();
+        matchData = FindObjectOfType<MatchData>();
     }
 
     void Update()
@@ -44,7 +45,7 @@ public class GameLogic : MonoBehaviour
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
-            if (winManager.OnTeamWon())
+            if (matchData.Score.OnTeamWon())
             {
                 roundRunning = false;
                 GameOver();
@@ -79,11 +80,11 @@ public class GameLogic : MonoBehaviour
 
         print("init players");
         teamManager.InitPlayers();
-        if (winManager.WinCondition == GameMode.WinCondition.Defense)
+        if (matchData.Score.WinCondition == GameMode.WinCondition.Defense)
         {
             print("init bases");
             DestructibleTeamBlock[] defenseBases = GameObject.FindGameObjectWithTag("DefenseBases").transform.GetComponentsInChildren<DestructibleTeamBlock>();
-            winManager.SetDefenseBases(defenseBases, teamManager.Count);
+            matchData.Score.SetDefenseBases(defenseBases, teamManager.Count);
         }
         roundRunning = true;
     }
@@ -94,14 +95,14 @@ public class GameLogic : MonoBehaviour
         if (team <= -1) {
             throw new UnityException();
         }
-        winManager.IncreaseKillScore(team);
+        matchData.Score.IncreaseKillScore(team);
         // display new score in UI
-        uiManager.UpdateScores(winManager.TeamKills);
+        uiManager.UpdateScores(matchData.Score.TeamKills);
     }
 
     public void GameOver()
     {
-        uiManager.SetGameOverUI(teamManager.GetTeamName(winManager.GetWinningTeam()));
+        uiManager.SetGameOverUI(teamManager.GetTeamName(matchData.Score.GetWinningTeam()));
         Time.timeScale = 0;
     }
 }

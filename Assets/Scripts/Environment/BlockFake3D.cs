@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockFake3D : MonoBehaviour
 {
     private SpriteRenderer baseSpr;
-    private Transform cam;
-
     [SerializeField] private Color wallColor = Color.grey;
     [SerializeField] private int steps = 2;
     [SerializeField] private float maxOffset = 0.5f;
@@ -18,7 +15,6 @@ public class BlockFake3D : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main.transform;
         baseSpr = GetComponent<SpriteRenderer>();
 
         var orgCol = baseSpr.color;
@@ -39,11 +35,10 @@ public class BlockFake3D : MonoBehaviour
         }
     }
 
-
     // Rotate the position of the top and bottom sprites so that it looks 3d from the camera pos
     void LateUpdate()
     {
-        Vector2 topDir = (transform.position - cam.position).normalized;
+        Vector2 topDir = (transform.position - Camera.main.transform.position).normalized;
         topDir = ExtensionMethods.RotatePointAroundPivot(topDir, Vector2.zero, -transform.eulerAngles.z);
 
         for (int i = 1; i <= tops.Count; i++)

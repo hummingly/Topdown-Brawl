@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,8 +10,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private int currentMapIndex = 1;
     private TeamManager teamManager;
     public List<Character> availableChars = new List<Character>();
-
-    // UI Data
+    [SerializeField] private Color[] teamColors;
+    [SerializeField] private String[] colorStrings;
     [SerializeField] private GameMode[] gameModes;
     [SerializeField] private string[] maps;
 
@@ -30,7 +30,11 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
+        int seed = UnityEngine.Random.Range(0, 1000);
+        teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
+        colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
         teamManager = FindObjectOfType<TeamManager>();
+        teamManager.Setup(SelectedGameMode.maxTeams, SelectedGameMode.maxTeamSize, colorStrings, teamColors);
     }
 
     private void Start()
@@ -206,6 +210,7 @@ public class MenuManager : MonoBehaviour
     private void Play()
     {
         SaveCharacters();
+        CreateMatch();
         FindObjectOfType<GameStateManager>().Play(SelectedMap);
     }
 
@@ -225,7 +230,6 @@ public class MenuManager : MonoBehaviour
     private void UpdateGameModeUi()
     {
         gameModeText.SetText(SelectedGameMode.name);
-        FindObjectOfType<WinManager>().SetGameMode(SelectedGameMode, teamManager.Count);
     }
 
     private void UpdateMapUi()
@@ -240,5 +244,11 @@ public class MenuManager : MonoBehaviour
             return 0;
         }
         return index + 1;
+    }
+
+    private void CreateMatch()
+    {
+        var match = FindObjectOfType<MatchData>();
+        match.Setup(SelectedMap, SelectedGameMode, teamManager);
     }
 }

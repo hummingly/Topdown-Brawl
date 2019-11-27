@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,8 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         _state = GameState.Start;
+        // TODO: Add Start Screen.
+        // SceneManager.LoadScene("Start");
     }
 
     // Loads Match Making Scene.
@@ -39,7 +42,7 @@ public class GameStateManager : MonoBehaviour
         // TODO: Move data instead of static gameObject...
         FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
         // TODO: Timer count down...
-        SceneManager.LoadScene(map);
+        StartCoroutine(LoadSceneAsync(map));
     }
 
     // Pauses in-game.
@@ -49,6 +52,7 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         _state = GameState.Pause;
+        // TODO: Add Pause Overlay.
     }
 
     public void Resume() {
@@ -76,5 +80,27 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         _state = GameState.MatchMaking;
+    }
+
+    IEnumerator LoadSceneAsync(string scene)
+    {
+        // Set the current Scene to be able to unload it later
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        var data = FindObjectOfType<MatchData>();
+
+        // The Application loads the Scene in the background at the same time as the current Scene.
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+
+        // Wait until the last operation fully loads to return anything
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
+        SceneManager.MoveGameObjectToScene(data.gameObject, SceneManager.GetSceneByName(scene));
+        // Unload the previous Scene
+        SceneManager.UnloadSceneAsync(currentScene);
     }
 }
