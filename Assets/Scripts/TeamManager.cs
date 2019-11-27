@@ -244,7 +244,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
     {
         foreach (Team team in teams)
         {
-            if (team.HasPlayer(player))
+            if (!team.HasPlayer(player))
             {
                 List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
