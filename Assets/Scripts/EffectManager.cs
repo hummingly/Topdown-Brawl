@@ -145,6 +145,14 @@ public class EffectManager : MonoBehaviour
         Instantiate(meleeCrumblePartic, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
     }
 
+    public void snipeShotParticAndRumb(Vector2 pos, Transform bullet, Gamepad gamepad = null)
+    {
+        var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
+        p.transform.localScale *= 4;
+
+        rumble(gamepad, 0.1f, 0.2f, 0.2f);
+    }
+
     public void muzzle(float dmg, Transform bullet, GameObject owner)
     {
         var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
@@ -156,7 +164,7 @@ public class EffectManager : MonoBehaviour
         // TODO: maybe also move individual muzzles in local up?
 
         Sequence seq = DOTween.Sequence();
-        seq.Append(m.DOPunchScale(Vector3.one * muzzleScale, muzzleFlashDur));
+        seq.Append(m.DOPunchScale(Vector3.one * muzzleScale * bullet.localScale.y, muzzleFlashDur));
         seq.AppendCallback(() => Destroy(m.gameObject));
 
         //addGridLigth(0.5f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m);

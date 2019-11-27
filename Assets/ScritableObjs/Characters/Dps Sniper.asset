@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Snipi
   description: 
-  prefab: {fileID: 7706905693724581864, guid: 39ca112c30779054fb439862d592e998, type: 3}
+  prefab: {fileID: 6733530726399029191, guid: 39ca112c30779054fb439862d592e998, type: 3}
   sprite: {fileID: -7017378215715786011, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
   role: 1
   roleIcon: {fileID: -5041719779417017081, guid: cdea967cff3cf8346a83bb42caf70392,

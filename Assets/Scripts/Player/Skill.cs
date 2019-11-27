@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public abstract class Skill : MonoBehaviour
 {
     protected PlayerMovement playerMovement;
+    protected PlayerStats stats;
     protected PlayerVisuals visuals;
     protected EffectManager effects;
 
@@ -31,6 +32,7 @@ public abstract class Skill : MonoBehaviour
     void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        stats = GetComponent<PlayerStats>();
         visuals = GetComponentInChildren<PlayerVisuals>();
         effects = FindObjectOfType<EffectManager>();
     }
@@ -53,6 +55,9 @@ public abstract class Skill : MonoBehaviour
 
     public void DoAction()
     {
+        if (stats.GetHealth() <= 0)
+            return;
+
         delayTimer = cooldown;
 
         if(greyPlayerWhileCD) visuals.SetActionOnCooldownCol();

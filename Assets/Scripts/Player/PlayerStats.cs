@@ -29,6 +29,8 @@ public class PlayerStats : IDamageable
         effects.AddShake(2f);
         effects.Stop(0.05f);
 
+        foreach(DefaultShootSkill d in GetComponents<DefaultShootSkill>())
+            d.disableLaser();
 
         if (damagedLastBy)
             FindObjectOfType<GameLogic>().IncreaseScore(damagedLastBy);

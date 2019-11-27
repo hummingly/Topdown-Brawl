@@ -93,7 +93,7 @@ public class MenuManager : MonoBehaviour
 
                 Destroy(bot);//remove bot cursor
 
-                print("del bot");
+                //print("del bot");
             }
             else
             {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DefaultShootSkill : Skill
 {
@@ -32,8 +33,9 @@ public class DefaultShootSkill : Skill
 
     protected override void Action(Vector2 shootDir)
     {
+        var spawnPos = (Vector2)transform.position + (shootDir.normalized * spawnPosFromCenter);
         shootDir = ExtensionMethods.RotatePointAroundPivot(shootDir, Vector2.zero, Random.Range(-accuracy, accuracy));
-        GameObject p = Instantiate(projectile, (Vector2)transform.position + (shootDir.normalized * spawnPosFromCenter), Quaternion.identity);
+        GameObject p = Instantiate(projectile, spawnPos, Quaternion.identity);
         p.GetComponent<Projectile>().SetInfo(damage, gameObject, range, bounceAmMax, bounceGain, scale);
         p.transform.up = shootDir;
         //p.transform.eulerAngles += new Vector3(0,0,90);//Random.Range(-accuracy, accuracy)
@@ -46,6 +48,10 @@ public class DefaultShootSkill : Skill
             float dmg = damage;
             if (dmg == 0) dmg = 75;
             effects.muzzle(dmg, p.transform, gameObject);
+
+            if (p.GetComponent<Projectile>().sniperShot)
+                effects.snipeShotParticAndRumb(spawnPos, p.transform, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+
 
             effects.AddShake(0.25f);
         }
@@ -72,5 +78,14 @@ public class DefaultShootSkill : Skill
             else
                 aimLaser.SetAim(false);
         }
+    }
+
+    public void disableLaser()
+    {
+        if (showIndicationOnHold)
+        {
+            aimLaser.SetAim(false);
+        }
+        //aimVal = 0;
     }
 }

@@ -23,6 +23,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float extraDmgMaxAngle = 45;
     [Space]
     private int damage = 10;
+    public bool sniperShot;
     [SerializeField] private Vector2 minMaxDist = new Vector2(3, 12);
     [SerializeField] private Vector2 minMaxDmg = new Vector2(10, 50);
     [SerializeField] private Vector2 minMaxScale = new Vector2(1, 3);
@@ -44,6 +45,7 @@ public class Projectile : MonoBehaviour
     private float bounceGain;
     private float extendTravelDist;
     private Vector3 lastVel;
+    private Vector2 lastPos;
     private GridLigth light;
 
     private void Awake()
@@ -85,8 +87,7 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        // Laser
-        if(damage == 0)
+        if(sniperShot)
         {
             light = effects.addGridLigth(transform.localScale.x * 0.025f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
@@ -111,8 +112,7 @@ public class Projectile : MonoBehaviour
 
     private void LateUpdate()
     {
-        // for snipe dmg depending on distance
-        if (damage == 0)
+        if (sniperShot)
         {
             float dist = Vector2.Distance(startPos, transform.position);
             float multi = ExtensionMethods.Remap(dist, minMaxDist.x, minMaxDist.y, minMaxScale.x, minMaxScale.y);
@@ -124,6 +124,7 @@ public class Projectile : MonoBehaviour
     private void FixedUpdate()
     {
         lastVel = rb.velocity;
+        lastPos = transform.position;
     }
 
     public void SetInfo(int damage, GameObject owner, float range, int am, float gain, Vector2 scale)
@@ -143,11 +144,11 @@ public class Projectile : MonoBehaviour
         //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner (now done via layer)
 
 
-        // for snipe dmg depending on distance
-        if (damage == 0)
+        if (sniperShot)
         {
             float dist = Vector2.Distance(startPos, transform.position);
             damage = Mathf.RoundToInt(ExtensionMethods.Remap(dist, minMaxDist.x, minMaxDist.y, minMaxDmg.x, minMaxDmg.y));
+            knockStrengthPlayer = ExtensionMethods.Remap(dist, minMaxDist.x, minMaxDist.y, 100, knockStrengthPlayer);
             //print(dist + " " + damage);
         }
 
@@ -210,7 +211,10 @@ public class Projectile : MonoBehaviour
         var otherRb = other.GetComponent<Rigidbody2D>();
         if (otherRb)//(rigidbod && teams.getTeamOf(other.gameObject) == -1)
         {
-            var knockDir = other.ClosestPoint(transform.position/*maybe rather bullet tip?*/) - (Vector2)transform.position;
+            var pos = transform.position;
+            if (sniperShot) pos = owner.transform.position;// bad hard coded knockback dir for sniper
+
+            var knockDir = other.ClosestPoint(transform.position/*maybe rather bullet tip?*/) - (Vector2)pos;
             knockDir = knockDir.normalized;
 
             // Player
