@@ -81,14 +81,16 @@ public class Projectile : MonoBehaviour
             effects.addGridLigth(0.15f, 4f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
         else
+        {
             //light = effects.addGridLigth(0.2f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
-            light = effects.addGridLigth(damage*0.01f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+            light = effects.addGridLigth(damage * 0.01f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
             //light = effects.addGridLigth(transform.localScale.x*0.1f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+        }
     }
 
     void Update()
     {
-        if(sniperShot)
+        if (sniperShot)
         {
             light = effects.addGridLigth(transform.localScale.x * 0.025f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
@@ -98,12 +100,14 @@ public class Projectile : MonoBehaviour
             rb.velocity *= fadeSlowdown; //slow down speed, more ideally OVER TIME
 
             foreach (SpriteRenderer s in GetComponentsInChildren<SpriteRenderer>())
+            {
                 s.DOFade(0, fadeSpd).SetEase(Ease.OutQuad);
+            }
 
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(fadeSpd);
-            seq.InsertCallback(fadeSpd/4, () => GetComponentInChildren<Collider2D>().enabled = false);
-            seq.InsertCallback(fadeSpd/4, () => GetComponentInChildren<ParticleSystem>().Stop());
+            seq.InsertCallback(fadeSpd / 4, () => GetComponentInChildren<Collider2D>().enabled = false);
+            seq.InsertCallback(fadeSpd / 4, () => GetComponentInChildren<ParticleSystem>().Stop());
             seq.AppendCallback(() => Destroy(gameObject));
 
 
@@ -139,11 +143,9 @@ public class Projectile : MonoBehaviour
         startScale = scale;
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         //if(collision.tag != "Bullet") // If its not another bulelt or the cinemachine confiner (now done via layer)
-
 
         if (sniperShot)
         {
@@ -153,20 +155,18 @@ public class Projectile : MonoBehaviour
             //print(dist + " " + damage);
         }
 
-
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.tag == "Destruction Piece" && this.enabled)
         {
             var damageAbleBase = other.transform.parent.GetComponent<IDamageable>();
             var isOwnBase = teams.IsBaseOf(damageAbleBase.GetComponent<DestructibleBlock>(), owner);
 
-            if(!isOwnBase)
+            if (!isOwnBase)
             {
                 damageAbleBase.ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
                 this.enabled = false;
             }
         }
-
 
         var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
 
@@ -186,9 +186,9 @@ public class Projectile : MonoBehaviour
             seq.AppendCallback(() => Destroy(gameObject));
         }
         else
+        {
             Destroy(gameObject);
-        
-
+        }
 
         var damageAble = other.GetComponent<IDamageable>();
 
@@ -200,11 +200,13 @@ public class Projectile : MonoBehaviour
             if (!sameTeam)
             {
                 if (damageAble.GetComponent<BotTest>())
+                {
                     damageAble.GetComponent<BotTest>().GotHit(owner); //order important so bot loses agro on death
+                }
 
                 damageAble.ReduceHealth(damage, owner);
 
-                if(melee)
+                if (melee)
                 {
                     damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
@@ -212,12 +214,14 @@ public class Projectile : MonoBehaviour
                 effects.damagedEntity(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
             }
             else
+            {
                 effects.bulletDeathPartic(hitPoint, transform);
+            }
         }
         else
+        {
             effects.bulletDeathPartic(hitPoint, transform);
-
-
+        }
 
         // only knock back enemys or neutrals
         var otherRb = other.GetComponent<Rigidbody2D>();
@@ -232,7 +236,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.GetComponent<PlayerMovement>())
             {
-                if(teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
+                if (teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.velocity *= keepOrgVelPlayer; // doesnt work well since player always changed velocity...
@@ -249,18 +253,15 @@ public class Projectile : MonoBehaviour
         }
     }
 
-
     // TODO: combine with onTrigger bcz much the same
     private void OnCollisionEnter2D(Collision2D other)
     {
-
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.gameObject.tag == "Destruction Piece" && this.enabled)
         {
             other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
             this.enabled = false;
         }
-
 
         if (bounceAmmount >= 0)
         {
@@ -295,8 +296,6 @@ public class Projectile : MonoBehaviour
             }
         }
 
-
-
         // only knock back enemys or neutrals
         var otherRb = other.gameObject.GetComponent<Rigidbody2D>();
         if (otherRb)//(rigidbod && teams.getTeamOf(other.gameObject) == -1)
@@ -322,8 +321,5 @@ public class Projectile : MonoBehaviour
                 //otherRb.AddForceAtPosition(knockDir * knockStrength, other.ClosestPoint(transform.position), ForceMode2D.Impulse); 
             }
         }
-
-
-
     }
 }
