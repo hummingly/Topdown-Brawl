@@ -146,8 +146,14 @@ public class GameLogic : MonoBehaviour
 
     public void GameOver()
     {
-        uiManager.SetGameOverUI();
+        float dur = FindObjectOfType<EffectManager>().gameOver(lastDeath);
+        StartCoroutine(showGameOverUi(dur));
+    }
 
-        FindObjectOfType<EffectManager>().gameOver(lastDeath);
+    private IEnumerator showGameOverUi(float t)
+    {
+        yield return new WaitForSecondsRealtime(t);
+
+        uiManager.SetGameOverUI();
     }
 }

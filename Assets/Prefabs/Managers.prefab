@@ -103,9 +103,9 @@ MonoBehaviour:
   - {fileID: 835956841870828920, guid: f5f3e06bc33947b40b25f15408e20a5a, type: 3}
   muzzleFlashDur: 0.15
   muzzleScale: 1
-  maxoffset: 10
+  maxoffset: 2
   traumaFallOff: 3.333
-  powerOfAllShakes: 1
+  powerOfAllShakes: 2
   frequency: 10
 --- !u!114 &1629654588299491853
 MonoBehaviour:
@@ -123,4 +123,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   time: {fileID: 0}
+  gameplay: {fileID: 0}
   gameOver: {fileID: 0}

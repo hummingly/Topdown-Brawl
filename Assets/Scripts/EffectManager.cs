@@ -5,6 +5,7 @@ using DG.Tweening;
 using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Cinemachine;
 
 public class EffectManager : MonoBehaviour
 {
@@ -38,9 +39,13 @@ public class EffectManager : MonoBehaviour
 
     private bool roundRunning = true;
 
-    private float trauma;
-    private float shake;
-    private Cinemachine.CinemachineBasicMultiChannelPerlin _perlin;
+    //private float trauma;
+    //private float shake;
+    private CinemachineBasicMultiChannelPerlin _perlin;
+    private CinemachineCameraOffset offset;
+    private Vector2 trauma;
+    private Vector2 shake;
+    private Vector2 camOffset;
 
     private void Awake()
     {
@@ -53,7 +58,8 @@ public class EffectManager : MonoBehaviour
         grid.material.SetFloatArray("highlightRanges", arrayF);
         grid.material.SetFloatArray("intensities", arrayF);
 
-        _perlin = FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
+        _perlin = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        offset = FindObjectOfType<CinemachineCameraOffset>();
     }
 
 
@@ -161,7 +167,7 @@ public class EffectManager : MonoBehaviour
         }
 
         StartCoroutine(screenBlink(Color.white, 2));
-        AddShake(2f);
+        AddShake(1f);
         Stop(0.05f);
     }
 
@@ -188,7 +194,7 @@ public class EffectManager : MonoBehaviour
         player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
 
 
-        //AddShake(0.25f);
+        AddShake(0.33f);
     }
 
 
@@ -255,8 +261,10 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void gameOver(Vector2 explosionPos)
+    public float gameOver(Vector2 explosionPos)
     {
+        float dur = 2;
+
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,-90));
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,180));
@@ -267,7 +275,7 @@ public class EffectManager : MonoBehaviour
 
         // get normal speed again
         //StartCoroutine(speedUpTime());
-        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 4).SetEase(Ease.InQuad).SetUpdate(true);
+        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, dur).SetEase(Ease.InQuad).SetUpdate(true);
 
         //TODO: also zoom in on position
         //FindObjectOfType<Cinemachine.CinemachineTargetGroup>().RemoveMember();
@@ -276,13 +284,15 @@ public class EffectManager : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineTargetGroup>().AddMember(heavyPlaceholder, 10, 5);
 
         //either go to timescale 0 again, or disable all input
+        FindObjectOfType<PlayerSpawner>().Disable();
         foreach (BotTest b in FindObjectsOfType<BotTest>())
             b.enabled = false;
         foreach (PlayerMovement b in FindObjectsOfType<PlayerMovement>())
             b.enabled = false;
         foreach (Skill b in FindObjectsOfType<Skill>())
             b.enabled = false;
-        FindObjectOfType<PlayerSpawner>().Disable();
+
+        return dur;
     }
 
 
@@ -307,38 +317,50 @@ public class EffectManager : MonoBehaviour
 
 
 
-    // TODO: make shake 2D again, so can direct it
-    public void AddShake(float str)
-    {
-        trauma += str;
-    }
 
-    /*public void AddShake(Vector2 dir, float strength) //dir is only 1,0  0,-1  1,1 etc
+    public void AddShake(float strength, Vector2 dir = new Vector2(), float threshHold = 0) //dir only 1,0  0,-1  1,1  etc
     {
-        // Makes sure always 1 or 0 (?)
+        //print(trauma); //only do small shake on shooting if no other shakes active
+        //if (threshHold != 0 && threshHold <= trauma.magnitude)
+        //    return;
+        if (threshHold != 0) return; //nvm, still stacks very bad
+
+
+        if (dir == Vector2.zero)
+            dir = Random.insideUnitCircle;
+        //only 0/1 values since -1/1 is done below
         if (dir.x < 0) dir.x = -dir.x;
         if (dir.x > 0) dir.x = 1;
         if (dir.y < 0) dir.y = -dir.y;
         if (dir.y > 0) dir.y = 1;
         trauma = new Vector2(trauma.x + (dir.x * strength), trauma.y + (dir.y * strength));
-    }*/
+    }
 
     // Update shake
     private void Update()
     {
-        trauma -= traumaFallOff * Time.deltaTime;
-        trauma = Mathf.Clamp(trauma, 0, 1);
-        shake = Mathf.Pow(trauma, powerOfAllShakes);
+        trauma.x -= traumaFallOff * Time.deltaTime;
+        trauma.x = Mathf.Clamp(trauma.x, 0, 1);
+        shake.x = Mathf.Pow(trauma.x, powerOfAllShakes);
 
-        shake *= maxoffset;
+        trauma.y -= traumaFallOff * Time.deltaTime;
+        trauma.y = Mathf.Clamp(trauma.y, 0, 1);
+        shake.y = Mathf.Pow(trauma.y, powerOfAllShakes);
+
+        camOffset = new Vector2(shake.x * (maxoffset * Random.Range(-1f, 1f)), shake.y * (maxoffset * Random.Range(-1f, 1f)));
     }
 
     private void LateUpdate()
     {
         // Show shake
-        _perlin.m_AmplitudeGain = shake;
-        _perlin.m_FrequencyGain = frequency;
+        //_perlin.m_AmplitudeGain = shake;
+        //_perlin.m_FrequencyGain = 11 - shake;//frequency;
+        // frequency should maybe be less and less the stronger the shake?
         // if too smooth, use cinemachine camera offset and move it manually
+        // -> cinemachine noise didn't seem to give enough control, overlapping shakes etc dunno
+
+        offset.m_Offset = camOffset;
+        //print(offset.m_Offset + " " + camOffset);
 
 
 
