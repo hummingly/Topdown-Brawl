@@ -359,6 +359,11 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         return teams[FindPlayerTeam(player)].Color;
     }
 
+    public string GetTeamName(Team team)
+    {
+        var index = teams.FindIndex(t => t == team);
+        return colorStrings[index];
+    }
 
     /*public GameObject getPlayerByID(int i)
     {

@@ -267,8 +267,13 @@ public class EffectManager : MonoBehaviour
 
         // get normal speed again
         //StartCoroutine(speedUpTime());
-        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 3).SetEase(Ease.InQuad).SetUpdate(true);
+        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 4).SetEase(Ease.InQuad).SetUpdate(true);
+
         //TODO: also zoom in on position
+        //FindObjectOfType<Cinemachine.CinemachineTargetGroup>().RemoveMember();
+        var heavyPlaceholder = new GameObject("Zoom on dis").transform;
+        heavyPlaceholder.position = explosionPos;
+        FindObjectOfType<Cinemachine.CinemachineTargetGroup>().AddMember(heavyPlaceholder, 10, 5);
 
         //either go to timescale 0 again, or disable all input
         foreach (BotTest b in FindObjectsOfType<BotTest>())

@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] scores;
     [SerializeField] private GameObject time;
+    [SerializeField] private GameObject gameplay;
     [SerializeField] private GameObject gameOver;
 
     private TeamManager teams;
@@ -32,7 +33,12 @@ public class UIManager : MonoBehaviour
 
     public void SetGameOverUI()
     {
+        gameplay.SetActive(false);
         gameOver.SetActive(true);
+
+        TextMeshProUGUI text = gameOver.GetComponentInChildren<TextMeshProUGUI>();
+        var winningTeam = teams.GetTeamName(FindObjectOfType<WinManager>().GetWinningTeam());
+        text.SetText(winningTeam + " WON!");
     }
 
     public void GoToMenu()
