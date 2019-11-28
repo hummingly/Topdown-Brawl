@@ -40,10 +40,14 @@ public class GameStateManager : MonoBehaviour
         {
             // hardcoded BAAAD
             currentMapInd = 2;
-            if(!menu)
+            if (!menu)
+            {
                 menu = FindObjectOfType<MenuManager>();
+            }
             else
+            {
                 menu.SetMapImg(mapSprites[currentMapInd - mapRange.x]);
+            }
         }
     }
 
@@ -68,9 +72,6 @@ public class GameStateManager : MonoBehaviour
         currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
         return allGameModes[currentGameModeIndex].name;
     }
-
-
-
 
     public void Play()
     {
@@ -108,14 +109,12 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-
-
     public void Restart()
     {
         BotTest[] bots = FindObjectsOfType<BotTest>();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
         // keep bots (poor hack)
         for (int i = 0; i < bots.Length; i++)
         {
