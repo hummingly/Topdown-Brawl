@@ -1,7 +1,5 @@
 # Game Engines Unity Project
 
-## Please use the classes branch and not the master
-
 ## Overview
 
 - top down 2D battle game
@@ -63,4 +61,13 @@
 
 - All sounds
 - Unity extensions: Cinemachine, new Input system, DoTween
-- Alles im "Import" Ordner: Keijiro glitch fx, SoundControll library um effecte auf Musik anzupassen, Delaunay library um sprite destruction zu erleichtern
+- Everything in the folder "Import": Keijiro glitch fx, SoundControll library to match effects to music, Delaunay library to split sprite easier
+
+## Missing Features
+
+- keep players & bots from gameplay to menu without resetting
+- damaging other players by knocking boxes into them (like the melee can do with other players into walls)
+- more characters and not just damage dealers
+- more game modes (ctf, elimination, etc)
+- real light / shadow (raytracing?) and more hdr
+- visual grid really on the ground, then warp completely around blocks, so on the sides and top grid too

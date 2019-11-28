@@ -2631,8 +2631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 1
-  playerCursorPrefab: {fileID: 0}
 --- !u!114 &723236038
 MonoBehaviour:
   m_ObjectHideFlags: 0

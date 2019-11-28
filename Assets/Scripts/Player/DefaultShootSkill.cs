@@ -20,7 +20,7 @@ public class DefaultShootSkill : Skill
     [SerializeField] private int bounceAmMax;
     [SerializeField] private float bounceGain;
     [SerializeField] private int splitAm;
-    [SerializeField] private Vector2 scale = new Vector2(1,1);
+    [SerializeField] private Vector2 scale = new Vector2(1, 1);
     //[SerializeField] private Vector2 scaleMax = new Vector2(1, 1);
 
     private void Start()
@@ -49,30 +49,31 @@ public class DefaultShootSkill : Skill
             float dmg = damage;
             if (dmg == 0) dmg = 75;
             effects.Muzzle(dmg, p.transform, gameObject);
-            effects.AddShake(0.25f);
+            effects.AddShake(0.3f, shootDir, 0.25f);
 
             if (p.GetComponent<Projectile>().sniperShot)
+            {
                 effects.SnipeShot(spawnPos, p.transform, gameObject, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+                effects.AddShake(0.5f, shootDir);
+            }
         }
         else
+        {
             effects.MeleeBlow(transform);
+        }
     }
-
-  
 
     protected override void OnTrigger(float inputValue) // may be integrated into the OnRight- / OnZRightTrigger methods
     {
-        if(showIndicationOnHold)
+        if (showIndicationOnHold)
             aimVal = inputValue;
         else
             actionInput = inputValue;
     }
 
-
-
     private void LateUpdate()
     {
-        if(showIndicationOnHold)
+        if (showIndicationOnHold)
         {
             if (aimVal > 0 && delayTimer <= 0)
                 aimLaser.SetAim(true);
@@ -81,7 +82,7 @@ public class DefaultShootSkill : Skill
         }
     }
 
-    public void disableLaser()
+    public void DisableLaser()
     {
         if (showIndicationOnHold)
             aimLaser.SetAim(false);
