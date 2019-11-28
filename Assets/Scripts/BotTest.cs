@@ -59,7 +59,7 @@ public class BotTest : MonoBehaviour
 
     void Awake()
     {
-        teamManager = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<MatchData>().TeamManager;
         playerMovement = GetComponent<PlayerMovement>();
         skill = GetComponent<DefaultShootSkill>();
 

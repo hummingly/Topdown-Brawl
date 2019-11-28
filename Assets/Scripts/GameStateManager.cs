@@ -13,7 +13,7 @@ public class GameStateManager : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput player)
     {
-        var teamManager = FindObjectOfType<TeamManager>();
+        var teamManager = FindObjectOfType<MatchData>().TeamManager;
         Debug.Log("Player joined");
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
@@ -127,6 +127,8 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         state = GameState.MatchMaking;
+        var list = new GameObject[] { FindObjectOfType<MatchData>().gameObject, gameObject };
+        StartCoroutine(LoadSceneAsync("Selection", list));
     }
 
     IEnumerator LoadSceneAsync(string scene, GameObject gameObject)

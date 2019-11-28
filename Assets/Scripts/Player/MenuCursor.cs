@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuCursor : MonoBehaviour
@@ -17,26 +15,12 @@ public class MenuCursor : MonoBehaviour
 
     [SerializeField] internal GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
-    private MatchMaker menuManager;
+    private MatchMaker matchMaker;
 
-    // private void Awake()
-    // {
-    //     SceneManager.sceneLoaded += SceneLoadeded;
-    // }
-
-    // private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
-    // {
-    //     if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.MatchMaking)
-    //     {
-    //         gr = FindObjectOfType<GraphicRaycaster>();
-    //         menuManager = FindObjectOfType<MatchMaker>();
-    //     }
-    // }
-
-    void Start()
+    private void Start()
     {
         gr = FindObjectOfType<GraphicRaycaster>();
-        menuManager = FindObjectOfType<MatchMaker>();
+        matchMaker = FindObjectOfType<MatchMaker>();
     }
 
     public void Setup(int playerNr, Color teamColor)
@@ -61,7 +45,6 @@ public class MenuCursor : MonoBehaviour
         if (gr == null)
         {
             gr = FindObjectOfType<GraphicRaycaster>();
-            Debug.Log(gr);
             return;
         }
 
@@ -80,30 +63,30 @@ public class MenuCursor : MonoBehaviour
                 switch (hitObj.gameObject.name)
                 {
                     case "Char Up":
-                        menuManager.ToggleCharacter(gameObject, hitObj.gameObject, 1);
+                        matchMaker.ToggleCharacter(gameObject, hitObj.gameObject, 1);
                         break;
                     case "Char Down":
-                        menuManager.ToggleCharacter(gameObject, hitObj.gameObject, -1);
+                        matchMaker.ToggleCharacter(gameObject, hitObj.gameObject, -1);
                         break;
                     case "Change Team Button":
-                        menuManager.TogglePlayerTeam(gameObject, hitObj.gameObject);
+                        matchMaker.TogglePlayerTeam(gameObject, hitObj.gameObject);
                         emptySlot = false;
                         break;
                     case "Map Button Toggle":
-                        menuManager.ToggleMap();
+                        matchMaker.ToggleMap();
                         break;
                     case "Add Bot Button":
                         addBotButton = hitObj.gameObject;
                         break;
                     case "Game Mode Toggle":
-                        menuManager.ToggleGameMode(hitObj.gameObject);
+                        matchMaker.ToggleGameMode(hitObj.gameObject);
                         break;
                 }
             }
 
             if (addBotButton && emptySlot)
             {
-                FindObjectOfType<TeamManager>().AddBot();
+                FindObjectOfType<MatchData>().TeamManager.AddBot();
             }
         }
 
@@ -120,8 +103,6 @@ public class MenuCursor : MonoBehaviour
         var state = FindObjectOfType<GameStateManager>();
         if (state.State == GameStateManager.GameState.Start) {
             state.MakeMatch();
-            // gr = FindObjectOfType<GraphicRaycaster>();
-            // menuManager = FindObjectOfType<MatchMaker>();
         } else if (state.State == GameStateManager.GameState.MatchMaking) {
             FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
         }

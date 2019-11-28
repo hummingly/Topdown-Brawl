@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,12 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 rotInput;
     private float velocity;
-    //private Vector2 acc;
-
     private Vector2 lastRotInput;
-
-
-    //[SerializeField] private float maxRotSpd = 1000;
 
     [SerializeField] private Vector2 startRot;
     [SerializeField] private float inputStartRotThresh;
@@ -27,12 +19,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float accForce;
     [SerializeField] private float dashForce = 2;
     [SerializeField] private float dashCooldown = 0.5f;
-
-    //[SerializeField] private float maxVelocity;
-    //[SerializeField] private float accSpeed;     // speed of acc going to maxAcc
-    //[SerializeField] private float maxAcc;
-    //[SerializeField] private float nAccSpeed;    // speed of acc going back to 0
-    //[SerializeField] private float drag;
 
     // used fields just for debugging purposes
     private float breathing;
@@ -85,50 +71,6 @@ public class PlayerMovement : MonoBehaviour
 
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
-    /*
-    private int GetBreathSpeed()
-    {
-        if (velocity < 4)
-        {
-            return 25;
-        }
-        else
-        {
-            return 15;
-        }
-        //return Mathf.RoundToInt(velocity * 4f);
-    }
-
-    private float GetBreathStrength()
-    {
-        if (velocity < 1)
-        {
-            return 0;
-        }
-        else if (velocity < 4)
-        {
-            return 100;
-        }
-        else
-        {
-            return 200;
-        }
-        //return velocity * 3;
-    }
-
-    private float AddBreathing(float desiredRot)
-    {
-        if (counter == 0)
-        {
-            if (breathing > 0)
-                breathing = GetBreathStrength() * -1;
-            else
-                breathing = GetBreathStrength()*5;
-            return desiredRot + breathing;
-        }
-        return desiredRot;
-    }
-    */
 
     // TODO: refactor out into input script
     private void OnA()
@@ -179,7 +121,6 @@ public class PlayerMovement : MonoBehaviour
         return lastRotInput;
     }
 
-
     private void RotateToRightStick()
     {
         // Always rotate to last input dir
@@ -221,104 +162,6 @@ public class PlayerMovement : MonoBehaviour
         //print(correction);
     }
 
-    /*
-    private Vector2 getVelocity()
-    {
-        // Nachteil: auch bei kleinem input (oder wenig tweak des sticks des controllers) beschleunigt man auf maxVelocity (zwar langsamer, aber trotzdem)
-        //      --> Lösung: beschleunigung nur bei "full-throttle" anwenden
-
-        // x und y beschleunigung ist getrennt, deswegen ist es etwas schwieriger zu steuern
-
-        acc.x = doAcceleration(moveInput.x, acc.x);
-        acc.y = doAcceleration(moveInput.y, acc.y);
-
-        // clamp max speed
-        acc.x = Mathf.Clamp(acc.x, -maxAcc, maxAcc);
-        acc.y = Mathf.Clamp(acc.y, -maxAcc, maxAcc);
-
-        
-        // apply drag
-        if (velocity.x < 0)
-        {
-            velocity.x += drag;
-            if (velocity.x > 0)
-            {
-                velocity.x = 0;
-            }
-        }
-        else if (velocity.x > 0)
-        {
-            velocity.x -= drag;
-            if (velocity.x < 0)
-            {
-                velocity.x = 0;
-            }
-        }
-        if (velocity.y < 0)
-        {
-            velocity.y += drag;
-            if (velocity.y > 0)
-            {
-                velocity.y = 0;
-            }
-        }
-        else if (velocity.y > 0)
-        {
-            velocity.y -= drag;
-            if (velocity.y < 0)
-            {
-                velocity.y = 0;
-            }
-        }
-
-        Vector2 newVelocity = velocity + (moveInput * acc);
-
-        // clamp max velocity (incl. diagonal movement)
-        Vector2 normVelocity = newVelocity.normalized;
-        float absVelocity = newVelocity.magnitude;
-
-        float div1 = Vector2.Dot(lastRotInput, moveInput);
-        float div2 = lastRotInput.magnitude * moveInput.magnitude;
-        float cos = div1 / div2;
-        float a = Mathf.Acos(cos);
-        a *= Mathf.Rad2Deg;
-        
-        newVelocity = (a > 120) ? (normVelocity * backVelocity) : newVelocity;
-        newVelocity = (absVelocity > maxVelocity) ? (normVelocity * maxVelocity) : newVelocity;
-        return newVelocity;
-    }
-
-    private float doAcceleration(float input, float acc)
-    {
-        // wegen Ungenauigkeiten bei meinem Controller... kA, wie das bei euch ist??
-        if (Math.Abs(input) > 0.1f)
-        {
-            return acc + accSpeed;
-        }
-        else
-        {
-            //return approachZero(acc, nAccSpeed);
-            return 0;
-        }
-    }*/
-
-
-    //https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html#started-performed-and-canceled-callbacks
-    //https://www.youtube.com/watch?v=D8nUI88POU8&t=4s
-
-    //TODO: implement deviceLost -> pause game ?
-    /*private void OnDeviceLost()
-    {
-        print("lost");
-        velocity = Vector2.zero;
-    }
-    private void OnDeviceRegained()
-    {
-        print("regained");
-        velocity = Vector2.zero;
-    }*/
-
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var dmgObj = collision.GetComponent<DamagingObject>();
@@ -330,31 +173,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /*
-     * // crusher worked ok, but didn't kill when fully closed
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnReady(InputValue value)
     {
-        DamagingObject dmgObj = collision.gameObject.GetComponent<DamagingObject>();
-        if (dmgObj && dmgObj.damageOnSqueeze)
-        {
-            // Wait until other collider also overlaps with player (apart from the crushing box) !!! MAY cause problems with colliding bullets etc, so can add (solid) mask
-            Collider2D[] hitColls = Physics2D.OverlapBoxAll(transform.position, transform.localScale / 2, transform.localRotation.z);
-
-            for (int i = 0; i < hitColls.Length; i++)
-            {
-                //    Debug.Log("Hit : " + hitColls[i].name + i);
-                //if(collision == solid)
-                if (hitColls[i] != dmgObj.GetComponent<Collider2D>() && hitColls[i] != GetComponent<Collider2D>())
-                {
-                    stats.ReduceHealth(dmgObj.damage);
-                    break;
-                }
-            }
-
-
-        }
+        Debug.Log("Replay Match!");
+        FindObjectOfType<GameStateManager>().Replay();
     }
-    */
 
     private void OnLeave(InputValue value)
     {

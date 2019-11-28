@@ -2314,7 +2314,6 @@ GameObject:
   m_Component:
   - component: {fileID: 723236035}
   - component: {fileID: 723236034}
-  - component: {fileID: 723236033}
   m_Layer: 0
   m_Name: Game Logic (Static)
   m_TagString: Untagged
@@ -2322,20 +2321,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &723236033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723236032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb8730f9cb84db944b831c75dde0f26c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerNrs: []
-  playerChars: []
 --- !u!114 &723236034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4504,6 +4489,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 888c331575c61a443b5d9e7771588877, type: 3}
+--- !u!1 &1504374113 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3686358038647527768, guid: 888c331575c61a443b5d9e7771588877,
+    type: 3}
+  m_PrefabInstance: {fileID: 1504374112}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1504374114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504374113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8730f9cb84db944b831c75dde0f26c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNrs: []
+  playerChars: []
 --- !u!1 &1519064508
 GameObject:
   m_ObjectHideFlags: 0

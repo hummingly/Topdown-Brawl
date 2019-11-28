@@ -251,4 +251,17 @@ public class MatchMaker : MonoBehaviour
         var match = FindObjectOfType<MatchData>();
         match.Setup(SelectedMap, SelectedGameMode, teamManager);
     }
+
+    public void Setup(MatchData match) {
+        var mode = Array.FindIndex(gameModes, m => m.name.Equals(match.Mode));
+        var map = Array.FindIndex(maps, m => m.Equals(match.Map));
+        if (mode > -1) {
+            currentGameModeIndex = mode;
+            UpdateGameModeUi();
+        }
+        if (map > -1) {
+            currentMapIndex = map;
+            UpdateMapUi();
+        }
+    }
 }

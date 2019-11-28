@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [Serializable]
 public partial class TeamManager : MonoBehaviour
@@ -99,11 +97,6 @@ public partial class TeamManager : MonoBehaviour
     {
         if (AddToSmallestTeam(player.gameObject))
         {
-            // var cursor = player.gameObject.GetComponent<MenuCursor>();
-            //     Debug.Log(cursor.gr);
-            // if (cursor.gr == null) {
-            //     cursor.gr = FindObjectOfType<GraphicRaycaster>();
-            // }
             FindObjectOfType<MatchMaker>().PlayerJoined(player.transform);
         }
     }
@@ -174,6 +167,9 @@ public partial class TeamManager : MonoBehaviour
             if (!team.Has(player))
             {
                 List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
+                if (activePlayers.Count == 0) {
+                    break;
+                }
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
                 return activePlayers[r];
             }

@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Projectile : MonoBehaviour
 {
-    private TeamManager teams;
+    private TeamManager teamManager;
 
     [SerializeField] private int damage = 10;
     [Space]
@@ -17,7 +16,7 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        teams = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<MatchData>().TeamManager;
     }
 
     void Update()
@@ -46,7 +45,7 @@ public class Projectile : MonoBehaviour
 
         if (damageAble)
         {
-            var sameTeam = teams.FindPlayerTeam(owner) == teams.FindPlayerTeam(damageAble.gameObject);
+            var sameTeam = teamManager.FindPlayerTeam(owner) == teamManager.FindPlayerTeam(damageAble.gameObject);
 
             // only damage enemys (-1 case isn't caught)
             if (!sameTeam)
@@ -77,7 +76,7 @@ public class Projectile : MonoBehaviour
             // Player
             if (other.GetComponent<PlayerMovement>())
             {
-                if (teams.FindPlayerTeam(owner) != teams.FindPlayerTeam(damageAble.gameObject))
+                if (teamManager.FindPlayerTeam(owner) != teamManager.FindPlayerTeam(damageAble.gameObject))
                 {
                     //otherRb.velocity = Vector2.zero;
                     otherRb.AddForce(knockDir * knockStrengthPlayer, ForceMode2D.Impulse); //TODO: instead of value for objects & for enemys: factor in mas and drag

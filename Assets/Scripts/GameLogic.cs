@@ -8,8 +8,6 @@ public class GameLogic : MonoBehaviour
 {
     private static GameLogic instance;
     private UIManager uiManager;
-    // TODO: Get rid of teamManager.
-    private TeamManager teamManager;
     private MatchData matchData;
     public static GameLogic Instance { get { return instance; } }
 
@@ -27,8 +25,6 @@ public class GameLogic : MonoBehaviour
         {
             instance = this;
         }
-
-        teamManager = GetComponent<TeamManager>();
 
         SceneManager.sceneLoaded += SceneLoadeded;
 
@@ -79,19 +75,19 @@ public class GameLogic : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
         print("init players");
-        teamManager.InitPlayers();
+        matchData.TeamManager.InitPlayers();
         if (matchData.Score.WinCondition == GameMode.WinCondition.Defense)
         {
             print("init bases");
             DestructibleTeamBlock[] defenseBases = GameObject.FindGameObjectWithTag("DefenseBases").transform.GetComponentsInChildren<DestructibleTeamBlock>();
-            matchData.Score.SetDefenseBases(defenseBases, teamManager.Count);
+            matchData.Score.SetDefenseBases(defenseBases, matchData.TeamManager.Count);
         }
         roundRunning = true;
     }
 
     public void IncreaseScore(GameObject player)
     {
-        int team = teamManager.FindPlayerTeam(player);
+        int team = matchData.TeamManager.FindPlayerTeam(player);
         if (team <= -1) {
             throw new UnityException();
         }
@@ -107,7 +103,7 @@ public class GameLogic : MonoBehaviour
         foreach (var p in playerInput) {
             p.SwitchCurrentActionMap("Menu");
         }
-        uiManager.SetGameOverUI(teamManager.GetTeamName(matchData.Score.GetWinningTeam()));
+        uiManager.SetGameOverUI(matchData.TeamManager.GetTeamName(matchData.Score.GetWinningTeam()));
         Time.timeScale = 0;
     }
 }

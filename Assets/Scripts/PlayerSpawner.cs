@@ -14,9 +14,8 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] private float zoomBefore = 0.3f;
     [SerializeField] private float stayAfterDeath = 0.3f;
     [SerializeField] private float spawnPosBlockTime = 0.3f;
-
-    private GameLogic gameLogic;
     private TeamManager teamManager;
+
     private EffectManager effectManager;
     private CinemachineTargetGroup camTargetGroup;
     //private List<float> spawnTimers = new List<float>();
@@ -24,8 +23,7 @@ public class PlayerSpawner : MonoBehaviour
 
     void Awake()
     {
-        gameLogic = FindObjectOfType<GameLogic>();
-        teamManager = FindObjectOfType<TeamManager>();
+        teamManager = FindObjectOfType<MatchData>().TeamManager;
         effectManager = GetComponent<EffectManager>();
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
 
