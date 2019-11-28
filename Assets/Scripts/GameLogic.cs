@@ -99,10 +99,6 @@ public class GameLogic : MonoBehaviour
     public void GameOver()
     {
         FindObjectOfType<GameStateManager>().EndGame();
-        var playerInput = FindObjectsOfType<PlayerInput>();
-        foreach (var p in playerInput) {
-            p.SwitchCurrentActionMap("Menu");
-        }
         uiManager.SetGameOverUI(matchData.TeamManager.GetTeamName(matchData.Score.GetWinningTeam()));
         Time.timeScale = 0;
     }

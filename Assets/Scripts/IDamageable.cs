@@ -15,7 +15,7 @@ public abstract class IDamageable : MonoBehaviour
 
     private int healthPoints;
 
-    public bool IsDeath => healthPoints <= 0;
+    public bool IsDead => healthPoints <= 0;
 
     public virtual void Awake()
     {

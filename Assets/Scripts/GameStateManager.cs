@@ -115,6 +115,11 @@ public class GameStateManager : MonoBehaviour
             return;
         }
         state = GameState.End;
+        var playerInput = FindObjectsOfType<PlayerInput>();
+        foreach (var p in playerInput)
+        {
+            p.SwitchCurrentActionMap("Menu");
+        }
     }
 
     // Returns to Match Making Scene with previously selected game mode and

@@ -52,7 +52,7 @@ public partial class MatchData
             var lastIndex = 0;
             for (int i = 0; i < defenseTeamBlocks.Length; i++)
             {
-                if (defenseTeamBlocks[i].IsDeath)
+                if (defenseTeamBlocks[i].IsDead)
                 {
                     DestroyTeamDefense(i);
                 }

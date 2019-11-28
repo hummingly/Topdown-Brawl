@@ -13,7 +13,7 @@ public class MenuCursor : MonoBehaviour
 
     private Vector2 moveInput;
 
-    [SerializeField] internal GraphicRaycaster gr;
+    private GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
     private MatchMaker matchMaker;
 
@@ -45,7 +45,6 @@ public class MenuCursor : MonoBehaviour
         if (gr == null)
         {
             gr = FindObjectOfType<GraphicRaycaster>();
-            return;
         }
 
         pointerEventData.position = transform.position;
@@ -101,9 +100,12 @@ public class MenuCursor : MonoBehaviour
     {
         Debug.Log("Ready");
         var state = FindObjectOfType<GameStateManager>();
-        if (state.State == GameStateManager.GameState.Start) {
+        if (state.State == GameStateManager.GameState.Start)
+        {
             state.MakeMatch();
-        } else if (state.State == GameStateManager.GameState.MatchMaking) {
+        }
+        else if (state.State == GameStateManager.GameState.MatchMaking)
+        {
             FindObjectOfType<MatchMaker>().ToggleReady(gameObject);
         }
     }
