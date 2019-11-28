@@ -29,7 +29,9 @@ public abstract class IDamageable : MonoBehaviour
         healthPoints = maxHealthPoints;
         healthSlider.maxValue = maxHealthPoints;
         if (!alwaysShowHp)
+        {
             healthSlider.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -40,7 +42,7 @@ public abstract class IDamageable : MonoBehaviour
         if (invincible)
             if (Vector2.Distance(transform.position, lastSpawnPos) > spawmProtectMaxDist)
             {
-                effects.stopInvincible(invincibleGO);
+                effects.StopInvincible(invincibleGO);
                 invincible = false;
             }
     }
@@ -53,19 +55,28 @@ public abstract class IDamageable : MonoBehaviour
 
     internal bool ReduceHealth(int amount, GameObject dmgSource = null, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3())
     {
-        if (invincible) return false;
+        if (invincible)
+        {
+            return false;
+        }
 
         if (dmgSource)
+        {
             damagedLastBy = dmgSource;
+        }
 
-        if (!healthSlider.gameObject.active)
+        if (!healthSlider.gameObject.activeInHierarchy)
+        {
             healthSlider.gameObject.SetActive(true);
+        }
 
         healthPoints = Mathf.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;
 
         if (healthPoints <= 0)
+        {
             OnDeath();
+        }
 
         OnReduceHealth(amount, projectilePos, nextProjectilePos);
 
@@ -81,8 +92,9 @@ public abstract class IDamageable : MonoBehaviour
     }
 
     public abstract void OnDeath();
+
     public abstract void OnReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3());
-    
+
     public int GetHealth()
     {
         return healthPoints;
@@ -92,12 +104,12 @@ public abstract class IDamageable : MonoBehaviour
     {
         lastSpawnPos = spawnPos;
 
-        invincibleGO = effects.invincible(transform, spawnProtectTime);
+        invincibleGO = effects.Invincible(transform, spawnProtectTime);
         invincible = true;
-        StartCoroutine(disableInvinc(spawnProtectTime));
+        StartCoroutine(DisableInvincible(spawnProtectTime));
     }
 
-    private IEnumerator disableInvinc(float dur)
+    private IEnumerator DisableInvincible(float dur)
     {
         yield return new WaitForSeconds(dur);
         invincible = false;

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class PlayerSlotMenuDisplay : MonoBehaviour
 {
@@ -25,16 +25,18 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
         myPlayer = player.gameObject;
 
         if (bot)
+        {
             playerNameTxt.text = "Bot";
+        }
         else
+        {
             playerNameTxt.text = "Player " + (playerNr + 1).ToString("0");
+        }
     }
-
 
     public void SetChar(Character character)
     {
         chara = character;
-
         displaySprite.sprite = chara.sprite;
         displaySpriteClass.sprite = chara.roleIcon;
     }

@@ -23,17 +23,22 @@ public class PlayerStats : IDamageable
     {
         //Time.timeScale = 0; //just for testing, TODO: destroy or hide player until respawn
 
-        if(GetComponent<BotTest>())
+        if (GetComponent<BotTest>())
+        {
             GetComponent<BotTest>().StopChasing();
-        
+        }
+
         effects.playerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
 
-        foreach(DefaultShootSkill d in GetComponents<DefaultShootSkill>())
-            d.disableLaser();
+        foreach (DefaultShootSkill d in GetComponents<DefaultShootSkill>())
+        {
+            d.DisableLaser();
+        }
 
         if (damagedLastBy)
+        {
             logic.IncreaseScore(damagedLastBy);
-
+        }
         logic.setDeathEvent(transform.position);
 
         playerSpawner.PlayerDied(this);
@@ -43,6 +48,6 @@ public class PlayerStats : IDamageable
     {
         // TODO: effects, whatever
 
-        effects.gotDamaged(transform);
+        effects.GotDamaged(transform);
     }
 }

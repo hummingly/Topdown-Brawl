@@ -129,11 +129,8 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
-    public void startSequence()
+    public void StartSequence()
     {
-        float totalTime = 1;
-
-
         //whole screen black
         //start at much glitch
         //go to clear color and less glitch
@@ -143,12 +140,12 @@ public class EffectManager : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(0.25f);
-        seq.Append(screenFill.DOFade(0,2).SetEase(Ease.InCubic));//OutCubic
+        seq.Append(screenFill.DOFade(0, 2).SetEase(Ease.InCubic));//OutCubic
         //seq.AppendCallback(() => Destroy(m.gameObject));
     }
 
 
-    private IEnumerator screenBlink(Color col, int frames)
+    private IEnumerator ScreenBlink(Color col, int frames)
     {
         screenFill.color = col;
 
@@ -164,7 +161,7 @@ public class EffectManager : MonoBehaviour
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
 
-        if(gamepad != null)
+        if (gamepad != null)
         {
             //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
             //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
@@ -173,20 +170,18 @@ public class EffectManager : MonoBehaviour
             rumble(gamepad, 0.2f, 0.75f, 0.75f);
         }
 
-        StartCoroutine(screenBlink(Color.white, 2));
+        StartCoroutine(ScreenBlink(Color.white, 2));
         AddShake(1f);
         Stop(0.05f);
     }
 
-
-
-    public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
+    public void BulletDeathPartic(Vector2 hitPos, Transform bullet)
     {
         var p = Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
-        p.transform.localScale = bullet.localScale*1.5f;
+        p.transform.localScale = bullet.localScale * 1.5f;
     }
 
-    public void damagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
+    public void DamagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
     {
         float rot_z = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg;
 
@@ -194,9 +189,9 @@ public class EffectManager : MonoBehaviour
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
     }
 
-    public void gotDamaged(Transform player)
+    public void GotDamaged(Transform player)
     {
-        shakeScale(player, 0.1f, 0.75f);
+        ShakeScale(player, 0.1f, 0.75f);
 
         player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
 
@@ -204,24 +199,22 @@ public class EffectManager : MonoBehaviour
         //AddShake(0.3f);
     }
 
-
-
-    public void meleeBlow(Transform owner)
+    public void MeleeBlow(Transform owner)
     {
-        shakeScale(owner, 0.1f, 0.75f);
+        ShakeScale(owner, 0.1f, 0.75f);
     }
 
-    public void snipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
+    public void SnipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
     {
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
         rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
-        shakeScale(owner.transform, 0.1f, 0.75f);
+        ShakeScale(owner.transform, 0.1f, 0.75f);
     }
 
-    public void muzzle(float dmg, Transform bullet, GameObject owner)
+    public void Muzzle(float dmg, Transform bullet, GameObject owner)
     {
         var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
 
@@ -236,14 +229,14 @@ public class EffectManager : MonoBehaviour
         seq.AppendCallback(() => Destroy(m.gameObject));
 
         //addGridLigth(0.5f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m);
-        addGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
+        AddGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
 
 
-        shakeScale(owner.transform, 0.05f, 0.5f);
+        ShakeScale(owner.transform, 0.05f, 0.5f);
     }
 
 
-    public GameObject invincible(Transform player, float dur)
+    public GameObject Invincible(Transform player, float dur)
     {
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
@@ -259,7 +252,8 @@ public class EffectManager : MonoBehaviour
 
         return p;
     }
-    public void stopInvincible(GameObject p)
+
+    public void StopInvincible(GameObject p)
     {
         Sequence seq = DOTween.Sequence();
         seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, 0.25f));
@@ -268,14 +262,14 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public float gameOver(Vector2 explosionPos)
+    public float GameOver(Vector2 explosionPos)
     {
         float dur = 2;
 
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
-        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,-90));
-        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,180));
-        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,-180));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, -90));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 180));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, -180));
 
         roundRunning = false;
         Time.timeScale = 0.1f;
@@ -306,7 +300,7 @@ public class EffectManager : MonoBehaviour
 
 
     // WILL ONLY WORK TO SCALE PLAYERS ATM
-    private void shakeScale(Transform obj, float time, float strength)
+    private void ShakeScale(Transform obj, float time, float strength)
     {
         /*obj.DOKill(); //prevent overlap or staying deformation
         Sequence seq = DOTween.Sequence();
@@ -381,9 +375,9 @@ public class EffectManager : MonoBehaviour
                 gridLights.RemoveAt(i);
         }
 
-        foreach(GridLigth g in gridLights)
+        foreach (GridLigth g in gridLights)
             g.updateIntensity();
-    
+
         if (gridLights.Count > 0)
         {
             //could also use a float array and just do j+=2 in shader, for less memory
@@ -417,7 +411,7 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public GridLigth addGridLigth(float i, float r, SpriteRenderer s, Transform t)
+    public GridLigth AddGridLigth(float i, float r, SpriteRenderer s, Transform t)
     {
         GridLigth l = new GridLigth(i, r, s, t);
         gridLights.Add(l);
@@ -468,7 +462,7 @@ public class EffectManager : MonoBehaviour
 
     public void Stop(float duration, float timeScale)
     {
-        if (paused ||!roundRunning)
+        if (paused || !roundRunning)
             return;
 
         Time.timeScale = timeScale;
@@ -479,7 +473,10 @@ public class EffectManager : MonoBehaviour
     {
         paused = true;
         yield return new WaitForSecondsRealtime(duration);
-        if(roundRunning) Time.timeScale = 1.0f;
+        if (roundRunning)
+        {
+            Time.timeScale = 1.0f;
+        }
         paused = false;
     }
 
@@ -493,7 +490,7 @@ public class EffectManager : MonoBehaviour
         StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }
 
-    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow , float startHigh)
+    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow, float startHigh)
     {
         // TODO: maybe set less rumble over time? currently on/off
 

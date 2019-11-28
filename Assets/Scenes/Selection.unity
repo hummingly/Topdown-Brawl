@@ -2528,9 +2528,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teams: []
-  playerNrs: []
-  playerChars: []
-  debugFastJoin: 0
   teamColors:
   - {r: 0.76862746, g: 0.37254903, b: 1, a: 1}
   - {r: 1, g: 0.93725497, b: 0, a: 1}
@@ -2543,6 +2540,9 @@ MonoBehaviour:
   - BLUE
   - GREEN
   - ORANGE
+  debugFastJoin: 0
+  playerNrs: []
+  playerChars: []
 --- !u!114 &723236034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2631,18 +2631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d71349fa320a4890528bff1f69023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMapInd: 2
-  state: 1
-  mapRange: {x: 1, y: 3}
-  mapSprites:
-  - {fileID: 21300000, guid: 00b93a1fc534e1d4086af46e443e9497, type: 3}
-  - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
-  - {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
-  allGameModes:
-  - {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
-  - {fileID: 11400000, guid: fbfbbcb7e0e862d45bd57adaa988bf70, type: 2}
-  playerCursorPrefab: {fileID: 1612415405458589315, guid: 379b7c51bee403a498a9cc30801737f1,
-    type: 3}
 --- !u!114 &723236038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5272,13 +5260,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 64bc184b3a7b85946a62dd3c165c5c0d, type: 2}
   - {fileID: 11400000, guid: 2cad82067caa7734ca185452d3cdd9d3, type: 2}
   - {fileID: 11400000, guid: ac80ac2a896ec2543b2ff0ac5b98c4e3, type: 2}
+  currentGameModeIndex: 1
+  maps:
+  - MapNormal1
+  - MapMedium
+  - MapBig
+  gameModes:
+  - {fileID: 11400000, guid: 9a42ce8d58e00bd4cbca4bf6ad821558, type: 2}
+  - {fileID: 11400000, guid: fbfbbcb7e0e862d45bd57adaa988bf70, type: 2}
   inputPrompt: {fileID: 351662704}
   botPrompt: {fileID: 796645691}
   charSlotParent: {fileID: 271888753}
   cursorParent: {fileID: 369987028}
   playerSlotPrefab: {fileID: 8413730774314761072, guid: bd427007c34cea14aa2647ba048022c0,
     type: 3}
+  mapSprites:
+  - {fileID: 21300000, guid: 5fd8725ef6df40c49874739410063a08, type: 3}
+  - {fileID: 21300000, guid: 1fe0c08e979f8b94494fd9889e9b8758, type: 3}
+  - {fileID: 21300000, guid: 00b93a1fc534e1d4086af46e443e9497, type: 3}
   mapImg: {fileID: 1689873875}
+  gameModeText: {fileID: 1138137515}
 --- !u!82 &1580641957
 AudioSource:
   m_ObjectHideFlags: 0

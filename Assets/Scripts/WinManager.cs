@@ -11,11 +11,6 @@ public class WinManager : MonoBehaviour
     [SerializeField] public GameMode gameMode;
     private Team winningTeam;
 
-    void Update()
-    {
-        gameMode = GetComponent<GameStateManager>().GetCurrentGameMode();
-    }
-
     public bool OnTeamWon(List<Team> teams)
     {
         switch (gameMode.winCondition)
@@ -55,8 +50,6 @@ public class WinManager : MonoBehaviour
                     aliveTeams++;
                 }
             }
-            //print(x);
-
             if (aliveTeams == 1)
             {
                 int index = teams.FindIndex(t => t.DefenseBase != null);

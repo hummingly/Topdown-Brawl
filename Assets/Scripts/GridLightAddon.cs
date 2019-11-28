@@ -13,7 +13,7 @@ public class GridLightAddon : MonoBehaviour
         SpriteRenderer s = gameObject.AddComponent<SpriteRenderer>();
         //s.material.shader = Shader.Find("Sprites/Default");
         s.color = Color.white;
-        light = FindObjectOfType<EffectManager>().addGridLigth(maxIntens, maxRange, s, transform);
+        light = FindObjectOfType<EffectManager>().AddGridLigth(maxIntens, maxRange, s, transform);
     }
 
     public void set(float i, float r)

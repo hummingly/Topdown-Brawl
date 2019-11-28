@@ -203,7 +203,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""LeaveTeam"",
+                    ""name"": ""Leave"",
                     ""type"": ""Button"",
                     ""id"": ""6726a714-eccd-4751-9f31-cb4dd2ee0363"",
                     ""expectedControlType"": """",
@@ -252,7 +252,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""LeaveTeam"",
+                    ""action"": ""Leave"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -276,7 +276,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         m_Menu_Select = m_Menu.FindAction("Select", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
         m_Menu_Ready = m_Menu.FindAction("Ready", throwIfNotFound: true);
-        m_Menu_LeaveTeam = m_Menu.FindAction("LeaveTeam", throwIfNotFound: true);
+        m_Menu_Leave = m_Menu.FindAction("Leave", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -418,7 +418,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
     private readonly InputAction m_Menu_Select;
     private readonly InputAction m_Menu_Move;
     private readonly InputAction m_Menu_Ready;
-    private readonly InputAction m_Menu_LeaveTeam;
+    private readonly InputAction m_Menu_Leave;
     public struct MenuActions
     {
         private PlayerControlTest m_Wrapper;
@@ -426,7 +426,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         public InputAction @Select => m_Wrapper.m_Menu_Select;
         public InputAction @Move => m_Wrapper.m_Menu_Move;
         public InputAction @Ready => m_Wrapper.m_Menu_Ready;
-        public InputAction @LeaveTeam => m_Wrapper.m_Menu_LeaveTeam;
+        public InputAction @Leave => m_Wrapper.m_Menu_Leave;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -445,9 +445,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Ready.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
                 Ready.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
                 Ready.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnReady;
-                LeaveTeam.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
-                LeaveTeam.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
-                LeaveTeam.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeaveTeam;
+                Leave.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeave;
+                Leave.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeave;
+                Leave.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnLeave;
             }
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
@@ -461,9 +461,9 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 Ready.started += instance.OnReady;
                 Ready.performed += instance.OnReady;
                 Ready.canceled += instance.OnReady;
-                LeaveTeam.started += instance.OnLeaveTeam;
-                LeaveTeam.performed += instance.OnLeaveTeam;
-                LeaveTeam.canceled += instance.OnLeaveTeam;
+                Leave.started += instance.OnLeave;
+                Leave.performed += instance.OnLeave;
+                Leave.canceled += instance.OnLeave;
             }
         }
     }
@@ -484,6 +484,6 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
         void OnSelect(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnReady(InputAction.CallbackContext context);
-        void OnLeaveTeam(InputAction.CallbackContext context);
+        void OnLeave(InputAction.CallbackContext context);
     }
 }

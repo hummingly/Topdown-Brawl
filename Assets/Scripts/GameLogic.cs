@@ -10,7 +10,6 @@ public class GameLogic : MonoBehaviour
     //private static GameLogic instance;
     //public static GameLogic Instance { get { return instance; } }
 
-    
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
@@ -91,7 +90,7 @@ public class GameLogic : MonoBehaviour
 
         if (!GetComponent<TeamManager>().debugFastJoin)
         {
-            FindObjectOfType<EffectManager>().startSequence();
+            FindObjectOfType<EffectManager>().StartSequence();
             //yield return new WaitForSeconds(FindObjectOfType<EffectManager>().startSequence());
         }
 
@@ -120,22 +119,15 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-
-        //print("init players");
         teamManager.InitPlayers();
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
         {
-            //print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
-
-        teamManager.colorSpawns();
-
-
+        teamManager.ColorSpawns();
         roundRunning = true;
     }
-
 
     public void IncreaseScore(GameObject player)
     {
@@ -144,13 +136,13 @@ public class GameLogic : MonoBehaviour
         uiManager.UpdateScores();
     }
 
-    public void GameOver()
+        public void GameOver()
     {
-        float dur = FindObjectOfType<EffectManager>().gameOver(lastDeath);
-        StartCoroutine(showGameOverUi(dur));
+        float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
+        StartCoroutine(ShowGameOverUi(dur));
     }
 
-    private IEnumerator showGameOverUi(float t)
+    private IEnumerator ShowGameOverUi(float t)
     {
         yield return new WaitForSecondsRealtime(t);
 
