@@ -10,7 +10,6 @@ public class GameLogic : MonoBehaviour
     //private static GameLogic instance;
     //public static GameLogic Instance { get { return instance; } }
 
-    
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
@@ -112,7 +111,6 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-
         //print("init players");
         teamManager.InitPlayers();
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
@@ -121,13 +119,9 @@ public class GameLogic : MonoBehaviour
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
-
         teamManager.colorSpawns();
-
-
         roundRunning = true;
     }
-
 
     public void IncreaseScore(GameObject player)
     {
