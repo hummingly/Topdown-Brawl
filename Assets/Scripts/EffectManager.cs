@@ -228,7 +228,7 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void invincible (Transform player, float dur)
+    public GameObject invincible(Transform player, float dur)
     {
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
@@ -239,10 +239,17 @@ public class EffectManager : MonoBehaviour
         seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
         seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
         seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
-        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, dur/4));
+        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, dur / 4));
         seq.AppendCallback(() => Destroy(p.gameObject));
 
-        
+        return p;
+    }
+    public void stopInvincible(GameObject p)
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, 0.25f));
+        seq.Join(p.transform.DOScale(Vector3.one * 3, 0.25f));
+        seq.AppendCallback(() => Destroy(p.gameObject));
     }
 
 
