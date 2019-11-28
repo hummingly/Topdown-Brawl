@@ -108,7 +108,7 @@ public class MenuCursor : MonoBehaviour
         FindObjectOfType<MenuManager>().ToggleReady(gameObject);
     }
 
-    private void OnLeaveTeam(InputValue value)
+    private void OnLeave(InputValue value)
     {
         Debug.Log("Leaving Team.");
     }
