@@ -157,8 +157,14 @@ public class Projectile : MonoBehaviour
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.tag == "Destruction Piece" && this.enabled)
         {
-            other.transform.parent.GetComponent<IDamageable>().ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
-            this.enabled = false;
+            var damageAbleBase = other.transform.parent.GetComponent<IDamageable>();
+            var isOwnBase = teams.IsBaseOf(damageAbleBase.GetComponent<DestructibleBlock>(), owner);
+
+            if(!isOwnBase)
+            {
+                damageAbleBase.ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
+                this.enabled = false;
+            }
         }
 
 

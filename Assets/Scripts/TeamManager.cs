@@ -322,6 +322,17 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         return teams.FindIndex(t => t.HasPlayer(player));
     }
 
+    public bool IsBaseOf(DestructibleBlock _base, GameObject player)
+    {
+        int teamId = FindPlayerTeam(player);
+
+        if (teams[teamId].DefenseBase == _base)
+            return true;
+
+        return false;
+    }
+
+
     public void Remove(GameObject player)
     {
         foreach (Team team in teams)

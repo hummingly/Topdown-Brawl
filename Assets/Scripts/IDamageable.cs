@@ -17,7 +17,7 @@ public abstract class IDamageable : MonoBehaviour
     protected int healthPoints;
     protected GameObject damagedLastBy;
     private bool invincible;
-    private EffectManager effects;
+    protected EffectManager effects;
 
     public virtual void Awake()
     {
