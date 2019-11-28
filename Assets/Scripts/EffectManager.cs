@@ -63,10 +63,17 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void DoDashPartic(Vector2 pos, Vector2 playerRot)
+    public void DoDash(Vector2 pos, Vector2 playerRot, Transform player)
     {
         var exp = Instantiate(dashPartic, pos, Quaternion.identity).transform;
         exp.forward = -playerRot;
+
+        // squeeze in dash dir
+        //Sequence seq = DOTween.Sequence();
+        //seq.Append(player.GetComponentInChildren<PlayerVisuals>().transform.DOScale(new Vector2(0.5f,1.5f), 0.5f));
+        ////seq.Append(player.GetComponentInChildren<PlayerVisuals>().transform.DOScale(Vector2.one + playerRot, 0.5f));
+        //seq.AppendCallback(() => player.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one);
+        //just do scale based on velocity? so no need to hardcode dash
     }
 
     // for now on spawn, but maybe rather an explosion on kill? or big dmg  !!!!!!!!!!
@@ -194,7 +201,7 @@ public class EffectManager : MonoBehaviour
         player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
 
 
-        AddShake(0.33f);
+        //AddShake(0.3f);
     }
 
 
@@ -298,7 +305,7 @@ public class EffectManager : MonoBehaviour
 
 
 
-
+    // WILL ONLY WORK TO SCALE PLAYERS ATM
     private void shakeScale(Transform obj, float time, float strength)
     {
         /*obj.DOKill(); //prevent overlap or staying deformation
@@ -306,12 +313,15 @@ public class EffectManager : MonoBehaviour
         seq.Append(obj.DOShakeScale(time, strength));
         seq.AppendCallback(() => obj.DOKill()); //prevent overlap or staying deformation*/
 
+        obj.GetComponentInChildren<PlayerVisuals>().ShakeScale(time, strength);
+        /*
         //obj.DOKill();
+        //obj.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one;
         Sequence seq = DOTween.Sequence();
-        seq.Append(obj.DOShakeScale(time, strength));
-        seq.AppendCallback(() => obj.localScale = obj.GetComponent<PlayerMovement>().orgScale); //optimize this
-
-        // WILL ONLY WORK TO SCALE PLAYERS
+        seq.Append(obj.GetComponentInChildren<PlayerVisuals>().transform.DOShakeScale(time, strength));
+       // seq.AppendCallback(() => obj.localScale = obj.GetComponent<PlayerMovement>().orgScale); //optimize this
+        seq.AppendCallback(() => obj.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one); //optimize this
+        */
     }
 
 

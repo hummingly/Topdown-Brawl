@@ -32,7 +32,7 @@ public class MovementSkill : Skill
         rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
 
 
-        effects.DoDashPartic(transform.position, dashDir);
+        effects.DoDash(transform.position, dashDir, transform);
     }
 
 

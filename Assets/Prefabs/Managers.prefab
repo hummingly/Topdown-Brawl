@@ -103,7 +103,7 @@ MonoBehaviour:
   - {fileID: 835956841870828920, guid: f5f3e06bc33947b40b25f15408e20a5a, type: 3}
   muzzleFlashDur: 0.15
   muzzleScale: 1
-  maxoffset: 2
+  maxoffset: 1
   traumaFallOff: 3.333
   powerOfAllShakes: 2
   frequency: 10
