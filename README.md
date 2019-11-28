@@ -1,5 +1,7 @@
 # Game Engines Unity Project
 
+## Please use the classes branch and not the master
+
 ## Overview
 
 - top down 2D battle game
