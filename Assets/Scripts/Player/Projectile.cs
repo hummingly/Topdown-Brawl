@@ -203,7 +203,7 @@ public class Projectile : MonoBehaviour
                     damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
 
-                effects.damageParticleSparks(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
+                effects.damagedEntity(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
             }
             else
                 effects.bulletDeathPartic(hitPoint, transform);

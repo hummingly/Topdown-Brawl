@@ -25,9 +25,7 @@ public class PlayerStats : IDamageable
         if(GetComponent<BotTest>())
             GetComponent<BotTest>().StopChasing();
         
-        effects.playerDeathExplosion(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
-        effects.AddShake(2f);
-        effects.Stop(0.05f);
+        effects.playerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
 
         foreach(DefaultShootSkill d in GetComponents<DefaultShootSkill>())
             d.disableLaser();
@@ -42,6 +40,6 @@ public class PlayerStats : IDamageable
     {
         // TODO: effects, whatever
 
-        //effects.AddShake(0.25f);
+        effects.gotDamaged(transform);
     }
 }

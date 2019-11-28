@@ -49,13 +49,13 @@ public class DefaultShootSkill : Skill
             float dmg = damage;
             if (dmg == 0) dmg = 75;
             effects.muzzle(dmg, p.transform, gameObject);
+            effects.AddShake(0.25f);
 
             if (p.GetComponent<Projectile>().sniperShot)
-                effects.snipeShotParticAndRumb(spawnPos, p.transform, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
-
-
-            effects.AddShake(0.25f);
+                effects.snipeShot(spawnPos, p.transform, gameObject, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
         }
+        else
+            effects.meleeBlow(transform);
     }
 
   
@@ -84,9 +84,7 @@ public class DefaultShootSkill : Skill
     public void disableLaser()
     {
         if (showIndicationOnHold)
-        {
             aimLaser.SetAim(false);
-        }
         //aimVal = 0;
     }
 }

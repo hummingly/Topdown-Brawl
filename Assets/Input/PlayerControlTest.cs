@@ -53,7 +53,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 {
                     ""name"": ""RightTriggerDown"",
                     ""type"": ""Value"",
-                    ""id"": ""d2294616-f171-4f1a-9cc9-f62d24ce6dd3"",
+                    ""id"": ""7fd1744c-5ba0-4360-86f5-0fed176c592a"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Press""
@@ -163,7 +163,7 @@ public class PlayerControlTest : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7874509f-26b5-40c3-ad1f-177dac61eb39"",
+                    ""id"": ""edbd13c9-8141-4af6-b81b-853a3fa05001"",
                     ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",

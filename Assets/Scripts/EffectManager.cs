@@ -132,8 +132,18 @@ public class EffectManager : MonoBehaviour
     }
 
 
+    private IEnumerator screenBlink(Color col, int frames)
+    {
+        screenFill.color = col;
 
-    public void playerDeathExplosion(Vector2 pos, Gamepad gamepad = null)// int deviceId)
+        //yield return new WaitForEndOfFrame();
+        for (int i = 0; i < frames; i++)
+            yield return null;
+
+        screenFill.color = Color.clear;
+    }
+
+    public void playerDeath(Vector2 pos, Gamepad gamepad = null)// int deviceId)
     {
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
@@ -146,6 +156,10 @@ public class EffectManager : MonoBehaviour
 
             rumble(gamepad, 0.2f, 0.75f, 0.75f);
         }
+
+        StartCoroutine(screenBlink(Color.white, 2));
+        AddShake(2f);
+        Stop(0.05f);
     }
 
 
@@ -156,7 +170,7 @@ public class EffectManager : MonoBehaviour
         p.transform.localScale = bullet.localScale*1.5f;
     }
 
-    public void damageParticleSparks(Vector2 hitPos, Vector2 normal, float dmg)
+    public void damagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
     {
         float rot_z = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg;
 
@@ -164,14 +178,31 @@ public class EffectManager : MonoBehaviour
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
     }
 
+    public void gotDamaged(Transform player)
+    {
+        shakeScale(player, 0.1f, 0.75f);
+
+        player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
 
 
-    public void snipeShotParticAndRumb(Vector2 pos, Transform bullet, Gamepad gamepad = null)
+        //AddShake(0.25f);
+    }
+
+
+
+    public void meleeBlow(Transform owner)
+    {
+        shakeScale(owner, 0.1f, 0.75f);
+    }
+
+    public void snipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
     {
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
         rumble(gamepad, 0.1f, 0.2f, 0.2f);
+
+        shakeScale(owner.transform, 0.1f, 0.75f);
     }
 
     public void muzzle(float dmg, Transform bullet, GameObject owner)
@@ -190,10 +221,28 @@ public class EffectManager : MonoBehaviour
 
         //addGridLigth(0.5f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m);
         addGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
+
+
+        shakeScale(owner.transform, 0.05f, 0.5f);
     }
 
 
 
+
+    private void shakeScale(Transform obj, float time, float strength)
+    {
+        /*obj.DOKill(); //prevent overlap or staying deformation
+        Sequence seq = DOTween.Sequence();
+        seq.Append(obj.DOShakeScale(time, strength));
+        seq.AppendCallback(() => obj.DOKill()); //prevent overlap or staying deformation*/
+
+        //obj.DOKill();
+        Sequence seq = DOTween.Sequence();
+        seq.Append(obj.DOShakeScale(time, strength));
+        seq.AppendCallback(() => obj.localScale = obj.GetComponent<PlayerMovement>().orgScale); //optimize this
+
+        // WILL ONLY WORK TO SCALE PLAYERS
+    }
 
 
     // TODO: make shake 2D again, so can direct it

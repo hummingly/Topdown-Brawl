@@ -43,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
     private float extraDmgVelThresh;
     private float extraDmgMaxAngle;
 
+    public Vector2 orgScale;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -51,6 +53,8 @@ public class PlayerMovement : MonoBehaviour
         // Set init rotation
         lastRotInput = startRot;
         transform.up = startRot;
+
+        orgScale = transform.localScale;
     }
 
     private void Update()
@@ -335,7 +339,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // print(collision.gameObject.name);
 
-            FindObjectOfType<EffectManager>().damageParticleSparks(collision.GetContact(0).point, -collision.GetContact(0).normal, extraDmgOnWallHit);
+            FindObjectOfType<EffectManager>().damagedEntity(collision.GetContact(0).point, -collision.GetContact(0).normal, extraDmgOnWallHit);
 
             // damage me if hit wall fast in angle
             if (rb.velocity.magnitude >= extraDmgVelThresh && Vector2.Angle(-collision.GetContact(0).normal, rb.velocity) <= extraDmgMaxAngle)
