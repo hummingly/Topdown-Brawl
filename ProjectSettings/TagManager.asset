@@ -9,6 +9,8 @@ TagManager:
   - Destruction Piece
   - Grid
   - DefenseBases
+  - Restart Button
+  - Menu Button
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -15,13 +16,18 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Transform charSlotParent;
     [SerializeField] private Transform cursorParent;
     [SerializeField] private GameObject playerSlotPrefab;
+    [SerializeField] private Image mapImg;
 
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
-        gameState = FindObjectOfType<GameStateManager>();
+        gameState = FindObjectOfType<GameStateManager>();  
     }
 
+    public void SetMapImg(Sprite sp)
+    {
+        mapImg.sprite = sp;
+    }
 
     void Update()
     {
@@ -204,16 +210,10 @@ public class MenuManager : MonoBehaviour
 
     public void Play()
     {
-        teams.SaveCharacters();
-        FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
-        gameState.state = GameStateManager.GameState.Ingame;
-        LoadMap();
+        gameState.Play();
     }
 
-    public void LoadMap()
-    {
-        SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
-    }
+
 
 
     // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
