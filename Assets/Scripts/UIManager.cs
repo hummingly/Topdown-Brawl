@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         teams = FindObjectOfType<TeamManager>();
+
+        if (FindObjectOfType<WinManager>().gameMode.winCondition == GameMode.WinCondition.Defense)
+            scores[0].transform.parent.gameObject.SetActive(false);
     }
 
     void Update()
