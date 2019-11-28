@@ -354,8 +354,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
-  spawnProtection: {fileID: 0}
   maxHealthPoints: 100
+  spawnProtectTime: 2
+  spawmProtectMaxDist: 3
 --- !u!50 &4000924214873993294
 Rigidbody2D:
   serializedVersion: 4
@@ -708,6 +709,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120370464419131127, guid: 09e1c46a1ea71ec4baea0c40caeab546,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3672363719971024957, guid: 09e1c46a1ea71ec4baea0c40caeab546,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09e1c46a1ea71ec4baea0c40caeab546, type: 3}

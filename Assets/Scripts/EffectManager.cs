@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Cinemachine;
+using Kino;
 
 public class EffectManager : MonoBehaviour
 {
@@ -131,21 +132,47 @@ public class EffectManager : MonoBehaviour
 
     public void startSequence()
     {
-        float totalTime = 1;
-
+        var digital = Camera.main.GetComponent<DigitalGlitch>();
+        var analog = Camera.main.GetComponent<AnalogGlitch>();
 
         //whole screen black
-        //start at much glitch
-        //go to clear color and less glitch
-        //also enable player movement
-
+        //start at much glitch (cant see bcz of black tho)
         screenFill.color = Color.black;
+        digital.intensity = 0.2f;
 
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(0.25f);
-        seq.Append(screenFill.DOFade(0,2).SetEase(Ease.InCubic));//OutCubic
-        //seq.AppendCallback(() => Destroy(m.gameObject));
+
+        float mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
+        FindObjectOfType<CinemachineVirtualCamera>().enabled = false;
+
+        //go to clear color and less glitch
+        Sequence seqFillFade = DOTween.Sequence();
+        seqFillFade.AppendInterval(0.25f);
+        seqFillFade.Append(screenFill.DOFade(0, 1.5f).SetEase(Ease.InCubic));//OutCubic
+        seqFillFade.Join(DOTween.To(() => digital.intensity, x => digital.intensity = x, 0.001f, 2).SetEase(Ease.InCubic));
+        //seqFillFade.AppendCallback(() => playerMove());
+        seqFillFade.InsertCallback(1.5f, () => playerSpawn()); //synced do music delay (HARDCODED)
+
+        //TODO: replace fade with ZAP animation? and do coutndown, then "GO"
+
+        Sequence seqCam = DOTween.Sequence();
+        seqCam.Append(Camera.main.DOOrthoSize(10 * mapSize, 1.75f).SetEase(Ease.OutCubic));
+        seqCam.AppendCallback(() => FindObjectOfType<CinemachineVirtualCamera>().enabled = true);
+
     }
+
+
+    private void playerSpawn()
+    {
+        foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
+        {
+            p.enabled = true;
+
+            //place players at spawn pos again and do anim
+            p.GetComponentInChildren<PlayerVisuals>().Hide(false);
+            SquareParticle(p.transform.position);
+        }
+    }
+
 
 
     private IEnumerator screenBlink(Color col, int frames)
@@ -218,7 +245,7 @@ public class EffectManager : MonoBehaviour
 
         rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
-        shakeScale(owner.transform, 0.1f, 0.75f);
+        shakeScale(owner.transform, 0.2f, 1f);
     }
 
     public void muzzle(float dmg, Transform bullet, GameObject owner)

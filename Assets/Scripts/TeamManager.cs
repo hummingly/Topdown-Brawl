@@ -41,9 +41,11 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
             teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
-            MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer m in meshs)
-                m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
+            //MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
+            //foreach (MeshRenderer m in meshs)
+            //    m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
+            //now happens before sprite split?!
+            parent.transform.GetChild(i).GetComponent<SpriteRenderer>().color = teams[i].Color;
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
