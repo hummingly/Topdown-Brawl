@@ -22,6 +22,7 @@ public class GameLogic : MonoBehaviour
 
     private bool roundRunning;
 
+    private Vector2 lastDeath;
 
     private void Awake()
     {
@@ -51,9 +52,16 @@ public class GameLogic : MonoBehaviour
             if (winManager.OnTeamWon(teamManager.GetTeams()))
             {
                 roundRunning = false;
+
                 GameOver();
             }
         }
+    }
+
+    public void setDeathEvent(Vector2 pos)
+    {
+        if(roundRunning)
+            lastDeath = pos;
     }
 
     public void Kill()
@@ -139,6 +147,7 @@ public class GameLogic : MonoBehaviour
     public void GameOver()
     {
         uiManager.SetGameOverUI();
-        Time.timeScale = 0;
+
+        FindObjectOfType<EffectManager>().gameOver(lastDeath);
     }
 }

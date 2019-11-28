@@ -7,11 +7,13 @@ using UnityEngine.InputSystem;
 public class PlayerStats : IDamageable
 {
     private PlayerSpawner playerSpawner;
+    private GameLogic logic;
 
 
     public override void Awake()
     {
         playerSpawner = FindObjectOfType<PlayerSpawner>();
+        logic = FindObjectOfType<GameLogic>();
 
         alwaysShowHp = true;
         base.Awake();
@@ -30,7 +32,9 @@ public class PlayerStats : IDamageable
             d.disableLaser();
 
         if (damagedLastBy)
-            FindObjectOfType<GameLogic>().IncreaseScore(damagedLastBy);
+            logic.IncreaseScore(damagedLastBy);
+
+        logic.setDeathEvent(transform.position);
 
         playerSpawner.PlayerDied(this);
     }

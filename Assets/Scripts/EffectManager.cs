@@ -36,6 +36,8 @@ public class EffectManager : MonoBehaviour
 
     private bool paused;
 
+    private bool roundRunning = true;
+
     private float trauma;
     private float shake;
     private Cinemachine.CinemachineBasicMultiChannelPerlin _perlin;
@@ -253,6 +255,34 @@ public class EffectManager : MonoBehaviour
     }
 
 
+    public void gameOver(Vector2 explosionPos)
+    {
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,-90));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,180));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f,-180));
+
+        roundRunning = false;
+        Time.timeScale = 0.1f;
+
+        // get normal speed again
+        //StartCoroutine(speedUpTime());
+        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 3).SetEase(Ease.InQuad).SetUpdate(true);
+        //TODO: also zoom in on position
+
+        //either go to timescale 0 again, or disable all input
+        foreach (BotTest b in FindObjectsOfType<BotTest>())
+            b.enabled = false;
+        foreach (PlayerMovement b in FindObjectsOfType<PlayerMovement>())
+            b.enabled = false;
+        foreach (Skill b in FindObjectsOfType<Skill>())
+            b.enabled = false;
+        FindObjectOfType<PlayerSpawner>().Disable();
+    }
+
+
+
+
 
     private void shakeScale(Transform obj, float time, float strength)
     {
@@ -268,6 +298,8 @@ public class EffectManager : MonoBehaviour
 
         // WILL ONLY WORK TO SCALE PLAYERS
     }
+
+
 
 
     // TODO: make shake 2D again, so can direct it
@@ -399,7 +431,7 @@ public class EffectManager : MonoBehaviour
 
     public void Stop(float duration, float timeScale)
     {
-        if (paused)
+        if (paused ||!roundRunning)
             return;
 
         Time.timeScale = timeScale;
@@ -410,7 +442,7 @@ public class EffectManager : MonoBehaviour
     {
         paused = true;
         yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1.0f;
+        if(roundRunning) Time.timeScale = 1.0f;
         paused = false;
     }
 

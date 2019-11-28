@@ -205,4 +205,10 @@ public class PlayerSpawner : MonoBehaviour
     {
         return spawnAreas[i].gameObject;
     }
+
+    public void Disable()
+    {
+        StopAllCoroutines();
+        this.enabled = false;
+    }
 }

@@ -29,6 +29,9 @@ public class DestructibleBlock : IDamageable //TODO: add option to own a block b
     {
         if (destruct && destruct.enabled)
             destruct.destroy();
+
+        FindObjectOfType<GameLogic>().setDeathEvent(transform.position);
+
         StartCoroutine(destroyAfterFrame());
     }
     private IEnumerator destroyAfterFrame()
