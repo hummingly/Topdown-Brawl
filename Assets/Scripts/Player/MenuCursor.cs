@@ -12,13 +12,11 @@ public class MenuCursor : MonoBehaviour
     [SerializeField] private Image spriteTeamCol;
     [SerializeField] private TextMeshProUGUI playerNrText;
 
-
     private Vector2 moveInput;
 
     private GraphicRaycaster gr;
     private PointerEventData pointerEventData = new PointerEventData(null);
     private MenuManager menuManager;
-
 
     void Start()
     {
@@ -39,20 +37,13 @@ public class MenuCursor : MonoBehaviour
 
     void Update()
     {
-        
-    }
 
+    }
 
     private void FixedUpdate()
     {
         var dir = new Vector3(moveInput.x, moveInput.y, 0);//new Vector3(moveInput.x, moveInput.y, 0).normalized;
         transform.position += Vector3.ClampMagnitude(dir, 1) * speed * Screen.width;
-
-        // clamp to screen
-        //Vector3 world = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-
-        //transform.position =  new Vector3(Mathf.Clamp(transform.position.x, -world.x, world.x),
-        //                                 Mathf.Clamp(transform.position.y, -world.y, world.y), transform.position.z);
     }
 
     private void OnSelect()
@@ -97,10 +88,11 @@ public class MenuCursor : MonoBehaviour
                 }
 
                 if (addBotButton && emptySlot)
-                    FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());//FindObjectOfType<MenuManager>().addBot();
+                {
+                    FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());
+                }
             }
         }
-
     }
 
     private void OnMove(InputValue value)
