@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,31 +8,35 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour
 {
     private TeamManager teams;
-    private GameStateManager gameState;
 
     public List<Character> availableChars = new List<Character>();
+    private int currentMapIndex = 1;
+    [SerializeField] private int currentGameModeIndex = 1;
+    [SerializeField] private string[] maps;
+    [SerializeField] private GameMode[] gameModes;
 
+    // UI Elements
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
     [SerializeField] private Transform charSlotParent;
     [SerializeField] private Transform cursorParent;
     [SerializeField] private GameObject playerSlotPrefab;
+    [SerializeField] private Sprite[] mapSprites;
     [SerializeField] private Image mapImg;
+    [SerializeField] private TextMeshProUGUI gameModeText;
+
+    private string SelectedMap => maps[currentMapIndex];
+    private GameMode SelectedGameMode => gameModes[currentGameModeIndex];
 
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
-        gameState = FindObjectOfType<GameStateManager>();
     }
 
-    public void SetMapImg(Sprite sp)
+    private void Start()
     {
-        mapImg.sprite = sp;
-    }
-
-    void Update()
-    {
-        // TODO: CHECK IF ALL PLAYERS ARE READY
+        UpdateMapUi();
+        UpdateGameModeUi();
     }
 
     public void ToggleReady(GameObject player)
@@ -119,14 +124,27 @@ public class MenuManager : MonoBehaviour
 
     public void ToggleMap()
     {
-        gameState.ToggleMap();
+        if (SelectedGameMode.name.Equals("Defense"))
+        {
+            // hardcoded BAAAD
+            currentMapIndex = 1;
+            UpdateMapUi();
+            return;
+        }
+        currentMapIndex = NextIndex(currentMapIndex, maps.Length);
+        UpdateMapUi();
     }
 
     public void ToggleGameMode(GameObject button)
     {
-        string name = gameState.ToggleGameMode();
-        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
-        textMesh.SetText(name);
+        currentGameModeIndex = NextIndex(currentGameModeIndex, gameModes.Length);
+        if (SelectedGameMode.name.Equals("Defense"))
+        {
+            // hardcoded BAAAD
+            currentMapIndex = 1;
+            UpdateMapUi();
+        }
+        UpdateGameModeUi();
     }
 
     public void PlayerJoined(Transform playerCursor, bool isBot = false, int place = 0)
@@ -170,6 +188,7 @@ public class MenuManager : MonoBehaviour
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
         slot.SetParent(charSlotParent);
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
+        slot.transform.localScale = Vector3.one;
 
         // for bot
         if (replaced)
@@ -180,62 +199,58 @@ public class MenuManager : MonoBehaviour
         //for player on joining if full (but with bots or empty GOs)
         if (!isBot)
         {
-            var currentPlayerCount = teams.GetTotalPlayers();
-            if (currentPlayerCount > 1)
+            var maxPlayerCount = SelectedGameMode.maxTeams * SelectedGameMode.maxTeamSize;
+            if (charSlotParent.childCount >= maxPlayerCount)
             {
-                currentPlayerCount--; //since just joined one
-            }
-
-            if (currentPlayerCount < 6) //TODO: add max player size dynamically... and enforce it too
-            {
-                // if current team count is still smaller than 6, but the children on the slotParent are already 6, get rid of the first empty GO...
-                if (charSlotParent.childCount >= 6)
+                foreach (Transform child in charSlotParent)
                 {
-                    for (int i = 0; i < charSlotParent.childCount; i++)
+                    if (!child.GetComponent<PlayerSlotMenuDisplay>())
                     {
-                        if (!charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>())
-                        {
-                            Destroy(charSlotParent.GetChild(i).gameObject);
-                            slot.transform.SetSiblingIndex(i);
-                            break;
-                        }
+                        var index = child.transform.GetSiblingIndex();
+                        Destroy(child.gameObject);
+                        slot.transform.SetSiblingIndex(index);
+                        return;
                     }
                 }
             }
-            else //if team count is 6, get rid of first bot
-            {
-                for (int i = 0; i < charSlotParent.childCount; i++)
-                    if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().isBot)
-                    {
-                        teams.Remove(charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>().myPlayer);//remove bot cursor in team list
-
-                        //TODO: missing step? everything of bot deleted?????
-
-                        Destroy(charSlotParent.GetChild(i).gameObject);
-                        slot.transform.SetSiblingIndex(i);
-                        break;
-                    }
-                //TODO: delete player again if no bot to delete...
-            }
         }
-        slot.transform.localScale = Vector3.one;
     }
 
     public void Play()
     {
-        gameState.Play();
+        SaveCharacters();
+        FindObjectOfType<GameStateManager>().Play(SelectedMap);
     }
 
-    public Character GetCharacterOfPlayer(GameObject player)
+    public void SaveCharacters()
     {
         PlayerSlotMenuDisplay[] characters = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
-        foreach (PlayerSlotMenuDisplay character in characters)
+        foreach (GameObject p in teams.playerNrs)
         {
-            if (character != null && character.myPlayer == player)
+            var character = Array.Find(characters, c => c != null && c.myPlayer == p);
+            if (character.chara != null)
             {
-                return character.chara;
+                teams.playerChars.Add(character.chara);
             }
         }
-        return null;
+    }
+
+    private void UpdateGameModeUi()
+    {
+        gameModeText.SetText(SelectedGameMode.name);
+    }
+
+    public void UpdateMapUi()
+    {
+        mapImg.sprite = mapSprites[currentMapIndex];
+    }
+
+    private int NextIndex(int index, int max)
+    {
+        if (index >= max - 1)
+        {
+            return 0;
+        }
+        return index + 1;
     }
 }

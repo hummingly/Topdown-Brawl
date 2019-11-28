@@ -11,11 +11,6 @@ public class WinManager : MonoBehaviour
     [SerializeField] public GameMode gameMode;
     private Team winningTeam;
 
-    void Update()
-    {
-        gameMode = GetComponent<GameStateManager>().GetCurrentGameMode();
-    }
-
     public bool OnTeamWon(List<Team> teams)
     {
         switch (gameMode.winCondition)

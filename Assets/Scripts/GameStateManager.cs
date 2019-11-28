@@ -8,81 +8,20 @@ using UnityEngine.UI;
 public class GameStateManager : MonoBehaviour
 {
     // SceneManager was already taken... (?) maybe MapManager, but should also do menu etc
-
-    public int currentMapInd = 1;
     public enum GameState { Menu, Selection, Ingame, Victory };
     public GameState state = GameState.Selection;
-
-    [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
-    [SerializeField] private Sprite[] mapSprites;
-
-    [SerializeField] private GameMode[] allGameModes;
-    private int currentGameModeIndex;
-    private MenuManager menu;
     private TeamManager teams;
-
-    [SerializeField] private GameObject playerCursorPrefab;
 
     private void Awake()
     {
         teams = GetComponent<TeamManager>();
-        menu = FindObjectOfType<MenuManager>();
-
-        currentGameModeIndex = 1; //start with defense, cuz focus on team play
     }
 
-
-
-    void Update()
+    public void Play(string map)
     {
-        if (state == GameState.Selection && GetCurrentGameMode().name.Equals("Defense"))
-        {
-            // hardcoded BAAAD
-            currentMapInd = 2;
-            if (!menu)
-            {
-                menu = FindObjectOfType<MenuManager>();
-            }
-            else
-            {
-                menu.SetMapImg(mapSprites[currentMapInd - mapRange.x]);
-            }
-        }
-    }
-
-    public GameMode GetCurrentGameMode()
-    {
-        return allGameModes[currentGameModeIndex];
-    }
-
-    public void ToggleMap()
-    {
-        currentMapInd++;
-        if (currentMapInd > mapRange.y)
-            currentMapInd = mapRange.x;
-
-        menu.SetMapImg(mapSprites[currentMapInd - mapRange.x]);
-
-        // TODO: resize of somehow fit the img? or all same ratio...
-    }
-
-    public string ToggleGameMode()
-    {
-        currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
-        return allGameModes[currentGameModeIndex].name;
-    }
-
-    public void Play()
-    {
-        teams.SaveCharacters();
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
         state = GameState.Ingame;
-        LoadMap();
-    }
-
-    public void LoadMap()
-    {
-        SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
+        SceneManager.LoadScene(map);
     }
 
     public void GoToSelection()

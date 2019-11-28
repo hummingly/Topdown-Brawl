@@ -50,7 +50,7 @@ public class MenuCursor : MonoBehaviour
     {
         if (gr == null)
         {
-            return;
+            gr = FindObjectOfType<GraphicRaycaster>();
         }
 
         pointerEventData.position = transform.position;
