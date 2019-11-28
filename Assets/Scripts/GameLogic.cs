@@ -7,8 +7,8 @@ using DG.Tweening;
 
 public class GameLogic : MonoBehaviour
 {
-    private static GameLogic instance;
-    public static GameLogic Instance { get { return instance; } }
+    //private static GameLogic instance;
+    //public static GameLogic Instance { get { return instance; } }
 
     
     private UIManager uiManager;
@@ -25,10 +25,10 @@ public class GameLogic : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this)
-            Destroy(this.gameObject);     
+        /*if (instance != null && instance != this)
+            Destroy(this.gameObject);
         else
-            instance = this;
+            instance = this;*/
 
         teamManager = GetComponent<TeamManager>();
 
@@ -56,7 +56,11 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-
+    public void Kill()
+    {
+        SceneManager.sceneLoaded -= SceneLoadeded;
+        Destroy(gameObject);
+    }
 
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
@@ -72,7 +76,6 @@ public class GameLogic : MonoBehaviour
     {
         if (winManager.gameMode.winCondition != GameMode.WinCondition.Defense)
             Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
-
 
         uiManager = FindObjectOfType<UIManager>();
 

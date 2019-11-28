@@ -35,4 +35,13 @@ public class UIManager : MonoBehaviour
         gameOver.SetActive(true);
     }
 
+    public void GoToMenu()
+    {
+        FindObjectOfType<GameStateManager>().GoToSelection();
+    }
+
+    public void Restart()
+    {
+        FindObjectOfType<GameStateManager>().Restart();
+    }
 }

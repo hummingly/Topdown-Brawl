@@ -397,4 +397,17 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
             spawnArea.GetComponent<SpriteRenderer>().color = ExtensionMethods.turnTeamColorDark(teams[t].Color, 0.5f);
         }
     }
+    
+    public void Wipe()
+    {
+        //teams.Clear();
+        teams = new List<Team>(2);
+        for (int i = 0; i < 2; i++)
+            teams.Add(new Team(2, GetColor(i)));
+
+
+        playerNrs.Clear();
+        playerDevices.Clear();
+        playerChars.Clear();
+    }
 }
