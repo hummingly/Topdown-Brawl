@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class EffectManager : MonoBehaviour
 {
     //[SerializeField] private Sprite rect;
+    [SerializeField] private GameObject spawnProtection;
     [SerializeField] private Image screenFill;
     [SerializeField] private GameObject deathExplosion;
     [SerializeField] private GameObject respawnAnim;
@@ -226,6 +227,23 @@ public class EffectManager : MonoBehaviour
         shakeScale(owner.transform, 0.05f, 0.5f);
     }
 
+
+    public void invincible (Transform player, float dur)
+    {
+        var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
+        //fix it to them, and make it transparent
+        p.transform.parent = player;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
+        seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
+        seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
+        seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
+        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, dur/4));
+        seq.AppendCallback(() => Destroy(p.gameObject));
+
+        
+    }
 
 
 

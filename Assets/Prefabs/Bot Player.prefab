@@ -339,6 +339,7 @@ MonoBehaviour:
     iFactor: 0.001
     dFactor: 0.25
   accForce: 8
+  orgScale: {x: 0, y: 0}
 --- !u!114 &2380627806415850663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 7551583603164826696}
   statsUi: {fileID: 7243113844117837110}
+  spawnProtection: {fileID: 0}
   maxHealthPoints: 100
 --- !u!50 &4000924214873993294
 Rigidbody2D:

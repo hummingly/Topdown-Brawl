@@ -5272,7 +5272,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 64bc184b3a7b85946a62dd3c165c5c0d, type: 2}
   - {fileID: 11400000, guid: 2cad82067caa7734ca185452d3cdd9d3, type: 2}
   - {fileID: 11400000, guid: ac80ac2a896ec2543b2ff0ac5b98c4e3, type: 2}
-  - {fileID: 11400000, guid: 751751662db75db4698586a408194975, type: 2}
   inputPrompt: {fileID: 351662704}
   botPrompt: {fileID: 796645691}
   charSlotParent: {fileID: 271888753}

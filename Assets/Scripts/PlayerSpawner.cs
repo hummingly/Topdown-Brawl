@@ -133,6 +133,7 @@ public class PlayerSpawner : MonoBehaviour
 
         SetPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue);
+        player.SetInvincible();
         SpawnPlayer(player.transform, spawnPos);
     }
 

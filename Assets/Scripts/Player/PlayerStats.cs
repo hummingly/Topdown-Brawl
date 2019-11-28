@@ -9,6 +9,7 @@ public class PlayerStats : IDamageable
     private PlayerSpawner playerSpawner;
     private EffectManager effects;
 
+
     public override void Awake()
     {
         playerSpawner = FindObjectOfType<PlayerSpawner>();

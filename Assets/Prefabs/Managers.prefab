@@ -82,6 +82,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06338c19a78fdfc4e81194b81564bcc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnProtection: {fileID: 2151810795888453688, guid: 5f81cbb4ba733a14c97a928e673eb76d,
+    type: 3}
+  screenFill: {fileID: 0}
   deathExplosion: {fileID: 5937921578677653148, guid: 8d290909e6ed482469749ee1ec6703ce,
     type: 3}
   respawnAnim: {fileID: 8590467141818954187, guid: 62182d8cff92ed54596c3d27e82451ef,
