@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Death Match
   description: Most kills wins
-  pointsToWin: 2
+  pointsToWin: 9
   stockCount: 0
   maxTeams: 2
   maxTeamSize: 3

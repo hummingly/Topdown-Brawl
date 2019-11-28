@@ -48,7 +48,7 @@ public class DefaultShootSkill : Skill
         {
             float dmg = damage;
             if (dmg == 0) dmg = 75;
-            effects.muzzle(dmg, p.transform, gameObject);
+            effects.Muzzle(dmg, p.transform, gameObject);
             effects.AddShake(0.25f);
 
             if (p.GetComponent<Projectile>().sniperShot)

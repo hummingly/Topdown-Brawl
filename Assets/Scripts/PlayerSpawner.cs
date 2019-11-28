@@ -114,7 +114,7 @@ public class PlayerSpawner : MonoBehaviour
 
         SetPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue);
-        player.SetInvincible();
+        player.SetInvincible(spawnPos);
         SpawnPlayer(player.transform, spawnPos);
     }
 
@@ -186,5 +186,11 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject getSpawnArea(int i)
     {
         return spawnAreas[i].gameObject;
+    }
+
+    public void Disable()
+    {
+        StopAllCoroutines();
+        this.enabled = false;
     }
 }

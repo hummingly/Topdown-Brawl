@@ -31,9 +31,9 @@ public class BlockFake3D : MonoBehaviour
         {
             // Top one different color
             if (i == steps-1)
-                PrepareNewSprite(ref tops, "Top", 2, orgCol);
+                PrepareNewSprite(ref tops, "Top", 3, orgCol);
             else
-                PrepareNewSprite(ref tops, "Top", 1, wallColor);
+                PrepareNewSprite(ref tops, "Top", 2, wallColor);
         }
         for (int i = 0; i < steps; i++)
         {

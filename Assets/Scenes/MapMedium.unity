@@ -4419,6 +4419,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 753745648}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &753745653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1314631144573001316, guid: c7c6ac3bbeda0ae468f9348dcc65c16e,
+    type: 3}
+  m_PrefabInstance: {fileID: 753745648}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &765260728
 GameObject:
   m_ObjectHideFlags: 0
@@ -7484,6 +7490,8 @@ MonoBehaviour:
   healthSlider: {fileID: 1853825485}
   statsUi: {fileID: 1853825484}
   maxHealthPoints: 500
+  spawnProtectTime: 2
+  spawmProtectMaxDist: 3
 --- !u!1 &1260536247
 GameObject:
   m_ObjectHideFlags: 0
@@ -11225,6 +11233,8 @@ MonoBehaviour:
   healthSlider: {fileID: 933680732}
   statsUi: {fileID: 933680731}
   maxHealthPoints: 500
+  spawnProtectTime: 2
+  spawmProtectMaxDist: 3
 --- !u!114 &1840763945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13222,6 +13232,11 @@ PrefabInstance:
       propertyPath: gameOver
       value: 
       objectReference: {fileID: 753745649}
+    - target: {fileID: 1629654588299491853, guid: 7e51d1935970f1a4aa41d9b44df72326,
+        type: 3}
+      propertyPath: gameplay
+      value: 
+      objectReference: {fileID: 753745653}
     - target: {fileID: 1629654588299491854, guid: 7e51d1935970f1a4aa41d9b44df72326,
         type: 3}
       propertyPath: screenFill

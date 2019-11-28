@@ -137,7 +137,7 @@ public class MenuManager : MonoBehaviour
             botPrompt.SetActive(true);
         }
 
-        playerCursor.parent = cursorParent;
+        playerCursor.SetParent(cursorParent, false);
         playerCursor.localPosition = Vector3.zero;
 
         if (!isBot)
@@ -154,7 +154,6 @@ public class MenuManager : MonoBehaviour
             if (place < charSlotParent.childCount)
             {
                 Destroy(charSlotParent.GetChild(place).gameObject);
-
                 replaced = true;
             }
             else // place new empty GO(s)
@@ -174,8 +173,9 @@ public class MenuManager : MonoBehaviour
 
         // for bot
         if (replaced)
+        {
             slot.transform.SetSiblingIndex(place);
-
+        }
 
         //for player on joining if full (but with bots or empty GOs)
         if (!isBot)
@@ -224,19 +224,6 @@ public class MenuManager : MonoBehaviour
     public void Play()
     {
         gameState.Play();
-    }
-
-    // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
-    private int GetSlotInd(Transform slotGO)
-    {
-        // count all the empty fill slots that help add a bot all the way on the right on the grid for example
-        int emptySlots = 0;
-
-        for (int i = 0; i < charSlotParent.childCount; i++)
-            if (charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>() == null)
-                emptySlots++;
-
-        return slotGO.GetSiblingIndex() - emptySlots;
     }
 
     public Character GetCharacterOfPlayer(GameObject player)

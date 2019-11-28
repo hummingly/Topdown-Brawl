@@ -100,7 +100,6 @@ public class MenuCursor : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
-        Debug.Log("Move");
         moveInput = value.Get<Vector2>();
     }
 

@@ -36,6 +36,8 @@ public class EffectManager : MonoBehaviour
 
     private bool paused;
 
+    private bool roundRunning = true;
+
     private float trauma;
     private float shake;
     private Cinemachine.CinemachineBasicMultiChannelPerlin _perlin;
@@ -125,7 +127,7 @@ public class EffectManager : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
         seq.AppendInterval(0.25f);
-        seq.Append(screenFill.DOFade(0,2).SetEase(Ease.InCubic));//OutCubic
+        seq.Append(screenFill.DOFade(0, 2).SetEase(Ease.InCubic));//OutCubic
         //seq.AppendCallback(() => Destroy(m.gameObject));
     }
 
@@ -146,7 +148,7 @@ public class EffectManager : MonoBehaviour
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
 
-        if(gamepad != null)
+        if (gamepad != null)
         {
             //rumble(gamepad, 0.2f, 0.1f); //good for third party controller
             //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
@@ -160,12 +162,10 @@ public class EffectManager : MonoBehaviour
         Stop(0.05f);
     }
 
-
-
     public void BulletDeathPartic(Vector2 hitPos, Transform bullet)
     {
         var p = Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
-        p.transform.localScale = bullet.localScale*1.5f;
+        p.transform.localScale = bullet.localScale * 1.5f;
     }
 
     public void DamagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
@@ -201,7 +201,7 @@ public class EffectManager : MonoBehaviour
         ShakeScale(owner.transform, 0.1f, 0.75f);
     }
 
-    public void muzzle(float dmg, Transform bullet, GameObject owner)
+    public void Muzzle(float dmg, Transform bullet, GameObject owner)
     {
         var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
 
@@ -223,7 +223,7 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void Invincible (Transform player, float dur)
+    public GameObject Invincible(Transform player, float dur)
     {
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
@@ -234,11 +234,52 @@ public class EffectManager : MonoBehaviour
         seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
         seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
         seq.Append(p.transform.DOScale(Vector3.one * 1.5f, dur / 4));
-        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, dur/4));
+        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, dur / 4));
         seq.AppendCallback(() => Destroy(p.gameObject));
 
-        
+        return p;
     }
+
+    public void StopInvincible(GameObject p)
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(p.transform.GetComponent<SpriteRenderer>().DOFade(0, 0.25f));
+        seq.Join(p.transform.DOScale(Vector3.one * 3, 0.25f));
+        seq.AppendCallback(() => Destroy(p.gameObject));
+    }
+
+
+    public void GameOver(Vector2 explosionPos)
+    {
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, -90));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 180));
+        Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, -180));
+
+        roundRunning = false;
+        Time.timeScale = 0.1f;
+
+        // get normal speed again
+        //StartCoroutine(speedUpTime());
+        DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, 4).SetEase(Ease.InQuad).SetUpdate(true);
+
+        //TODO: also zoom in on position
+        //FindObjectOfType<Cinemachine.CinemachineTargetGroup>().RemoveMember();
+        var heavyPlaceholder = new GameObject("Zoom on dis").transform;
+        heavyPlaceholder.position = explosionPos;
+        FindObjectOfType<Cinemachine.CinemachineTargetGroup>().AddMember(heavyPlaceholder, 10, 5);
+
+        //either go to timescale 0 again, or disable all input
+        foreach (BotTest b in FindObjectsOfType<BotTest>())
+            b.enabled = false;
+        foreach (PlayerMovement b in FindObjectsOfType<PlayerMovement>())
+            b.enabled = false;
+        foreach (Skill b in FindObjectsOfType<Skill>())
+            b.enabled = false;
+        FindObjectOfType<PlayerSpawner>().Disable();
+    }
+
+
 
 
 
@@ -256,6 +297,8 @@ public class EffectManager : MonoBehaviour
 
         // WILL ONLY WORK TO SCALE PLAYERS
     }
+
+
 
 
     // TODO: make shake 2D again, so can direct it
@@ -300,9 +343,9 @@ public class EffectManager : MonoBehaviour
                 gridLights.RemoveAt(i);
         }
 
-        foreach(GridLigth g in gridLights)
+        foreach (GridLigth g in gridLights)
             g.updateIntensity();
-    
+
         if (gridLights.Count > 0)
         {
             //could also use a float array and just do j+=2 in shader, for less memory
@@ -387,7 +430,7 @@ public class EffectManager : MonoBehaviour
 
     public void Stop(float duration, float timeScale)
     {
-        if (paused)
+        if (paused || !roundRunning)
             return;
 
         Time.timeScale = timeScale;
@@ -398,7 +441,10 @@ public class EffectManager : MonoBehaviour
     {
         paused = true;
         yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1.0f;
+        if (roundRunning)
+        {
+            Time.timeScale = 1.0f;
+        }
         paused = false;
     }
 
@@ -412,7 +458,7 @@ public class EffectManager : MonoBehaviour
         StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }
 
-    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow , float startHigh)
+    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow, float startHigh)
     {
         // TODO: maybe set less rumble over time? currently on/off
 

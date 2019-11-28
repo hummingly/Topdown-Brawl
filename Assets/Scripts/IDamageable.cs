@@ -8,7 +8,9 @@ public abstract class IDamageable : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private RectTransform statsUi;
     [SerializeField] protected int maxHealthPoints = 100;
-    //[SerializeField] protected float spawnProtectTime = 0.5f;
+    [SerializeField] protected float spawnProtectTime = 2f;
+    [SerializeField] protected float spawmProtectMaxDist = 3f;
+
 
     internal bool alwaysShowHp; //or hide slider until took damage
 
@@ -18,6 +20,8 @@ public abstract class IDamageable : MonoBehaviour
     protected GameObject damagedLastBy;
     private bool invincible;
     protected EffectManager effects;
+    protected GameObject invincibleGO;
+    protected Vector2 lastSpawnPos;
 
     public virtual void Awake()
     {
@@ -34,6 +38,13 @@ public abstract class IDamageable : MonoBehaviour
     {
         healthSlider.value = healthPoints;
         statsUi.rotation = guiRotation;
+
+        if (invincible)
+            if (Vector2.Distance(transform.position, lastSpawnPos) > spawmProtectMaxDist)
+            {
+                effects.StopInvincible(invincibleGO);
+                invincible = false;
+            }
     }
 
     internal void IncreaseHealth(int amount)
@@ -89,16 +100,16 @@ public abstract class IDamageable : MonoBehaviour
         return healthPoints;
     }
 
-    public void SetInvincible()
+    public void SetInvincible(Vector2 spawnPos)
     {
-        float spawnProtectTime = 2f;
-        effects.Invincible(transform, spawnProtectTime);
-        invincible = true;
-        StartCoroutine(disableInvinc(spawnProtectTime));
+        lastSpawnPos = spawnPos;
 
+        invincibleGO = effects.Invincible(transform, spawnProtectTime);
+        invincible = true;
+        StartCoroutine(DisableInvincible(spawnProtectTime));
     }
 
-    private IEnumerator disableInvinc(float dur)
+    private IEnumerator DisableInvincible(float dur)
     {
         yield return new WaitForSeconds(dur);
         invincible = false;

@@ -2538,12 +2538,11 @@ MonoBehaviour:
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
   colorStrings:
-  - WHITE
+  - PURPLE
   - YELLOW
-  - CYAN
+  - BLUE
   - GREEN
   - ORANGE
-  - PURPLE
 --- !u!114 &723236034
 MonoBehaviour:
   m_ObjectHideFlags: 0

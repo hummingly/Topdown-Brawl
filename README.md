@@ -58,3 +58,9 @@
 - various shaders on screen while game is running
 - emulate an arcade game / old monitor (mostly analog TV effects)
 - all kinds of effects for good game feel / juice, such as muzzle flash, screenshake, and more
+
+## External Tools
+
+- All sounds
+- Unity extensions: Cinemachine, new Input system, DoTween
+- Alles im "Import" Ordner: Keijiro glitch fx, SoundControll library um effecte auf Musik anzupassen, Delaunay library um sprite destruction zu erleichtern
