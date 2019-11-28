@@ -10,7 +10,7 @@ public class MenuManager : MonoBehaviour
     private GameStateManager gameState;
 
     public List<Character> availableChars = new List<Character>();
-    
+
     [SerializeField] private GameObject inputPrompt;
     [SerializeField] private GameObject botPrompt;
     [SerializeField] private Transform charSlotParent;
@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
     void Awake()
     {
         teams = FindObjectOfType<TeamManager>();
-        gameState = FindObjectOfType<GameStateManager>();  
+        gameState = FindObjectOfType<GameStateManager>();
     }
 
     public void SetMapImg(Sprite sp)
@@ -34,15 +34,19 @@ public class MenuManager : MonoBehaviour
         // CHECK IF ALL PLAYERS READY
     }
 
-    public void ToggleGameMode(GameObject button)
+    public void ToggleReady(GameObject player)
     {
-        string name = gameState.ToggleGameMode();
-        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
-        textMesh.SetText(name);
+        PlayerSlotMenuDisplay[] slots = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
+        foreach (var slot in slots)
+        {
+            if (slot.myPlayer == player)
+            {
+                var ready = slot.transform.GetComponentInChildren<Toggle>();
+                ready.isOn = !ready.isOn;
+                return;
+            }
+        }
     }
-
-
-
 
     public void ToggleCharacter(GameObject player, GameObject toggleButton, int dir)
     {
@@ -63,7 +67,6 @@ public class MenuManager : MonoBehaviour
         //TODO: actually spawn different character based on selection
     }
 
-
     public void TogglePlayerTeam(GameObject player/*that toggled*/, GameObject toggleButton)
     {
         var slotGO = toggleButton.transform.parent;
@@ -78,7 +81,7 @@ public class MenuManager : MonoBehaviour
         }
 
         // everyone can change bot
-        if(slot.isBot)
+        if (slot.isBot)
         {
             var bot = slot.myPlayer;//teams.getPlayerByID(getSlotInd(slotGO)); //possibly instable, prone to bugs ?!?!?!
 
@@ -98,8 +101,6 @@ public class MenuManager : MonoBehaviour
                 empty.SetSiblingIndex(index);
 
                 Destroy(bot);//remove bot cursor
-
-                //print("del bot");
             }
             else
             {
@@ -109,18 +110,21 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-
     public void ToggleMap()
     {
         gameState.ToggleMap();
     }
 
-
-
+    public void ToggleGameMode(GameObject button)
+    {
+        string name = gameState.ToggleGameMode();
+        TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
+        textMesh.SetText(name);
+    }
 
     public void PlayerJoined(Transform playerCursor, bool isBot = false, int place = 0)
     {
-        if (inputPrompt.active)
+        if (inputPrompt.activeInHierarchy)
         {
             inputPrompt.SetActive(false);
             botPrompt.SetActive(true);
@@ -130,13 +134,14 @@ public class MenuManager : MonoBehaviour
         playerCursor.localPosition = Vector3.zero;
 
         if (!isBot)
-            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject)/*teams.getPlayerId(playerCursor.gameObject)*/, teams.GetColorOf(playerCursor.gameObject));
-
+        {
+            playerCursor.GetComponent<MenuCursor>().Setup(teams.playerNrs.IndexOf(playerCursor.gameObject), teams.GetColorOf(playerCursor.gameObject));
+        }
 
         var replaced = false;
 
         //add as many empty slots as needed so bot spawns where pressed
-        if(isBot)
+        if (isBot)
         {
             //replace that empty GO with bot
             if (place < charSlotParent.childCount)
@@ -156,21 +161,23 @@ public class MenuManager : MonoBehaviour
             }
         }
 
-
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
         slot.parent = charSlotParent;
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
 
         // for bot
-        if(replaced)
+        if (replaced)
             slot.transform.SetSiblingIndex(place);
 
 
         //for player on joining if full (but with bots or empty GOs)
-        if(!isBot)
+        if (!isBot)
         {
             var currentPlayerCount = teams.GetTotalPlayers();
-            if (currentPlayerCount > 1) currentPlayerCount--; //since just joined one
+            if (currentPlayerCount > 1)
+            {
+                currentPlayerCount--; //since just joined one
+            }
 
             if (currentPlayerCount < 6) //TODO: add max player size dynamically... and enforce it too
             {
@@ -178,12 +185,14 @@ public class MenuManager : MonoBehaviour
                 if (charSlotParent.childCount >= 6)
                 {
                     for (int i = 0; i < charSlotParent.childCount; i++)
+                    {
                         if (!charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>())
                         {
                             Destroy(charSlotParent.GetChild(i).gameObject);
                             slot.transform.SetSiblingIndex(i);
                             break;
                         }
+                    }
                 }
             }
             else //if team count is 6, get rid of first bot
@@ -202,19 +211,13 @@ public class MenuManager : MonoBehaviour
                 //TODO: delete player again if no bot to delete...
             }
         }
-
-
         slot.transform.localScale = Vector3.one;
     }
-
 
     public void Play()
     {
         gameState.Play();
     }
-
-
-
 
     // should be the index of the player or bot here, ignoring all empty objects in the list that are for correct palcement
     private int GetSlotInd(Transform slotGO)
