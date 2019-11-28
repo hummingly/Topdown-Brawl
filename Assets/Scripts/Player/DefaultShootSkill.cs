@@ -21,6 +21,7 @@ public class DefaultShootSkill : Skill
     [SerializeField] private float bounceGain;
     [SerializeField] private int splitAm;
     [SerializeField] private Vector2 scale = new Vector2(1,1);
+    //[SerializeField] private Vector2 scaleMax = new Vector2(1, 1);
 
     private void Start()
     {

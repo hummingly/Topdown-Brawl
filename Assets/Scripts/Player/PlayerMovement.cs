@@ -335,7 +335,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // print(collision.gameObject.name);
 
-            FindObjectOfType<EffectManager>().meleeBulletDeathPartic(collision.GetContact(0).point, -collision.GetContact(0).normal);
+            FindObjectOfType<EffectManager>().damageParticleSparks(collision.GetContact(0).point, -collision.GetContact(0).normal, extraDmgOnWallHit);
 
             // damage me if hit wall fast in angle
             if (rb.velocity.magnitude >= extraDmgVelThresh && Vector2.Angle(-collision.GetContact(0).normal, rb.velocity) <= extraDmgMaxAngle)

@@ -453,7 +453,8 @@ MonoBehaviour:
   bounceAmMax: 0
   bounceGain: 0
   splitAm: 0
-  scale: {x: 3, y: 3}
+  scale: {x: 1, y: 1}
+  scaleMax: {x: 3, y: 3}
 --- !u!114 &5912071029736522639
 MonoBehaviour:
   m_ObjectHideFlags: 0

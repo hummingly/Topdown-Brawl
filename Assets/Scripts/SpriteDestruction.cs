@@ -242,7 +242,7 @@ public class SpriteDestruction : MonoBehaviour
 
 
         Collider2D[] piecesToDetach = Physics2D.OverlapCircleAll(finalPiecePos, radius);
-        print(piecesToDetach.Length);
+        //print(piecesToDetach.Length);
         /*
         while (piecesToDetach.Length <= 5 && piecesToDetach.Length < transform.childCount - 1)
         {

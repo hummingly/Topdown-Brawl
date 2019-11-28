@@ -70,6 +70,7 @@ public class Projectile : MonoBehaviour
 
             Sequence seq = DOTween.Sequence();
             seq.Append(GetComponentInChildren<SpriteMask>().transform.DOLocalMoveY(0, meleeAnimDur));
+            seq.Join(transform.DOScale(Vector3.one * 4, meleeAnimDur)); //poorly hard coded
             seq.Insert(fadeAt, GetComponentInChildren<SpriteRenderer>().DOFade(0, meleeAnimDur - fadeAt));
             //seq.AppendCallback(() => Destroy(gameObject));
             seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false);
@@ -165,7 +166,9 @@ public class Projectile : MonoBehaviour
 
         if (melee)
         {
-            effects.meleeBulletDeathPartic(hitPoint, transform);
+            //effects.bulletDeathPartic(hitPoint, transform);
+            // TODO: rather in hit normal of wall? well, is trigger.. or just in the middle of the melee bullet instead of hitPoint?
+
             //GetComponentInChildren<Collider2D>().enabled = false;
             //Destroy(gameObject);
 
@@ -177,11 +180,8 @@ public class Projectile : MonoBehaviour
             seq.AppendCallback(() => Destroy(gameObject));
         }
         else
-        {
-            effects.bulletDeathPartic(hitPoint, transform);
-
             Destroy(gameObject);
-        }
+        
 
 
         var damageAble = other.GetComponent<IDamageable>();
@@ -202,8 +202,14 @@ public class Projectile : MonoBehaviour
                 {
                     damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
+
+                effects.damageParticleSparks(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
             }
+            else
+                effects.bulletDeathPartic(hitPoint, transform);
         }
+        else
+            effects.bulletDeathPartic(hitPoint, transform);
 
 
 

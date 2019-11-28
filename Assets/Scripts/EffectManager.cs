@@ -12,7 +12,7 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private GameObject respawnAnim;
     [SerializeField] private GameObject dashPartic;
     [SerializeField] private GameObject bulletCrumblePartic;
-    [SerializeField] private GameObject meleeCrumblePartic;
+    [SerializeField] private GameObject bigSparks;
     [SerializeField] private GameObject[] muzzleFlashes;
     [SerializeField] private float muzzleFlashDur = 0.1f;
     [SerializeField] private float muzzleScale = 2f;
@@ -127,23 +127,23 @@ public class EffectManager : MonoBehaviour
         }
     }
 
+
+
     public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
     {
-        Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
+        var p = Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
+        p.transform.localScale = bullet.localScale*1.5f;
     }
 
-    public void meleeBulletDeathPartic(Vector2 hitPos, Transform bullet)
-    {
-        Instantiate(meleeCrumblePartic, hitPos, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)); //rotate to look in opposite direction of bullet
-
-        // TODO: rather in hit normal of wall? well, is trigger.. or just in the middle of the melee bullet instead of hitPoint?
-    }
-    public void meleeBulletDeathPartic(Vector2 hitPos, Vector2 normal)
+    public void damageParticleSparks(Vector2 hitPos, Vector2 normal, float dmg)
     {
         float rot_z = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg;
 
-        Instantiate(meleeCrumblePartic, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
+        var p = Instantiate(bigSparks, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
+        p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f);
     }
+
+
 
     public void snipeShotParticAndRumb(Vector2 pos, Transform bullet, Gamepad gamepad = null)
     {
