@@ -7,16 +7,25 @@ public abstract class IDamageable : MonoBehaviour
 {
     [SerializeField] private Slider healthSlider;
     [SerializeField] private RectTransform statsUi;
-    [SerializeField] private int maxHealthPoints = 100;
+    [SerializeField] protected int maxHealthPoints = 100;
+    [SerializeField] protected float spawnProtectTime = 2f;
+    [SerializeField] protected float spawmProtectMaxDist = 3f;
+
 
     internal bool alwaysShowHp; //or hide slider until took damage
 
     private readonly Quaternion guiRotation = Quaternion.identity;
 
-    private int healthPoints;
+    protected int healthPoints;
+    protected GameObject damagedLastBy;
+    private bool invincible;
+    protected EffectManager effects;
+    protected GameObject invincibleGO;
+    protected Vector2 lastSpawnPos;
 
     public virtual void Awake()
     {
+        effects = FindObjectOfType<EffectManager>();
         healthPoints = maxHealthPoints;
         healthSlider.maxValue = maxHealthPoints;
         if (!alwaysShowHp)
@@ -29,6 +38,13 @@ public abstract class IDamageable : MonoBehaviour
     {
         healthSlider.value = healthPoints;
         statsUi.rotation = guiRotation;
+
+        if (invincible)
+            if (Vector2.Distance(transform.position, lastSpawnPos) > spawmProtectMaxDist)
+            {
+                effects.StopInvincible(invincibleGO);
+                invincible = false;
+            }
     }
 
     internal void IncreaseHealth(int amount)
@@ -37,8 +53,18 @@ public abstract class IDamageable : MonoBehaviour
         healthSlider.value = healthPoints;
     }
 
-    internal bool ReduceHealth(int amount)
+    internal bool ReduceHealth(int amount, GameObject dmgSource = null, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3())
     {
+        if (invincible)
+        {
+            return false;
+        }
+
+        if (dmgSource)
+        {
+            damagedLastBy = dmgSource;
+        }
+
         if (!healthSlider.gameObject.activeInHierarchy)
         {
             healthSlider.gameObject.SetActive(true);
@@ -51,6 +77,8 @@ public abstract class IDamageable : MonoBehaviour
         {
             OnDeath();
         }
+
+        OnReduceHealth(amount, projectilePos, nextProjectilePos);
 
         return healthPoints <= 0;
     }
@@ -65,8 +93,25 @@ public abstract class IDamageable : MonoBehaviour
 
     public abstract void OnDeath();
 
+    public abstract void OnReduceHealth(int amount, Vector3 projectilePos = new Vector3(), Vector3 nextProjectilePos = new Vector3());
+
     public int GetHealth()
     {
         return healthPoints;
+    }
+
+    public void SetInvincible(Vector2 spawnPos)
+    {
+        lastSpawnPos = spawnPos;
+
+        invincibleGO = effects.Invincible(transform, spawnProtectTime);
+        invincible = true;
+        StartCoroutine(DisableInvincible(spawnProtectTime));
+    }
+
+    private IEnumerator DisableInvincible(float dur)
+    {
+        yield return new WaitForSeconds(dur);
+        invincible = false;
     }
 }

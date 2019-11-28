@@ -13,20 +13,9 @@ public partial class TeamManager
         public int Points { get; set; }
         public Color Color { get; set; }
 
-        private DestructibleTeamBlock defenseBase;
+        private DestructibleBlock defenseBase;
 
-        public DestructibleTeamBlock DefenseBase
-        {
-            get => defenseBase;
-            set
-            {
-                defenseBase = value;
-                if (defenseBase != null)
-                {
-                    Debug.Log("DefenseBase set!");
-                }
-            }
-        }
+        public DestructibleBlock DefenseBase { get; set; }
 
         public Team(int teamSize, Color color)
         {

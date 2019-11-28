@@ -44,8 +44,7 @@ public class DamagingObject : MonoBehaviour
                 {
                     var pointA = ((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2);
 
-                    RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, moveDir, squeezeSafetyRoom);
-
+                    RaycastHit2D[] rayHit = Physics2D.RaycastAll(pointA, moveDir, squeezeSafetyRoom, ExtensionMethods.bulletLayerIgnored);
                     Debug.DrawLine(pointA, pointA + moveDir * squeezeSafetyRoom, Color.white);
 
                     bool closeEnough = false;
@@ -90,7 +89,7 @@ public class DamagingObject : MonoBehaviour
 
                     for (int j = -ammountOfRays + 1; j < ammountOfRays; j++)
                     {
-                        RaycastHit2D[] rayHit = Physics2D.RaycastAll(((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2), moveDir, squeezeSafetyRoom);
+                        RaycastHit2D[] rayHit = Physics2D.RaycastAll(((Vector2)transform.position + moveDir * (transform.localScale.y / 2)) + new Vector2(moveDir.y, moveDir.x) * j * (transform.localScale.x / (ammountOfRays - 1) / 2), moveDir, squeezeSafetyRoom, ExtensionMethods.bulletLayerIgnored);
 
                         for (int i = 0; i < rayHit.Length; i++)
                         {

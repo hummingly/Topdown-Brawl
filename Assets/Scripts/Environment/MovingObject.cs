@@ -28,6 +28,7 @@ public class MovingObject : MonoBehaviour
     private Vector2 lastDir;
 
 
+
     void Start()
     {
         if (GetComponent<Rigidbody2D>())
@@ -41,12 +42,17 @@ public class MovingObject : MonoBehaviour
 
         if(movement == MoveType.PingPong)
         {
-            Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Yoyo);
+            /*Sequence seq = DOTween.Sequence().SetLoops(-1, LoopType.Yoyo);
             seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutSine));
             seq.AppendInterval(0.25f);
             seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutSine));
-            seq.AppendInterval(0.25f);
+            seq.AppendInterval(0.25f);*/
             //seq.Append(rb.DOMove(transform.position - direction * distance / 2, speed));
+            Sequence seq = DOTween.Sequence().SetLoops(-1);
+            seq.Append(rb.DOMove(transform.position + direction * distance, speed).SetEase(Ease.OutSine));
+            seq.Append(rb.DOMove(transform.position, speed).SetEase(Ease.InSine));
+            seq.Append(rb.DOMove(transform.position - direction * distance, speed).SetEase(Ease.OutSine));
+            seq.Append(rb.DOMove(transform.position, speed).SetEase(Ease.InSine));
         }
         
         if (movement == MoveType.PingPongBounce)

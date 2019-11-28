@@ -38,12 +38,13 @@
 - in defense mode you have to defend your base which is a block near your spawn area
 - at the same time you have to destroy the block of the enemy team
 - the team that destroys the other team's block first wins
+- the block actually crumbles uppon taking damage
 
 ### Classes
 
 - Normal shooter: shooting skill with short cooldown, medium range, damage and speed of projectiles
 - Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range, the longer the shot the higher the damage
-- Melee: a tough and slightly faster class with a melee attack that knockbacks back others (and additional damage on pushing into walls)
+- Melee: a tough and slightly faster class with a melee attack that knockbacks back others (and does additional damage on pushing into walls)
 - (beta ;) Bouncer: shooting skill with a shorter range but bouncing bullets, going further each bounce
 
 ## Game Mechanics
@@ -54,5 +55,12 @@
 
 - blocky and simple
 - low resolution pixel game
-- various filters on screen while game is running
+- various shaders on screen while game is running
 - emulate an arcade game / old monitor (mostly analog TV effects)
+- all kinds of effects for good game feel / juice, such as muzzle flash, screenshake, and more
+
+## External Tools
+
+- All sounds
+- Unity extensions: Cinemachine, new Input system, DoTween
+- Alles im "Import" Ordner: Keijiro glitch fx, SoundControll library um effecte auf Musik anzupassen, Delaunay library um sprite destruction zu erleichtern

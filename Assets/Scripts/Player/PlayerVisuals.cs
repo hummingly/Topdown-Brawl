@@ -7,6 +7,8 @@ public class PlayerVisuals : MonoBehaviour
     [SerializeField] private float dashUsedBrigthness = 0.5f;
 
     private Color mainColor;
+    private bool isBlinking;
+    private IEnumerator coroutine;
 
     void Start()
     {
@@ -18,27 +20,46 @@ public class PlayerVisuals : MonoBehaviour
         
     }
 
+
     public void InitColor(Color col)
     {
         SetColorAll(col);
         mainColor = col;
     }
 
-    public void SetDashUsedColor()
+
+    public void SetActionOnCooldownCol()
     {
-        var darkColor = mainColor;
-        float H;
-        float S;
-        float V;
-        Color.RGBToHSV(darkColor, out H, out S, out V);
-        V = dashUsedBrigthness;
-        darkColor = Color.HSVToRGB(H,S,V);
-        //print(darkColor);
-        SetColorAll(darkColor);
+        if(!isBlinking)
+            SetColorAll(ExtensionMethods.turnTeamColorDark(mainColor, dashUsedBrigthness));
     }
     public void SetMainColor()
     {
+        if (!isBlinking)
+            SetColorAll(mainColor);
+    }
+
+
+    public void blinkWhite(Color col, int frames)
+    {
+        //StopAllCoroutines();
+        if (coroutine!=null) StopCoroutine(coroutine);
+        StartCoroutine(coroutine = blink(col, frames));
+    }
+
+
+
+    private IEnumerator blink(Color col, int frames)
+    {
+        isBlinking = true;
+        SetColorAll(col);
+
+        //yield return new WaitForEndOfFrame();
+        for (int i = 0; i < frames; i++)
+            yield return null;
+
         SetColorAll(mainColor);
+        isBlinking = false;
     }
 
     private void SetColorAll(Color col)

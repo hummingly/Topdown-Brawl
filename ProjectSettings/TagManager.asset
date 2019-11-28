@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - MapBounds
+  - BotLookThrough
+  - Destruction Piece
+  - Grid
+  - Restart Button
+  - Menu Button
   - DefenseBases
   layers:
   - Default
@@ -42,4 +47,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Mask Test
+    uniqueID: 3223499625
     locked: 0

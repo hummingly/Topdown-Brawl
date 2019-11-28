@@ -7,8 +7,8 @@ using DG.Tweening;
 
 public class GameLogic : MonoBehaviour
 {
-    private static GameLogic instance;
-    public static GameLogic Instance { get { return instance; } }
+    //private static GameLogic instance;
+    //public static GameLogic Instance { get { return instance; } }
 
     private UIManager uiManager;
     private TeamManager teamManager;
@@ -18,18 +18,17 @@ public class GameLogic : MonoBehaviour
 
     [SerializeField] private float startGameplayAnimDur = 1;
     [SerializeField] private float spawnBeforeAnimDone = 0.2f;
+
     private bool roundRunning;
+
+    private Vector2 lastDeath;
 
     private void Awake()
     {
-        if (instance != null && instance != this)
-        {
+        /*if (instance != null && instance != this)
             Destroy(this.gameObject);
-        }
         else
-        {
-            instance = this;
-        }
+            instance = this;*/
 
         teamManager = GetComponent<TeamManager>();
 
@@ -52,12 +51,23 @@ public class GameLogic : MonoBehaviour
             if (winManager.OnTeamWon(teamManager.GetTeams()))
             {
                 roundRunning = false;
+
                 GameOver();
             }
         }
     }
 
+    public void setDeathEvent(Vector2 pos)
+    {
+        if(roundRunning)
+            lastDeath = pos;
+    }
 
+    public void Kill()
+    {
+        SceneManager.sceneLoaded -= SceneLoadeded;
+        Destroy(gameObject);
+    }
 
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
@@ -71,10 +81,18 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator InitGameplay()
     {
+        if (winManager.gameMode.winCondition != GameMode.WinCondition.Defense)
+            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
+
         uiManager = FindObjectOfType<UIManager>();
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
 
+        if (!GetComponent<TeamManager>().debugFastJoin)
+        {
+            FindObjectOfType<EffectManager>().StartSequence();
+            //yield return new WaitForSeconds(FindObjectOfType<EffectManager>().startSequence());
+        }
 
 
         // TODO: put all this shit into a camera script !!!
@@ -101,14 +119,13 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-        print("init players");
         teamManager.InitPlayers();
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
         {
-            print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
+        teamManager.ColorSpawns();
         roundRunning = true;
     }
 
@@ -122,6 +139,7 @@ public class GameLogic : MonoBehaviour
     public void GameOver()
     {
         uiManager.SetGameOverUI();
-        Time.timeScale = 0;
+
+        FindObjectOfType<EffectManager>().GameOver(lastDeath);
     }
 }

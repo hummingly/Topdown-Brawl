@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameStateManager : MonoBehaviour
@@ -13,24 +15,38 @@ public class GameStateManager : MonoBehaviour
 
     [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
     [SerializeField] private Sprite[] mapSprites;
-    [SerializeField] private Image mapImg;
 
     [SerializeField] private GameMode[] allGameModes;
     private int currentGameModeIndex;
+    private MenuManager menu;
+    private TeamManager teams;
 
-    void Start()
+    [SerializeField] private GameObject playerCursorPrefab;
+
+    private void Awake()
     {
-        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
-        currentGameModeIndex = 0;
+        teams = GetComponent<TeamManager>();
+        menu = FindObjectOfType<MenuManager>();
+
+        currentGameModeIndex = 1; //start with defense, cuz focus on team play
     }
+
+
 
     void Update()
     {
-        if (GetCurrentGameMode().name.Equals("Defense"))
+        if (state == GameState.Selection && GetCurrentGameMode().name.Equals("Defense"))
         {
             // hardcoded BAAAD
             currentMapInd = 2;
-            mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+            if (!menu)
+            {
+                menu = FindObjectOfType<MenuManager>();
+            }
+            else
+            {
+                menu.SetMapImg(mapSprites[currentMapInd - mapRange.x]);
+            }
         }
     }
 
@@ -45,7 +61,7 @@ public class GameStateManager : MonoBehaviour
         if (currentMapInd > mapRange.y)
             currentMapInd = mapRange.x;
 
-        mapImg.sprite = mapSprites[currentMapInd - mapRange.x];
+        menu.SetMapImg(mapSprites[currentMapInd - mapRange.x]);
 
         // TODO: resize of somehow fit the img? or all same ratio...
     }
@@ -54,5 +70,62 @@ public class GameStateManager : MonoBehaviour
     {
         currentGameModeIndex = (currentGameModeIndex + 1) % allGameModes.Length;
         return allGameModes[currentGameModeIndex].name;
+    }
+
+    public void Play()
+    {
+        teams.SaveCharacters();
+        FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
+        state = GameState.Ingame;
+        LoadMap();
+    }
+
+    public void LoadMap()
+    {
+        SceneManager.LoadScene(FindObjectOfType<GameStateManager>().currentMapInd);
+    }
+
+    public void GoToSelection()
+    {
+        //keeping players from gameplay to menu won't work atm because static scripts etc
+
+
+        /*state = GameState.Selection;
+
+        SceneManager.LoadScene("Selection");
+
+        FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
+        FindObjectOfType<PlayerInputManager>().playerPrefab = playerCursorPrefab;
+        teams.Wipe();
+
+        Time.timeScale = 1;*/
+
+
+        FindObjectOfType<GameLogic>().Kill();
+
+        SceneManager.LoadScene("Selection");
+
+        Time.timeScale = 1;
+    }
+
+    public void Restart()
+    {
+        BotTest[] bots = FindObjectsOfType<BotTest>();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        // keep bots (poor hack)
+        for (int i = 0; i < bots.Length; i++)
+        {
+            //teams.AddBot(i);
+
+            GameObject bot = new GameObject("Empty Bot Cursor");
+            //AddToEmptyOrSmallestTeam(bot);
+            teams.GetTeams()[teams.FindPlayerTeam(bots[i].gameObject)].ReplacePlayer(bots[i].gameObject, bot);
+
+            DontDestroyOnLoad(bot);
+        }
+
+        Time.timeScale = 1;
     }
 }

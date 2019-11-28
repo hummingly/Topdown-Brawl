@@ -21,12 +21,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private PlayerStats stats;
-    private PlayerVisuals visuals;
-    private EffectManager effects;
+
 
     [SerializeField] private float accForce;
-    [SerializeField] private float dashForce = 2;
-    [SerializeField] private float dashCooldown = 0.5f;
 
     //[SerializeField] private float maxVelocity;
     //[SerializeField] private float accSpeed;     // speed of acc going to maxAcc
@@ -40,25 +37,30 @@ public class PlayerMovement : MonoBehaviour
     private int breathSpeed;
     private float correction;
 
-    private float dashTimer;
+    private GameObject knockOwner;
+    private float meleeKnockTimer;
+    private int extraDmgOnWallHit;
+    private float extraDmgVelThresh;
+    private float extraDmgMaxAngle;
+
+    public Vector2 orgScale;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
-        visuals = GetComponentInChildren<PlayerVisuals>();
-        effects = FindObjectOfType<EffectManager>();
 
         // Set init rotation
         lastRotInput = startRot;
         transform.up = startRot;
+
+        orgScale = transform.localScale;
     }
 
     private void Update()
     {
-        dashTimer -= Time.deltaTime;
-        if(dashTimer <= 0 && visuals)
-            visuals.SetMainColor();
+        meleeKnockTimer -= Time.deltaTime;
+        //print(meleeKnockTimer > 0);
     }
 
     private void FixedUpdate()
@@ -135,26 +137,7 @@ public class PlayerMovement : MonoBehaviour
     {
         print("hit a");
     }
-    private void OnLeftTrigger()
-    {
-        if(dashTimer <= 0)
-        {
-            dashTimer = dashCooldown;
-            visuals.SetDashUsedColor();
-
-            // if not using left stick to move, dash to look direction or right stick
-            Vector2 dashDir;
-            if (moveInput != Vector2.zero)
-                dashDir = moveInput;
-            else
-                dashDir = lastRotInput;
-
-            rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
-
-
-            effects.DoDashPartic(transform.position, dashDir);
-        }
-    }
+    
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
@@ -174,9 +157,15 @@ public class PlayerMovement : MonoBehaviour
     {
         rotInput = val;
     }
+
+
     public Vector2 GetLastRot()
     {
         return lastRotInput;
+    }
+    public Vector2 GetMoveInput()
+    {
+        return moveInput;
     }
 
 
@@ -328,6 +317,41 @@ public class PlayerMovement : MonoBehaviour
             Vector2 pushDir = (Vector2)transform.position - collision.ClosestPoint(transform.position); // maybe instead solid collider? so that I can get hit point... but then player  can't really go "into" spikes
             rb.AddForce(pushDir * dmgObj.knockback, ForceMode2D.Impulse);
         }
+    }
+
+
+    public void tookMeleeDmg(GameObject owner, float t, int dmg, float velThresh, float maxAngle)
+    {
+        knockOwner = owner;
+        meleeKnockTimer = t;
+        extraDmgOnWallHit = dmg;
+        extraDmgVelThresh = velThresh;
+        extraDmgMaxAngle = maxAngle;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // no collision with person who knocked
+        if (collision.gameObject == knockOwner)
+            return;
+
+        if (meleeKnockTimer >= 0)
+        {
+            // print(collision.gameObject.name);
+
+            FindObjectOfType<EffectManager>().DamagedEntity(collision.GetContact(0).point, -collision.GetContact(0).normal, extraDmgOnWallHit);
+
+            // damage me if hit wall fast in angle
+            if (rb.velocity.magnitude >= extraDmgVelThresh && Vector2.Angle(-collision.GetContact(0).normal, rb.velocity) <= extraDmgMaxAngle)
+                stats.ReduceHealth(extraDmgOnWallHit);
+
+            // damage other thing if a damageable cube or same team
+            if (collision.gameObject.GetComponent<IDamageable>() && FindObjectOfType<TeamManager>().FindPlayerTeam(collision.gameObject) == FindObjectOfType<TeamManager>().FindPlayerTeam(gameObject))
+                collision.gameObject.GetComponent<IDamageable>().ReduceHealth(extraDmgOnWallHit);
+        }
+
+
+
     }
 
     /*

@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.InputSystem;
 
 public static class ExtensionMethods
 {
+    public static int bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
+
     public static float Remap(float value, float low1, float high1, float low2, float high2)
     {
         return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
@@ -28,7 +29,7 @@ public static class ExtensionMethods
         return Quaternion.Euler(angles) * (point - pivot) + pivot;
     }*/
 
-                                              //(float angle, Vector2 point, Vector2 pivot = new Vector2())
+    //(float angle, Vector2 point, Vector2 pivot = new Vector2())
     public static Vector2 RotatePointAroundPivot(Vector2 point, Vector2 pivot, float angle) //https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
     {
         float s = Mathf.Sin(Mathf.Deg2Rad * angle);
@@ -40,7 +41,12 @@ public static class ExtensionMethods
         return new Vector2(xnew, ynew);
     }
 
-    
+    public static IList<T> Shuffle<T>(IList<T> collection)
+    {
+        int seed = UnityEngine.Random.Range(0, 1000);
+        return Shuffle(collection, seed);
+    }
+
     public static IList<T> Shuffle<T>(IList<T> collection, int seed)
     {
         Random.InitState(seed);
@@ -54,35 +60,39 @@ public static class ExtensionMethods
         return collection;
     }
 
-    /*
-    public static object[] shuffle(object[] array)
+    public static float getGamepadAmp(Gamepad gamepad)
     {
-        for (int t = 0; t < array.Length; t++)
+        //Debug.Log(gamepad.ToString());
+        //Debug.Log(gamepad.name);
+        //Debug.Log(gamepad.description);
+
+        if (gamepad.name.Equals("DualShock4GamepadHID"))
         {
-            object tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
+            //Debug.Log("ps4");
+            return 1;
         }
-        return array;
+        if (gamepad.name.Equals("XInputControllerWindows"))
+        {
+            //Debug.Log("third party xbox");
+            return 0.4f;
+        }
+
+        //TODO: more generic solution? currently modeled mainly for ps4 controller
+
+        return 1;
     }
 
-
-    public static T[] shuffle<T>(T[] array)//object[] shuffle(object[] array)
+    public static Color turnTeamColorDark(Color orgColor, float brigthness)
     {
-        for (int t = 0; t < array.Length; t++)
-        {
-            T tmp = array[t];
-            int r = Random.Range(t, array.Length);
-            array[t] = array[r];
-            array[r] = tmp;
-        }
-        return array;
+        var darkColor = orgColor;
+        float H;
+        float S;
+        float V;
+        Color.RGBToHSV(darkColor, out H, out S, out V);
+        V = brigthness;
+        darkColor = Color.HSVToRGB(H, S, V);
+        //print(darkColor);
+        return darkColor;
     }
-
-    public static T[] LastItem<T>(this List<T> list)
-    {
-        return list[list.Count - 1];
-    }*/
 }
 

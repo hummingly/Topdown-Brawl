@@ -35,6 +35,11 @@ public class MenuCursor : MonoBehaviour
         spriteTeamCol.color = teamColor;
     }
 
+    void Update()
+    {
+
+    }
+
     private void FixedUpdate()
     {
         var dir = new Vector3(moveInput.x, moveInput.y, 0);
@@ -84,14 +89,13 @@ public class MenuCursor : MonoBehaviour
                         menuManager.ToggleGameMode(hitObj.gameObject);
                         break;
                 }
-            }
 
-            if (addBotButton && emptySlot)
-            {
-                FindObjectOfType<TeamManager>().AddBot();
+                if (addBotButton && emptySlot)
+                {
+                    FindObjectOfType<TeamManager>().AddBot(addBotButton.transform.parent.GetSiblingIndex());
+                }
             }
         }
-
     }
 
     private void OnMove(InputValue value)

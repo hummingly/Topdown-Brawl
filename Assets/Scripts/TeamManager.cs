@@ -10,8 +10,8 @@ public partial class TeamManager : MonoBehaviour
     private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
-    [SerializeField] private String[] colorStrings;
-    //[SerializeField] private GameObject defenseBases;
+    [SerializeField] private string[] colorStrings;
+    public bool debugFastJoin;
 
     // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
@@ -91,31 +91,26 @@ public partial class TeamManager : MonoBehaviour
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
+                FindObjectOfType<EffectManager>().AddGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
             }
         }
     }
-
 
     public void InitDefenseBases(GameObject parent)
     {
         for (int i = 0; i < teams.Count; i++)
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleTeamBlock>();
+            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
+            MeshRenderer[] meshes = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach (var m in meshes)
+            {
+                m.material.color = teams[i].Color;
+            }
         }
-        /*
-        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
-        // assumption count bases == teams.count --> TODO!
-        // random assignment --> TODO!
-        for (int t = 0; t < teams.Count; t++)
-        {
-            print("base...");
-            teams[t].setBase(bases[t]);
-        }
-        */
     }
 
-    public void AddBot()
+    public void AddBot(int addBotButtonIndex)
     {
         int team = FindSmallestTeam();
         if (team <= -1)
@@ -125,7 +120,7 @@ public partial class TeamManager : MonoBehaviour
         GameObject bot = new GameObject("Empty Bot Cursor");
         if (teams[team].AddPlayer(bot))
         {
-            FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true);
+            FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true, addBotButtonIndex);
             bot.transform.parent = null;
             DontDestroyOnLoad(bot);
         }
@@ -143,7 +138,12 @@ public partial class TeamManager : MonoBehaviour
             {
                 FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
             }
-            //TODO: check which player? write string P1 for example
+
+            if (debugFastJoin)
+            {
+                AddBot(0);
+                menu.Play();
+            }
             return;
         }
 
@@ -224,7 +224,7 @@ public partial class TeamManager : MonoBehaviour
     {
         foreach (Team team in teams)
         {
-            if (team.HasPlayer(player))
+            if (!team.HasPlayer(player))
             {
                 List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
@@ -310,7 +310,7 @@ public partial class TeamManager : MonoBehaviour
         int team = FindPlayerTeam(player);
         if (team <= -1)
         {
-            throw new Exception("Score can be only increased in a match with a player on one team!");
+            throw new System.Exception("Score can be only increased in a match with a player on one team!");
         }
         teams[team].Points++;
     }
@@ -323,5 +323,37 @@ public partial class TeamManager : MonoBehaviour
     public List<Team> GetTeams()
     {
         return teams;
+    }
+
+    public bool IsBaseOf(DestructibleBlock _base, GameObject player)
+    {
+        int teamId = FindPlayerTeam(player);
+
+        if (teams[teamId].DefenseBase == _base)
+            return true;
+
+        return false;
+    }
+
+    public void ColorSpawns()
+    {
+        for (int t = 0; t < teams.Count; t++)
+        {
+            var spawnArea = spawner.getSpawnArea(t);
+            spawnArea.GetComponent<SpriteRenderer>().color = ExtensionMethods.turnTeamColorDark(teams[t].Color, 0.5f);
+        }
+    }
+
+    public void Wipe()
+    {
+        //teams.Clear();
+        teams = new List<Team>(2);
+        for (int i = 0; i < 2; i++)
+            teams.Add(new Team(2, GetColor(i)));
+
+
+        playerNrs.Clear();
+        playerDevices.Clear();
+        playerChars.Clear();
     }
 }

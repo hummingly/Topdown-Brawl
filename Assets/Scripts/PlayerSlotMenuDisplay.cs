@@ -9,6 +9,7 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
     public Character chara;
 
     public Image displaySprite;
+    public Image displaySpriteClass;
     public TextMeshProUGUI playerNameTxt;
 
     public bool isBot;
@@ -37,11 +38,13 @@ public class PlayerSlotMenuDisplay : MonoBehaviour
     {
         chara = character;
         displaySprite.sprite = chara.sprite;
+        displaySpriteClass.sprite = chara.roleIcon;
     }
 
     public void SetCol(Color col)
     {
         displaySprite.color = col;
+        displaySpriteClass.color = col;
     }
 
 }

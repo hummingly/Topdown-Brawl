@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1629654588299491840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1629654588299491842}
+  - component: {fileID: 1629654588299491843}
+  - component: {fileID: 1629654588299491852}
+  - component: {fileID: 1629654588299491854}
+  - component: {fileID: 1629654588299491853}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1629654588299491842
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629654588299491840}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1629654588299491843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629654588299491840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b603bc7191a8da14fb3a4729639cb158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884,
+    type: 3}
+  botPrefab: {fileID: 4000924214873993329, guid: 9fc340f7de9dbd44599c858af6c49732,
+    type: 3}
+  spawnAreas:
+  - {fileID: 0}
+  - {fileID: 0}
+  respawnTime: 3
+  zoomBefore: 0.5
+  stayAfterDeath: 0.5
+  spawnPosBlockTime: 0.3
+  playerCameraRadius: 2
+--- !u!114 &1629654588299491852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629654588299491840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261472c5f48c84544becf229a40da179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1629654588299491854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629654588299491840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06338c19a78fdfc4e81194b81564bcc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnProtection: {fileID: 2151810795888453688, guid: 5f81cbb4ba733a14c97a928e673eb76d,
+    type: 3}
+  screenFill: {fileID: 0}
+  deathExplosion: {fileID: 5937921578677653148, guid: 8d290909e6ed482469749ee1ec6703ce,
+    type: 3}
+  respawnAnim: {fileID: 8590467141818954187, guid: 62182d8cff92ed54596c3d27e82451ef,
+    type: 3}
+  dashPartic: {fileID: 5282224505969515614, guid: 79c17ab750617fd47ae556387c491f47,
+    type: 3}
+  bulletCrumblePartic: {fileID: 1312439423435851881, guid: 881c7f6e6dc039e41b26454eb9bf500d,
+    type: 3}
+  bigSparks: {fileID: 4564625899703968821, guid: fb399037f56b99645abd84f79c072045,
+    type: 3}
+  muzzleFlashes:
+  - {fileID: 835956841870828920, guid: 8dc4a41fac2bc1e448a5d5b9b1b6b4b1, type: 3}
+  - {fileID: 835956841870828920, guid: d41d6bc20bff5e5409b06f7604014e97, type: 3}
+  - {fileID: 835956841870828920, guid: 6a496372c059e7e4f812f4caeaeacb70, type: 3}
+  - {fileID: 835956841870828920, guid: 4f044f50c5dc95d4592a0d8278cf9128, type: 3}
+  - {fileID: 835956841870828920, guid: f5f3e06bc33947b40b25f15408e20a5a, type: 3}
+  muzzleFlashDur: 0.15
+  muzzleScale: 1
+  maxoffset: 10
+  traumaFallOff: 3.333
+  powerOfAllShakes: 1
+  frequency: 10
+--- !u!114 &1629654588299491853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629654588299491840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae781c9f2d0af064a9689c55d058fdd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scores:
+  - {fileID: 0}
+  - {fileID: 0}
+  time: {fileID: 0}
+  gameOver: {fileID: 0}

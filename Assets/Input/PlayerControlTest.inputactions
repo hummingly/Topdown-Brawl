@@ -38,6 +38,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "RightTriggerDown",
+                    "type": "Value",
+                    "id": "7fd1744c-5ba0-4360-86f5-0fed176c592a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
                     "name": "ZRightTrigger",
                     "type": "Value",
                     "id": "2f721df3-313a-4941-8a75-cbb69e35b24a",
@@ -137,6 +145,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ZRightTriggerUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "edbd13c9-8141-4af6-b81b-853a3fa05001",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightTriggerDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

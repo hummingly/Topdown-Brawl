@@ -17,4 +17,5 @@ MonoBehaviour:
   prefab: {fileID: 4000924214873993329, guid: 00b80f5a43f91bb47a1dbdb77b0ac884, type: 3}
   sprite: {fileID: 5105561115069631295, guid: cdea967cff3cf8346a83bb42caf70392, type: 3}
   role: 1
-  roleIcon: {fileID: 0}
+  roleIcon: {fileID: 5538985876562519171, guid: cdea967cff3cf8346a83bb42caf70392,
+    type: 3}
