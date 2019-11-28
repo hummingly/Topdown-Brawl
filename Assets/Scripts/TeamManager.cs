@@ -4,20 +4,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public partial class TeamManager : MonoBehaviour // Singleton instead of static, so can change variable in inspector
+public partial class TeamManager : MonoBehaviour
 {
+    private MenuManager menu;
+    private PlayerSpawner spawner;
     public List<Team> teams = new List<Team>();
-    //public List<GameObject> playerIDs = new List<GameObject>();
-    public List<GameObject> playerNrs = new List<GameObject>(); //not for bots, just players... for keeping track of what name to put for each, etc
-    public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
-    public List<Character> playerChars = new List<Character>(); 
-
-    public bool debugFastJoin;
     [SerializeField] private Color[] teamColors;
     [SerializeField] private string[] colorStrings;
-    private PlayerSpawner spawner;
-    private MenuManager menu;
-
+    public List<GameObject> playerNrs = new List<GameObject>();
+    public List<InputDevice> playerDevices = new List<InputDevice>();
+    public List<Character> playerChars = new List<Character>();
+    public bool debugFastJoin;
 
     private void Awake()
     {
@@ -35,43 +32,19 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         }
     }
 
-    public void InitDefenseBases(GameObject parent)
-    {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
-            MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer m in meshs)
-                m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
-        }
-        /*
-        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
-        // assumption count bases == teams.count --> TODO!
-        // random assignment --> TODO!
-        for (int t = 0; t < teams.Count; t++)
-        {
-            print("base...");
-            teams[t].setBase(bases[t]);
-        }
-        */
-    }
-
-
     public void SaveCharacters()
     {
         foreach (GameObject p in playerNrs)
         {
             var cha = menu.GetCharacterOfPlayer(p);
 
-            playerChars.Add(cha);//(menu.availableChars[ind]);
+            playerChars.Add(cha);
         }
     }
 
-    public void InitPlayers()
+        public void InitPlayers()
     {
-        // disable more joining
-        //GetComponent<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersManually; //here still added a cursor in gameplay still...
+        Debug.Log("Init Player");
         spawner = FindObjectOfType<PlayerSpawner>();
         var input = FindObjectOfType<PlayerInputManager>();
 
@@ -79,9 +52,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
 
         //join prefabs manually for gameplay (spawn the correct prefabs for selected players)
 
-
         // TODO: for each player in each team spawn and assign team, controllerIDs, color
-
         for (int t = 0; t < teams.Count; t++)
         {
             Team team = teams[t];
@@ -119,12 +90,33 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
 
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
-				currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
+                currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
                 FindObjectOfType<EffectManager>().addGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
             }
         }
     }
 
+    public void InitDefenseBases(GameObject parent)
+    {
+        for (int i = 0; i < teams.Count; i++)
+        {
+            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
+            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
+            MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer m in meshs)
+                m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
+        }
+        /*
+        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
+        // assumption count bases == teams.count --> TODO!
+        // random assignment --> TODO!
+        for (int t = 0; t < teams.Count; t++)
+        {
+            print("base...");
+            teams[t].setBase(bases[t]);
+        }
+        */
+    }
 
     public void AddBot(int addBotButtonIndex)
     {
@@ -155,7 +147,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
 
             FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
 
-            if(debugFastJoin)
+            if (debugFastJoin)
             {
                 AddBot(0);
                 menu.Play();
