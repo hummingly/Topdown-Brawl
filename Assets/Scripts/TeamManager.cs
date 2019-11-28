@@ -415,4 +415,10 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         playerDevices.Clear();
         playerChars.Clear();
     }
+
+    public void ResetPoints()
+    {
+        for (int t = 0; t < teams.Count; t++)
+            teams[t].Points = 0;
+    }
 }

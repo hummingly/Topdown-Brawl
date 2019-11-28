@@ -114,6 +114,8 @@ public class GameStateManager : MonoBehaviour
     {
         BotTest[] bots = FindObjectsOfType<BotTest>();
 
+        teams.ResetPoints();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
         
         // keep bots (poor hack)
