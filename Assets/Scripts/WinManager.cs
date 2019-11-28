@@ -55,8 +55,6 @@ public class WinManager : MonoBehaviour
                     aliveTeams++;
                 }
             }
-            //print(x);
-
             if (aliveTeams == 1)
             {
                 int index = teams.FindIndex(t => t.DefenseBase != null);
