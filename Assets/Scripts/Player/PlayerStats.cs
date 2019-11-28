@@ -39,6 +39,6 @@ public class PlayerStats : IDamageable
     {
         // TODO: effects, whatever
 
-        effects.gotDamaged(transform);
+        effects.GotDamaged(transform);
     }
 }

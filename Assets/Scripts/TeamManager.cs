@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -91,7 +91,7 @@ public partial class TeamManager : MonoBehaviour
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
-                FindObjectOfType<EffectManager>().addGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
+                FindObjectOfType<EffectManager>().AddGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
             }
         }
     }
@@ -128,11 +128,9 @@ public partial class TeamManager : MonoBehaviour
 
     private void OnPlayerJoined(PlayerInput player)
     {
-        //if (!gameLogic.gameMode.maxTeams > teams.Count) return;
-
+        Debug.Log("Player joined");
         //if in menu scene do new teams
         //else if gameplay: no new teams, instead just spawn prefab for exising players
-
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
@@ -337,7 +335,7 @@ public partial class TeamManager : MonoBehaviour
         return false;
     }
 
-    public void colorSpawns()
+    public void ColorSpawns()
     {
         for (int t = 0; t < teams.Count; t++)
         {

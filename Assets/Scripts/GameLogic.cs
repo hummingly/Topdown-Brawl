@@ -82,7 +82,7 @@ public class GameLogic : MonoBehaviour
 
         if (!GetComponent<TeamManager>().debugFastJoin)
         {
-            FindObjectOfType<EffectManager>().startSequence();
+            FindObjectOfType<EffectManager>().StartSequence();
             //yield return new WaitForSeconds(FindObjectOfType<EffectManager>().startSequence());
         }
 
@@ -111,15 +111,13 @@ public class GameLogic : MonoBehaviour
 
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
-        //print("init players");
         teamManager.InitPlayers();
         if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
         {
-            //print("init bases");
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
-        teamManager.colorSpawns();
+        teamManager.ColorSpawns();
         roundRunning = true;
     }
 

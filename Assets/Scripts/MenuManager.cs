@@ -31,7 +31,7 @@ public class MenuManager : MonoBehaviour
 
     void Update()
     {
-        // CHECK IF ALL PLAYERS READY
+        // TODO: CHECK IF ALL PLAYERS ARE READY
     }
 
     public void ToggleReady(GameObject player)
@@ -58,12 +58,18 @@ public class MenuManager : MonoBehaviour
         {
             var lastIndex = availableChars.IndexOf(slot.chara);
             lastIndex += dir;
-            if (lastIndex < 0) lastIndex = availableChars.Count - 1;
-            if (lastIndex >= availableChars.Count) lastIndex = 0;
+            if (lastIndex < 0)
+            {
+                lastIndex = availableChars.Count - 1;
+            }
+
+            if (lastIndex >= availableChars.Count)
+            {
+                lastIndex = 0;
+            }
+
             slot.SetChar(availableChars[lastIndex]);
         }
-
-
         //TODO: actually spawn different character based on selection
     }
 
@@ -78,6 +84,7 @@ public class MenuManager : MonoBehaviour
             teams.MoveTeam(player);
             slot.SetCol(teams.GetColorOf(player));
             slot.myPlayer.GetComponent<MenuCursor>().SetColor(teams.GetColorOf(player));
+            return;
         }
 
         // everyone can change bot
@@ -97,7 +104,7 @@ public class MenuManager : MonoBehaviour
                 var index = slot.transform.GetSiblingIndex();
                 Destroy(slot.gameObject);
                 Transform empty = new GameObject("Fill", typeof(RectTransform)).transform;
-                empty.parent = charSlotParent;
+                empty.SetParent(charSlotParent, false);
                 empty.SetSiblingIndex(index);
 
                 Destroy(bot);//remove bot cursor
@@ -162,7 +169,7 @@ public class MenuManager : MonoBehaviour
         }
 
         var slot = Instantiate(playerSlotPrefab, transform.position, Quaternion.identity).transform;
-        slot.parent = charSlotParent;
+        slot.SetParent(charSlotParent);
         slot.GetComponent<PlayerSlotMenuDisplay>().SetSlot(playerCursor, availableChars[0], teams.GetColorOf(playerCursor.gameObject), isBot, teams.playerNrs.IndexOf(playerCursor.gameObject));
 
         // for bot
@@ -234,13 +241,12 @@ public class MenuManager : MonoBehaviour
 
     public Character GetCharacterOfPlayer(GameObject player)
     {
-        for (int i = 0; i < charSlotParent.childCount; i++)
+        PlayerSlotMenuDisplay[] characters = charSlotParent.GetComponentsInChildren<PlayerSlotMenuDisplay>();
+        foreach (PlayerSlotMenuDisplay character in characters)
         {
-            var slot = charSlotParent.GetChild(i).GetComponent<PlayerSlotMenuDisplay>();
-
-            if (slot != null && slot.myPlayer == player)
+            if (character != null && character.myPlayer == player)
             {
-                return slot.chara;
+                return character.chara;
             }
         }
         return null;

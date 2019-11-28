@@ -66,7 +66,6 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject CreateBot()
     {
         var player = Instantiate(botPrefab, Vector2.zero, Quaternion.identity).transform;
-
         return player.gameObject;
     }
 
@@ -149,7 +148,6 @@ public class PlayerSpawner : MonoBehaviour
         player.GetComponentInChildren<Canvas>().enabled = b;
     }
 
-
     private Vector2 GetSpawnArea(Transform player)
     {
         int team = teams.FindPlayerTeam(player.gameObject);
@@ -168,13 +166,16 @@ public class PlayerSpawner : MonoBehaviour
             }
         }
 
-
         // Spawn in one of the premade points in the right spawn zone
         //return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[0].childCount)).position;
         if (spawnAreas[team].childCount > pos)
+        {
             return spawnAreas[team].GetChild(pos).position;
+        }
         else
+        {
             return spawnAreas[team].GetChild(Random.Range(0, spawnAreas[team].childCount)).position; //team technically too big for the spawn poitns (eg 4 ppl, but only 3 spots) TODO: additional spots, for now random
+        }
     }
 
     private int GetPlayerTeam() // 0 or 1 for now

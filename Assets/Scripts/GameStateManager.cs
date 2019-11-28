@@ -16,7 +16,6 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private Vector2Int mapRange; //currently maps between 1 and 3
     [SerializeField] private Sprite[] mapSprites;
 
-
     [SerializeField] private GameMode[] allGameModes;
     private int currentGameModeIndex;
     private MenuManager menu;

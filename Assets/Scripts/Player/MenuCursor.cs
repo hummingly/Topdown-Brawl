@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using TMPro;
 
 public class MenuCursor : MonoBehaviour
 {
-    [SerializeField] private float speed = 0.5f;
+    private readonly float speed = 0.01f;
     [SerializeField] private Image spriteTeamCol;
     [SerializeField] private TextMeshProUGUI playerNrText;
 
@@ -42,15 +42,18 @@ public class MenuCursor : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var dir = new Vector3(moveInput.x, moveInput.y, 0);//new Vector3(moveInput.x, moveInput.y, 0).normalized;
+        var dir = new Vector3(moveInput.x, moveInput.y, 0);
         transform.position += Vector3.ClampMagnitude(dir, 1) * speed * Screen.width;
     }
 
     private void OnSelect()
     {
-        if (gr == null) return;
+        if (gr == null)
+        {
+            return;
+        }
 
-        pointerEventData.position = transform.position;//Camera.main.WorldToScreenPoint(transform.position);
+        pointerEventData.position = transform.position;
         List<RaycastResult> results = new List<RaycastResult>();
         gr.Raycast(pointerEventData, results);
 
@@ -97,6 +100,17 @@ public class MenuCursor : MonoBehaviour
 
     private void OnMove(InputValue value)
     {
+        Debug.Log("Move");
         moveInput = value.Get<Vector2>();
+    }
+
+    private void OnReady(InputValue value)
+    {
+        FindObjectOfType<MenuManager>().ToggleReady(gameObject);
+    }
+
+    private void OnLeaveTeam(InputValue value)
+    {
+        Debug.Log("Leaving Team.");
     }
 }

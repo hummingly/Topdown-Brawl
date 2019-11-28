@@ -114,11 +114,8 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
-    public void startSequence()
+    public void StartSequence()
     {
-        float totalTime = 1;
-
-
         //whole screen black
         //start at much glitch
         //go to clear color and less glitch
@@ -133,7 +130,7 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    private IEnumerator screenBlink(Color col, int frames)
+    private IEnumerator ScreenBlink(Color col, int frames)
     {
         screenFill.color = col;
 
@@ -158,20 +155,20 @@ public class EffectManager : MonoBehaviour
             rumble(gamepad, 0.2f, 0.75f, 0.75f);
         }
 
-        StartCoroutine(screenBlink(Color.white, 2));
+        StartCoroutine(ScreenBlink(Color.white, 2));
         AddShake(2f);
         Stop(0.05f);
     }
 
 
 
-    public void bulletDeathPartic(Vector2 hitPos, Transform bullet)
+    public void BulletDeathPartic(Vector2 hitPos, Transform bullet)
     {
         var p = Instantiate(bulletCrumblePartic, hitPos, Quaternion.Euler(bullet.rotation.eulerAngles.z + 90, /*-90*/ -90, 0)); //rotate to look in opposite direction of bullet
         p.transform.localScale = bullet.localScale*1.5f;
     }
 
-    public void damagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
+    public void DamagedEntity(Vector2 hitPos, Vector2 normal, float dmg)
     {
         float rot_z = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg;
 
@@ -179,9 +176,9 @@ public class EffectManager : MonoBehaviour
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
     }
 
-    public void gotDamaged(Transform player)
+    public void GotDamaged(Transform player)
     {
-        shakeScale(player, 0.1f, 0.75f);
+        ShakeScale(player, 0.1f, 0.75f);
 
         player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
 
@@ -189,21 +186,19 @@ public class EffectManager : MonoBehaviour
         //AddShake(0.25f);
     }
 
-
-
-    public void meleeBlow(Transform owner)
+    public void MeleeBlow(Transform owner)
     {
-        shakeScale(owner, 0.1f, 0.75f);
+        ShakeScale(owner, 0.1f, 0.75f);
     }
 
-    public void snipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
+    public void SnipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
     {
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
         rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
-        shakeScale(owner.transform, 0.1f, 0.75f);
+        ShakeScale(owner.transform, 0.1f, 0.75f);
     }
 
     public void muzzle(float dmg, Transform bullet, GameObject owner)
@@ -221,14 +216,14 @@ public class EffectManager : MonoBehaviour
         seq.AppendCallback(() => Destroy(m.gameObject));
 
         //addGridLigth(0.5f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m);
-        addGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
+        AddGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
 
 
-        shakeScale(owner.transform, 0.05f, 0.5f);
+        ShakeScale(owner.transform, 0.05f, 0.5f);
     }
 
 
-    public void invincible (Transform player, float dur)
+    public void Invincible (Transform player, float dur)
     {
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
@@ -247,7 +242,7 @@ public class EffectManager : MonoBehaviour
 
 
 
-    private void shakeScale(Transform obj, float time, float strength)
+    private void ShakeScale(Transform obj, float time, float strength)
     {
         /*obj.DOKill(); //prevent overlap or staying deformation
         Sequence seq = DOTween.Sequence();
@@ -341,7 +336,7 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public GridLigth addGridLigth(float i, float r, SpriteRenderer s, Transform t)
+    public GridLigth AddGridLigth(float i, float r, SpriteRenderer s, Transform t)
     {
         GridLigth l = new GridLigth(i, r, s, t);
         gridLights.Add(l);

@@ -78,12 +78,12 @@ public class Projectile : MonoBehaviour
 
             //TODO: add easing
 
-            effects.addGridLigth(0.15f, 4f, GetComponentInChildren<SpriteRenderer>(), transform);
+            effects.AddGridLigth(0.15f, 4f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
         else
         {
             //light = effects.addGridLigth(0.2f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
-            light = effects.addGridLigth(damage * 0.01f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+            light = effects.AddGridLigth(damage * 0.01f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
             //light = effects.addGridLigth(transform.localScale.x*0.1f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
     }
@@ -92,7 +92,7 @@ public class Projectile : MonoBehaviour
     {
         if (sniperShot)
         {
-            light = effects.addGridLigth(transform.localScale.x * 0.025f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
+            light = effects.AddGridLigth(transform.localScale.x * 0.025f, 2.5f, GetComponentInChildren<SpriteRenderer>(), transform);
         }
 
         if (Vector2.Distance(startPos, transform.position) - extendTravelDist >= destroyRange)
@@ -211,16 +211,16 @@ public class Projectile : MonoBehaviour
                     damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
 
-                effects.damagedEntity(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
+                effects.DamagedEntity(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
             }
             else
             {
-                effects.bulletDeathPartic(hitPoint, transform);
+                effects.BulletDeathPartic(hitPoint, transform);
             }
         }
         else
         {
-            effects.bulletDeathPartic(hitPoint, transform);
+            effects.BulletDeathPartic(hitPoint, transform);
         }
 
         // only knock back enemys or neutrals
@@ -274,7 +274,7 @@ public class Projectile : MonoBehaviour
         else
         {
             var hitPoint = other.contacts[0].point;
-            effects.bulletDeathPartic(hitPoint, transform);
+            effects.BulletDeathPartic(hitPoint, transform);
 
             Destroy(gameObject);
         }

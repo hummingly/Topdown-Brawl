@@ -25,7 +25,9 @@ public abstract class IDamageable : MonoBehaviour
         healthPoints = maxHealthPoints;
         healthSlider.maxValue = maxHealthPoints;
         if (!alwaysShowHp)
+        {
             healthSlider.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -90,7 +92,7 @@ public abstract class IDamageable : MonoBehaviour
     public void SetInvincible()
     {
         float spawnProtectTime = 2f;
-        effects.invincible(transform, spawnProtectTime);
+        effects.Invincible(transform, spawnProtectTime);
         invincible = true;
         StartCoroutine(disableInvinc(spawnProtectTime));
 

@@ -52,10 +52,10 @@ public class DefaultShootSkill : Skill
             effects.AddShake(0.25f);
 
             if (p.GetComponent<Projectile>().sniperShot)
-                effects.snipeShot(spawnPos, p.transform, gameObject, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+                effects.SnipeShot(spawnPos, p.transform, gameObject, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
         }
         else
-            effects.meleeBlow(transform);
+            effects.MeleeBlow(transform);
     }
 
   
