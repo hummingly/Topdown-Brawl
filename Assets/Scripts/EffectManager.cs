@@ -4,10 +4,12 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class EffectManager : MonoBehaviour
 {
     //[SerializeField] private Sprite rect;
+    [SerializeField] private Image screenFill;
     [SerializeField] private GameObject deathExplosion;
     [SerializeField] private GameObject respawnAnim;
     [SerializeField] private GameObject dashPartic;
@@ -111,6 +113,25 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
+    public void startSequence()
+    {
+        float totalTime = 1;
+
+
+        //whole screen black
+        //start at much glitch
+        //go to clear color and less glitch
+        //also enable player movement
+
+        screenFill.color = Color.black;
+
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(0.25f);
+        seq.Append(screenFill.DOFade(0,2).SetEase(Ease.InCubic));//OutCubic
+        //seq.AppendCallback(() => Destroy(m.gameObject));
+    }
+
+
 
     public void playerDeathExplosion(Vector2 pos, Gamepad gamepad = null)// int deviceId)
     {
@@ -140,7 +161,7 @@ public class EffectManager : MonoBehaviour
         float rot_z = Mathf.Atan2(normal.y, normal.x) * Mathf.Rad2Deg;
 
         var p = Instantiate(bigSparks, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
-        p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f);
+        p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
     }
 
 

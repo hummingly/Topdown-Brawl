@@ -81,5 +81,18 @@ public static class ExtensionMethods
 
         return 1;
     }
+
+    public static Color turnTeamColorDark(Color orgColor, float brigthness)
+    {
+        var darkColor = orgColor;
+        float H;
+        float S;
+        float V;
+        Color.RGBToHSV(darkColor, out H, out S, out V);
+        V = brigthness;
+        darkColor = Color.HSVToRGB(H, S, V);
+        //print(darkColor);
+        return darkColor;
+    }
 }
 

@@ -78,6 +78,11 @@ public class GameLogic : MonoBehaviour
 
         mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
 
+        if (!GetComponent<TeamManager>().debugFastJoin)
+        {
+            FindObjectOfType<EffectManager>().startSequence();
+            //yield return new WaitForSeconds(FindObjectOfType<EffectManager>().startSequence());
+        }
 
 
         // TODO: put all this shit into a camera script !!!
@@ -113,6 +118,8 @@ public class GameLogic : MonoBehaviour
             GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
             teamManager.InitDefenseBases(defenseBasesParent);
         }
+
+        teamManager.colorSpawns();
 
 
         roundRunning = true;

@@ -28,15 +28,7 @@ public class PlayerVisuals : MonoBehaviour
 
     public void SetActionOnCooldownCol()
     {
-        var darkColor = mainColor;
-        float H;
-        float S;
-        float V;
-        Color.RGBToHSV(darkColor, out H, out S, out V);
-        V = dashUsedBrigthness;
-        darkColor = Color.HSVToRGB(H,S,V);
-        //print(darkColor);
-        SetColorAll(darkColor);
+        SetColorAll(ExtensionMethods.turnTeamColorDark(mainColor, dashUsedBrigthness));
     }
     public void SetMainColor()
     {

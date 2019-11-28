@@ -199,4 +199,9 @@ public class PlayerSpawner : MonoBehaviour
     {
         return Random.Range(0, 2);
     }
+
+    public GameObject getSpawnArea(int i)
+    {
+        return spawnAreas[i].gameObject;
+    }
 }

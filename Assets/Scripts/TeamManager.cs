@@ -12,7 +12,7 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
     public List<InputDevice> playerDevices = new List<InputDevice>(); //each device of the player
     public List<Character> playerChars = new List<Character>(); 
 
-    [SerializeField] private bool debugFastJoin;
+    public bool debugFastJoin;
     [SerializeField] private Color[] teamColors;
     [SerializeField] private string[] colorStrings;
     private PlayerSpawner spawner;
@@ -41,6 +41,9 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
             teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
+            MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer m in meshs)
+                m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
         }
         /*
         DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
@@ -375,4 +378,12 @@ public partial class TeamManager : MonoBehaviour // Singleton instead of static,
         return teams;
     }
 
+    public void colorSpawns()
+    {
+        for (int t = 0; t < teams.Count; t++)
+        {
+            var spawnArea = spawner.getSpawnArea(t);
+            spawnArea.GetComponent<SpriteRenderer>().color = ExtensionMethods.turnTeamColorDark(teams[t].Color, 0.5f);
+        }
+    }
 }

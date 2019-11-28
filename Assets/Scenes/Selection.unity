@@ -2532,12 +2532,11 @@ MonoBehaviour:
   playerChars: []
   debugFastJoin: 0
   teamColors:
-  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.76862746, g: 0.37254903, b: 1, a: 1}
   - {r: 1, g: 0.93725497, b: 0, a: 1}
   - {r: 0, g: 0.9450981, b: 1, a: 1}
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
-  - {r: 0.8117648, g: 0, b: 1, a: 1}
   colorStrings:
   - WHITE
   - YELLOW
