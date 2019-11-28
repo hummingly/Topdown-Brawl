@@ -69,7 +69,7 @@ public class BotTest : MonoBehaviour
         // if hasn't been added bcz testing in dev scene
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "gameplayDEV")//FindObjectOfType<TeamManager>().getTeamOf(gameObject) == -1)
         {
-            FindObjectOfType<TeamManager>().AddToEmptyOrSmallestTeam(gameObject);
+            FindObjectOfType<TeamManager>().AddToSmallestTeam(gameObject);
             GetComponentInChildren<PlayerVisuals>().InitColor(FindObjectOfType<TeamManager>().GetColorOf(gameObject));
         }
     }

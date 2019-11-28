@@ -11,10 +11,12 @@ public partial class TeamManager : MonoBehaviour
     public List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
     [SerializeField] private string[] colorStrings;
+    public bool debugFastJoin;
+
+    // Actual players
     public List<GameObject> playerNrs = new List<GameObject>();
     public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
-    public bool debugFastJoin;
 
     private void Awake()
     {
@@ -36,13 +38,15 @@ public partial class TeamManager : MonoBehaviour
     {
         foreach (GameObject p in playerNrs)
         {
-            var cha = menu.GetCharacterOfPlayer(p);
-
-            playerChars.Add(cha);
+            Character character = menu.GetCharacterOfPlayer(p);
+            if (character != null)
+            {
+                playerChars.Add(character);
+            }
         }
     }
 
-        public void InitPlayers()
+    public void InitPlayers()
     {
         Debug.Log("Init Player");
         spawner = FindObjectOfType<PlayerSpawner>();
@@ -60,7 +64,6 @@ public partial class TeamManager : MonoBehaviour
             {
                 GameObject player = team.Get(p);
                 GameObject currentPlayer = null;
-
                 // Bot cursor is not destroyed on scene load, so now destroy it and spawn a bot, not a player object
                 if (player != null)
                 {
@@ -80,14 +83,11 @@ public partial class TeamManager : MonoBehaviour
                         }
                     }
                     index++;
-
                     /* Each PlayerInput can be assigned one or more devices. 
                      * By default, no two PlayerInput components will be assigned the same devices — 
                      * although this can be forced explicitly by manually assigning devices to a player when calling PlayerInput.
                      * Instantiate or by calling InputUser.PerformPairingWithDevice on the InputUser of a PlayerInput */
                 }
-
-
                 team.ReplacePlayer(player, currentPlayer);
                 spawner.PlayerJoined(currentPlayer.transform);
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
@@ -102,35 +102,28 @@ public partial class TeamManager : MonoBehaviour
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
             teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
-            MeshRenderer[] meshs = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer m in meshs)
-                m.material.color = teams[i].Color;//ExtensionMethods.turnTeamColorDark(teams[i].Color, 0.5f);
+            MeshRenderer[] meshes = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach (var m in meshes)
+            {
+                m.material.color = teams[i].Color;
+            }
         }
-        /*
-        DestructibleTeamBlock[] bases = FindObjectsOfType<DestructibleTeamBlock>();
-        // assumption count bases == teams.count --> TODO!
-        // random assignment --> TODO!
-        for (int t = 0; t < teams.Count; t++)
-        {
-            print("base...");
-            teams[t].setBase(bases[t]);
-        }
-        */
     }
 
     public void AddBot(int addBotButtonIndex)
     {
-        //GameObject bot = Instantiate(cursor, transform.position, Quaternion.identity); //instantiate a new unused cursor
-        // not needed since players will change everything for the bot?
-
+        int team = FindSmallestTeam();
+        if (team <= -1)
+        {
+            return;
+        }
         GameObject bot = new GameObject("Empty Bot Cursor");
-
-        AddToEmptyOrSmallestTeam(bot);
-
-        FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true, addBotButtonIndex);
-
-        bot.transform.parent = null;
-        DontDestroyOnLoad(bot);
+        if (teams[team].AddPlayer(bot))
+        {
+            FindObjectOfType<MenuManager>().PlayerJoined(bot.transform, true, addBotButtonIndex);
+            bot.transform.parent = null;
+            DontDestroyOnLoad(bot);
+        }
     }
 
     private void OnPlayerJoined(PlayerInput player)
@@ -143,15 +136,17 @@ public partial class TeamManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "Selection")
         {
             // first just add all to a new team
-            AddToEmptyOrSmallestTeam(player.gameObject);
-
-            FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
+            if (AddToSmallestTeam(player.gameObject))
+            {
+                FindObjectOfType<MenuManager>().PlayerJoined(player.transform);
+            }
 
             if (debugFastJoin)
             {
                 AddBot(0);
                 menu.Play();
             }
+            return;
         }
 
         //else if (teams.Count <= 1)// FOR SOME REASON still got called even when coming from scene
@@ -160,13 +155,13 @@ public partial class TeamManager : MonoBehaviour
             // in gameplay, but no teams made yet (so just fast testing from 1 scene in editor)
 
             // for testing add to a new team each new player
-            AddToEmptyOrSmallestTeam(player.gameObject);
-
-            FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
-            player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
+            if (AddToSmallestTeam(player.gameObject))
+            {
+                FindObjectOfType<PlayerSpawner>().PlayerJoined(player.transform);
+                player.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(player.gameObject));
+            }
         }
     }
-
 
     // Adds player and bots to the team.
     //
@@ -190,14 +185,6 @@ public partial class TeamManager : MonoBehaviour
         playerNrs.Add(player);
         playerDevices.Add(player.GetComponent<PlayerInput>().devices[0]);
         return true;
-    }
-
-    public void AddToEmptyOrSmallestTeam(GameObject player)
-    {
-        if (GetEmptyTeam() != -1)
-            AddToTeam(player, GetEmptyTeam());
-        else
-            AddToTeam(player, GetSmallestTeam());
     }
 
     public bool AddToSmallestTeam(GameObject player)
@@ -283,47 +270,11 @@ public partial class TeamManager : MonoBehaviour
         return smallestTeam;
     }
 
-    private int GetEmptyTeam()
-    {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            if (teams[i].Count == 0)
-                return i;
-        }
-        return -1;
-    }
-
-    private int GetSmallestTeam()
-    {
-        int smallestTeam = int.MaxValue;
-        int smallestTeamPlayers = int.MaxValue;
-        for (int i = 0; i < teams.Count; i++)
-        {
-            if (teams[i].Count < smallestTeamPlayers)
-            {
-                smallestTeam = i;
-                smallestTeamPlayers = teams[i].Count;
-            }
-        }
-        return smallestTeam;
-    }
-
     // Returns the index of the player's team or -1 if the player has no team.
     public int FindPlayerTeam(GameObject player)
     {
         return teams.FindIndex(t => t.HasPlayer(player));
     }
-
-    public bool IsBaseOf(DestructibleBlock _base, GameObject player)
-    {
-        int teamId = FindPlayerTeam(player);
-
-        if (teams[teamId].DefenseBase == _base)
-            return true;
-
-        return false;
-    }
-
 
     public void Remove(GameObject player)
     {
@@ -335,7 +286,6 @@ public partial class TeamManager : MonoBehaviour
             }
         }
     }
-
 
     public Color GetColor(int index)
     {
@@ -350,16 +300,6 @@ public partial class TeamManager : MonoBehaviour
     {
         return teams[FindPlayerTeam(player)].Color;
     }
-
-
-    /*public GameObject getPlayerByID(int i)
-    {
-        return playerIDs[i];
-    }
-    public int getPlayerId(GameObject player)
-    {
-        return playerIDs.IndexOf(player);
-    }*/
 
     public void IncreaseScore(GameObject player)
     {
@@ -379,6 +319,16 @@ public partial class TeamManager : MonoBehaviour
     public List<Team> GetTeams()
     {
         return teams;
+    }
+
+    public bool IsBaseOf(DestructibleBlock _base, GameObject player)
+    {
+        int teamId = FindPlayerTeam(player);
+
+        if (teams[teamId].DefenseBase == _base)
+            return true;
+
+        return false;
     }
 
     public void colorSpawns()
