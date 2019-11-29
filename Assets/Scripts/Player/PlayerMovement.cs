@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private PlayerStats stats;
+    private SoundsPlayer sounds;
 
 
     [SerializeField] private float accForce;
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
+        sounds = GetComponentInChildren<SoundsPlayer>();
 
         // Set init rotation
         lastRotInput = startRot;
@@ -331,6 +333,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        sounds.bounceWall(rb.velocity.magnitude);
+
         // no collision with person who knocked
         if (collision.gameObject == knockOwner)
             return;

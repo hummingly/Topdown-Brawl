@@ -56,8 +56,8 @@ MonoBehaviour:
   startLevelClip: {fileID: 8300000, guid: 992a760998ceda447bf20e720f932af4, type: 3}
   respawnClip: {fileID: 8300000, guid: 75cb34999cb968b448dcc469139956d2, type: 3}
   gameOverClip: {fileID: 8300000, guid: 91858beca496e0d4b972eacc763ced22, type: 3}
-  bass: {fileID: 1777854169654126298}
-  bigEvents: {fileID: 3547008770471504144}
+  levelLoad: {fileID: 3547008770471504144}
+  gameOverBass: {fileID: 1777854169654126298}
 --- !u!82 &6227297312816878262
 AudioSource:
   m_ObjectHideFlags: 0
@@ -70,7 +70,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f99b163714d05784b9669f9e20ef196b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.75
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 1
   Mute: 0

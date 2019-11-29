@@ -9531,7 +9531,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 737725873
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_RenderMode: 1
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -9567,6 +9567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3847066a28a84564f9277e8d746b2268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxIntens: 0.1
+  maxRange: 2.5
 --- !u!1 &868615776719617943
 GameObject:
   m_ObjectHideFlags: 0
@@ -14374,7 +14376,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 737725873
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_RenderMode: 1
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -14410,3 +14412,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3847066a28a84564f9277e8d746b2268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxIntens: 0.1
+  maxRange: 2.5

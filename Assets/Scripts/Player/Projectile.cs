@@ -79,7 +79,7 @@ public class Projectile : MonoBehaviour
             //seq.AppendCallback(() => Destroy(gameObject));
             seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false);
             seq.AppendCallback(() => Destroy(gameObject));
-            this.enabled = false;
+            //this.enabled = false;
 
             //TODO: add easing
 
