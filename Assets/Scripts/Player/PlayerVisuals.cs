@@ -133,4 +133,9 @@ public class PlayerVisuals : MonoBehaviour
                 i.enabled = true;
         }
     }
+
+    public Color GetMainColor()
+    {
+        return mainColor;
+    }
 }

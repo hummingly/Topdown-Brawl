@@ -253,13 +253,23 @@ public class EffectManager : MonoBehaviour
 
         var p = Instantiate(bigSparks, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
+
+        //print(dmg);
+        if(dmg >= 25) //heavy hit: sniper long range or melee
+        {
+            //StartCoroutine(screenBlink(Color.white, 1));
+            AddShake(0.5f);
+            Stop(0.025f);
+
+            //TODO: rumble the damaged one
+        }
     }
 
     public void gotDamaged(PlayerVisuals player)
     {
         shakeScale(player, 0.1f, 0.75f);
 
-        player.blinkWhite(Color.white, 1);
+        player.blinkWhite(Color.white, 2);
 
 
         //AddShake(0.3f);
@@ -282,15 +292,20 @@ public class EffectManager : MonoBehaviour
         shakeScale(player, 0.2f, 1f);
     }
 
-    public void muzzle(float dmg, Transform bullet, PlayerVisuals player)
+    public void muzzle(float dmg, Transform bullet, PlayerVisuals player, float spawnPosFromCenter)
     {
-        var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
+        //because always shoot in stick dir, not player look dir this looks weird
+        //var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
+        var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], player.transform.parent.position + player.transform.parent.up * spawnPosFromCenter, player.transform.parent.rotation).transform;
 
-        m.parent = player.transform;
+        m.parent = player.transform.parent;
 
         foreach (SpriteRenderer spr in m.GetComponentsInChildren<SpriteRenderer>())
+        {
+            //spr.color = player.GetMainColor(); // or just use FF8D00 (orange) bcz looks realistic
             spr.DOFade(0, muzzleFlashDur);
-        // TODO: maybe also move individual muzzles in local up?
+            // TODO: maybe also move individual muzzles in local up?
+        }
 
 
         Sequence seq = DOTween.Sequence();
@@ -363,6 +378,13 @@ public class EffectManager : MonoBehaviour
             b.enabled = false;
         foreach (Skill b in FindObjectsOfType<Skill>())
             b.enabled = false;
+
+
+        foreach (PlayerInput p in FindObjectsOfType<PlayerInput>())
+            rumble((Gamepad)p.devices[0], 0.3f, 1,1);
+        StartCoroutine(screenBlink(Color.white, 4));
+        AddShake(2f);
+        Stop(0.2f);
 
         return dur;
     }

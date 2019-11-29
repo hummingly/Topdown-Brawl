@@ -160,6 +160,8 @@ public class Projectile : MonoBehaviour
         }
 
 
+        var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
+
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.tag == "Destruction Piece" && this.enabled)
         {
@@ -169,13 +171,12 @@ public class Projectile : MonoBehaviour
             if(!isOwnBase)
             {
                 sounds.hitEnemy();
+                effects.damagedEntity(hitPoint, -transform.up, damage);
                 damageAbleBase.ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
                 this.enabled = false;
             }
         }
 
-
-        var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
 
         if (melee)
         {
