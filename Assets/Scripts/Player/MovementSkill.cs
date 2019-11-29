@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementSkill : Skill
 {
     private Rigidbody2D rb;
+    private SoundsPlayer sounds;
 
     protected enum Type { Dash, Teleport, SpeedChange };
     protected Type type = Type.Dash;
@@ -16,6 +17,7 @@ public class MovementSkill : Skill
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sounds = GetComponentInChildren<SoundsPlayer>();
     }
 
 
@@ -31,7 +33,7 @@ public class MovementSkill : Skill
 
         rb.AddForce(dashDir * dashForce, ForceMode2D.Impulse);
 
-
+        sounds.dash();
         effects.DoDash(transform.position, dashDir, transform);
     }
 

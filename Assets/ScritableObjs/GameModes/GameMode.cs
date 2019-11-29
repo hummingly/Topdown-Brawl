@@ -8,7 +8,7 @@ public class GameMode : ScriptableObject
     public new string name;
     public string description;
 
-
+    public int rounds;
     public int pointsToWin;
     //public bool doRespawn;
     //public float startTime;

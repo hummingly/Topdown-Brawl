@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PIDController torquePID;
     private Rigidbody2D rb;
     private PlayerStats stats;
+    private SoundsPlayer sounds;
 
 
     [SerializeField] private float accForce;
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<PlayerStats>();
+        sounds = GetComponentInChildren<SoundsPlayer>();
 
         // Set init rotation
         lastRotInput = startRot;
@@ -78,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         //rb.AddForce(moveInput * acc, ForceMode2D.Impulse);
         rb.AddForce(moveInput * accForce, ForceMode2D.Impulse);
 
-        
+
         // TODO: instead add torque for physics! OR smooth visually
         RotateToRightStick(); //  TODO: only if joystick fully pressed change look dir?
 
@@ -87,87 +89,27 @@ public class PlayerMovement : MonoBehaviour
 
         // TODO: take rotInput directly to shoot bullets, don't wait for physical rotation
     }
-    /*
-    private int GetBreathSpeed()
-    {
-        if (velocity < 4)
-        {
-            return 25;
-        }
-        else
-        {
-            return 15;
-        }
-        //return Mathf.RoundToInt(velocity * 4f);
-    }
-
-    private float GetBreathStrength()
-    {
-        if (velocity < 1)
-        {
-            return 0;
-        }
-        else if (velocity < 4)
-        {
-            return 100;
-        }
-        else
-        {
-            return 200;
-        }
-        //return velocity * 3;
-    }
-
-    private float AddBreathing(float desiredRot)
-    {
-        if (counter == 0)
-        {
-            if (breathing > 0)
-                breathing = GetBreathStrength() * -1;
-            else
-                breathing = GetBreathStrength()*5;
-            return desiredRot + breathing;
-        }
-        return desiredRot;
-    }
-    */
-
-    // TODO: refactor out into input script
-    private void OnA()
-    {
-        print("hit a");
-    }
-    
-    private void OnMove(InputValue value)
-    {
-        moveInput = value.Get<Vector2>();
-    }
-    private void OnRotate(InputValue value)
-    {
-        rotInput = value.Get<Vector2>();
-    }
-
 
     // bot setters
     public void SetMove(Vector2 val)
     {
         moveInput = val;
     }
+
     public void SetRot(Vector2 val)
     {
         rotInput = val;
     }
 
-
     public Vector2 GetLastRot()
     {
         return lastRotInput;
     }
+
     public Vector2 GetMoveInput()
     {
         return moveInput;
     }
-
 
     private void RotateToRightStick()
     {
@@ -176,8 +118,8 @@ public class PlayerMovement : MonoBehaviour
             lastRotInput = rotInput;
 
         float desiredRot = Mathf.Atan2(lastRotInput.y, lastRotInput.x) * Mathf.Rad2Deg + 90f; // 90 to convert the transform rot to the input rot
-        //desiredRot = addBreathing(desiredRot);
-        
+                                                                                              //desiredRot = addBreathing(desiredRot);
+
         float actualRot = transform.eulerAngles.z; // 0 to 360, but should be 180 to -180 like desiredRot
         actualRot -= 180;
 
@@ -210,104 +152,6 @@ public class PlayerMovement : MonoBehaviour
         //print(correction);
     }
 
-    /*
-    private Vector2 getVelocity()
-    {
-        // Nachteil: auch bei kleinem input (oder wenig tweak des sticks des controllers) beschleunigt man auf maxVelocity (zwar langsamer, aber trotzdem)
-        //      --> Lösung: beschleunigung nur bei "full-throttle" anwenden
-
-        // x und y beschleunigung ist getrennt, deswegen ist es etwas schwieriger zu steuern
-
-        acc.x = doAcceleration(moveInput.x, acc.x);
-        acc.y = doAcceleration(moveInput.y, acc.y);
-
-        // clamp max speed
-        acc.x = Mathf.Clamp(acc.x, -maxAcc, maxAcc);
-        acc.y = Mathf.Clamp(acc.y, -maxAcc, maxAcc);
-
-        
-        // apply drag
-        if (velocity.x < 0)
-        {
-            velocity.x += drag;
-            if (velocity.x > 0)
-            {
-                velocity.x = 0;
-            }
-        }
-        else if (velocity.x > 0)
-        {
-            velocity.x -= drag;
-            if (velocity.x < 0)
-            {
-                velocity.x = 0;
-            }
-        }
-        if (velocity.y < 0)
-        {
-            velocity.y += drag;
-            if (velocity.y > 0)
-            {
-                velocity.y = 0;
-            }
-        }
-        else if (velocity.y > 0)
-        {
-            velocity.y -= drag;
-            if (velocity.y < 0)
-            {
-                velocity.y = 0;
-            }
-        }
-
-        Vector2 newVelocity = velocity + (moveInput * acc);
-
-        // clamp max velocity (incl. diagonal movement)
-        Vector2 normVelocity = newVelocity.normalized;
-        float absVelocity = newVelocity.magnitude;
-
-        float div1 = Vector2.Dot(lastRotInput, moveInput);
-        float div2 = lastRotInput.magnitude * moveInput.magnitude;
-        float cos = div1 / div2;
-        float a = Mathf.Acos(cos);
-        a *= Mathf.Rad2Deg;
-        
-        newVelocity = (a > 120) ? (normVelocity * backVelocity) : newVelocity;
-        newVelocity = (absVelocity > maxVelocity) ? (normVelocity * maxVelocity) : newVelocity;
-        return newVelocity;
-    }
-
-    private float doAcceleration(float input, float acc)
-    {
-        // wegen Ungenauigkeiten bei meinem Controller... kA, wie das bei euch ist??
-        if (Math.Abs(input) > 0.1f)
-        {
-            return acc + accSpeed;
-        }
-        else
-        {
-            //return approachZero(acc, nAccSpeed);
-            return 0;
-        }
-    }*/
-
-
-    //https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/Actions.html#started-performed-and-canceled-callbacks
-    //https://www.youtube.com/watch?v=D8nUI88POU8&t=4s
-
-    //TODO: implement deviceLost -> pause game ?
-    /*private void OnDeviceLost()
-    {
-        print("lost");
-        velocity = Vector2.zero;
-    }
-    private void OnDeviceRegained()
-    {
-        print("regained");
-        velocity = Vector2.zero;
-    }*/
-
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var dmgObj = collision.GetComponent<DamagingObject>();
@@ -319,8 +163,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
-    public void tookMeleeDmg(GameObject owner, float t, int dmg, float velThresh, float maxAngle)
+    public void TookMeleeDmg(GameObject owner, float t, int dmg, float velThresh, float maxAngle)
     {
         knockOwner = owner;
         meleeKnockTimer = t;
@@ -331,6 +174,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        sounds.bounceWall(rb.velocity.magnitude);
+
         // no collision with person who knocked
         if (collision.gameObject == knockOwner)
             return;
@@ -349,34 +194,27 @@ public class PlayerMovement : MonoBehaviour
             if (collision.gameObject.GetComponent<IDamageable>() && FindObjectOfType<TeamManager>().FindPlayerTeam(collision.gameObject) == FindObjectOfType<TeamManager>().FindPlayerTeam(gameObject))
                 collision.gameObject.GetComponent<IDamageable>().ReduceHealth(extraDmgOnWallHit);
         }
-
-
-
     }
 
-    /*
-     * // crusher worked ok, but didn't kill when fully closed
-    private void OnCollisionStay2D(Collision2D collision)
+    // TODO: refactor out into input script
+    private void OnA()
     {
-        DamagingObject dmgObj = collision.gameObject.GetComponent<DamagingObject>();
-        if (dmgObj && dmgObj.damageOnSqueeze)
-        {
-            // Wait until other collider also overlaps with player (apart from the crushing box) !!! MAY cause problems with colliding bullets etc, so can add (solid) mask
-            Collider2D[] hitColls = Physics2D.OverlapBoxAll(transform.position, transform.localScale / 2, transform.localRotation.z);
-
-            for (int i = 0; i < hitColls.Length; i++)
-            {
-                //    Debug.Log("Hit : " + hitColls[i].name + i);
-                //if(collision == solid)
-                if (hitColls[i] != dmgObj.GetComponent<Collider2D>() && hitColls[i] != GetComponent<Collider2D>())
-                {
-                    stats.ReduceHealth(dmgObj.damage);
-                    break;
-                }
-            }
-
-
-        }
+        print("hit a");
     }
-    */
+
+    private void OnMove(InputValue value)
+    {
+        moveInput = value.Get<Vector2>();
+    }
+
+    private void OnRotate(InputValue value)
+    {
+        rotInput = value.Get<Vector2>();
+    }
+
+    // Can be only called at game end.
+    private void OnReady(InputValue value)
+    {
+        FindObjectOfType<GameStateManager>().RestartMatchMaking();
+    }
 }

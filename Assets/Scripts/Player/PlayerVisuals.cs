@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerVisuals : MonoBehaviour
 {
@@ -110,5 +111,31 @@ public class PlayerVisuals : MonoBehaviour
     {
         foreach (SpriteRenderer spr in GetComponentsInChildren<SpriteRenderer>())
             spr.color = col;
+    }
+
+    public void Hide(bool b)
+    {
+        if(b)
+        {
+            //transform.position += Vector3.right * -999;
+            transform.position += Vector3.right * -999;
+            //transform.parent.GetComponentInChildren<Slider>().transform.gameObject.SetActive(false);
+            foreach(Image i in transform.parent.GetComponentsInChildren<Image>())
+                i.enabled = false;
+        }
+        else
+        {
+            //FindObjectOfType<PlayerSpawner>().PlayerJoined(transform.parent.transform);
+            //transform.parent.transform.position += Vector3.right * 999;
+            transform.position += Vector3.right * 999;
+            //transform.parent.GetComponentInChildren<Slider>().transform.gameObject.SetActive(true);
+            foreach (Image i in transform.parent.GetComponentsInChildren<Image>())
+                i.enabled = true;
+        }
+    }
+
+    public Color GetMainColor()
+    {
+        return mainColor;
     }
 }

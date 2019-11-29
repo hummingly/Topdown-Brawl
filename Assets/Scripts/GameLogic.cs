@@ -2,22 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class GameLogic : MonoBehaviour
 {
-    //private static GameLogic instance;
-    //public static GameLogic Instance { get { return instance; } }
-
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
-
-    private float mapSize;
-
-    [SerializeField] private float startGameplayAnimDur = 1;
-    [SerializeField] private float spawnBeforeAnimDone = 0.2f;
 
     private bool roundRunning;
 
@@ -44,23 +35,21 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        //GetComponent<GameStateManager>().state == GameStateManager.GameState.Ingame doesn't help because InitGameplay is Coroutine
-        if (roundRunning) // bases are initialized
+        if (roundRunning)
         {
-            //if bigger than gamemode max then won
-            if (winManager.OnTeamWon(teamManager.GetTeams()))
+            if (winManager.OnTeamWon())
             {
-                roundRunning = false;
-
-                GameOver();
+                StartRoundEnd();
             }
         }
     }
 
-    public void setDeathEvent(Vector2 pos)
+    public void SetDeathEvent(Vector2 pos)
     {
-        if(roundRunning)
+        if (roundRunning)
+        {
             lastDeath = pos;
+        }
     }
 
     public void Kill()
@@ -72,80 +61,83 @@ public class GameLogic : MonoBehaviour
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
+        Debug.Log("Scene Loadeed!");
         // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (FindObjectOfType<GameStateManager>().State != GameStateManager.GameState.Ingame)
         {
-            StartCoroutine(InitGameplay());
+            return;
         }
-    }
-
-    private IEnumerator InitGameplay()
-    {
-        if (winManager.gameMode.winCondition != GameMode.WinCondition.Defense)
-            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
 
         uiManager = FindObjectOfType<UIManager>();
 
-        mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
+        if (winManager.WinCondition != GameMode.WinCondition.Defense)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
+        }
+
+        teamManager.InitPlayers();
+
+        foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
+        {
+            p.enabled = false;
+            p.GetComponentInChildren<PlayerVisuals>().Hide(true);
+        }
+        foreach (Skill s in FindObjectsOfType<Skill>())
+        {
+            s.enabled = false;
+        }
+
+        if (winManager.WinCondition == GameMode.WinCondition.Defense)
+        {
+            winManager.InitDefenseBases();
+        }
+        teamManager.ColorSpawns();
+
+        roundRunning = true;
 
         if (!GetComponent<TeamManager>().debugFastJoin)
         {
             FindObjectOfType<EffectManager>().StartSequence();
-            //yield return new WaitForSeconds(FindObjectOfType<EffectManager>().startSequence());
         }
-
-
-        // TODO: put all this shit into a camera script !!!
-
-        // Short cam animation before spawn
-        //Camera.main.DOOrthoSize(30, 2);
-        // doesnt work since is controlled by target group, so new vcam
-        /*var newGO = new GameObject("Zoom Cam");
-        newGO.transform.position = new Vector3(0,0, -11);
-        Cinemachine.CinemachineVirtualCamera testCam = newGO.AddComponent<Cinemachine.CinemachineVirtualCamera>();
-        testCam.MoveToTopOfPrioritySubqueue();
-        testCam.transform.DOMove(Vector2.one * 10, 2);
-        testCam.m_Lens.OrthographicSize = 50;
-        //testCam.do;*/
-
-        // TODO: maybe move camera across the map once from left to center, then zoom out
-
-        FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = false;
-        Camera.main.DOOrthoSize(10 * mapSize, startGameplayAnimDur).SetEase(Ease.OutCubic);
-
-        //TODO: Display a message like "GO" (and potentially a countdown?)
-
-        yield return new WaitForSeconds(startGameplayAnimDur - spawnBeforeAnimDone);
-
-        FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
-
-        teamManager.InitPlayers();
-        if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
-        {
-            GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
-            teamManager.InitDefenseBases(defenseBasesParent);
-        }
-        teamManager.ColorSpawns();
-        roundRunning = true;
     }
 
     public void IncreaseScore(GameObject player)
     {
-        teamManager.IncreaseScore(player);
-        // display new score in UI
+        winManager.IncreaseKillScore(teamManager.FindPlayerTeam(player));
         uiManager.UpdateScores();
     }
 
-        public void GameOver()
+    public void StartRoundEnd()
     {
+        roundRunning = false;
         float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
-        StartCoroutine(ShowGameOverUi(dur));
+        if (winManager.GetWinningTeam() > -1)
+        {
+            StartCoroutine(GameOverUi(dur));
+        }
+        else
+        {
+            StartCoroutine(RestartMatchUi(dur));
+        }
     }
 
-    private IEnumerator ShowGameOverUi(float t)
+    private IEnumerator RestartMatchUi(float t)
+    {
+        var seconds = Mathf.Max(t, 8.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
+        uiManager.ShowRoundMatchUi();
+        yield return new WaitForSecondsRealtime(seconds);
+
+        var dur = FindObjectOfType<EffectManager>().Restart();
+        Sequence seqCam = DOTween.Sequence();
+        seqCam.AppendInterval(dur);
+        seqCam.AppendCallback(() => FindObjectOfType<GameStateManager>().Replay());
+    }
+
+    private IEnumerator GameOverUi(float t)
     {
         yield return new WaitForSecondsRealtime(t);
-
+        FindObjectOfType<GameStateManager>().EndGame();
         uiManager.SetGameOverUI();
     }
 }

@@ -7,13 +7,17 @@ using UnityEngine.InputSystem;
 public class PlayerStats : IDamageable
 {
     private PlayerSpawner playerSpawner;
+    private SoundsPlayer sounds;
     private GameLogic logic;
+    private PlayerVisuals visuals;
 
 
     public override void Awake()
     {
         playerSpawner = FindObjectOfType<PlayerSpawner>();
         logic = FindObjectOfType<GameLogic>();
+        visuals = GetComponentInChildren<PlayerVisuals>();
+        sounds = GetComponentInChildren<SoundsPlayer>();
 
         alwaysShowHp = true;
         base.Awake();
@@ -28,7 +32,8 @@ public class PlayerStats : IDamageable
             GetComponent<BotTest>().StopChasing();
         }
 
-        effects.playerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+        sounds.Death();
+        effects.PlayerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
 
         foreach (DefaultShootSkill d in GetComponents<DefaultShootSkill>())
         {
@@ -39,7 +44,7 @@ public class PlayerStats : IDamageable
         {
             logic.IncreaseScore(damagedLastBy);
         }
-        logic.setDeathEvent(transform.position);
+        logic.SetDeathEvent(transform.position);
 
         playerSpawner.PlayerDied(this);
     }
@@ -47,7 +52,7 @@ public class PlayerStats : IDamageable
     public override void OnReduceHealth(int amount, Vector3 projectilePos, Vector3 nextProjectilePos)
     {
         // TODO: effects, whatever
-
-        effects.GotDamaged(transform);
+        sounds.Damaged();
+        effects.GotDamaged(visuals);
     }
 }

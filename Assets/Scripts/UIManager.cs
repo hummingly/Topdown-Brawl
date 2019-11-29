@@ -1,38 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] scores;
+    [SerializeField] private GameObject[] rounds;
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject gameplay;
+    [SerializeField] private GameObject roundOverview;
     [SerializeField] private GameObject gameOver;
+    [SerializeField] private GameObject pointPrefab;
+    [SerializeField] private TextMeshProUGUI roundTitle;
 
-    private TeamManager teams;
+    private WinManager winManager;
 
-    void Start()
+    private void Start()
     {
-        teams = FindObjectOfType<TeamManager>();
+        winManager = FindObjectOfType<WinManager>();
 
-        if (FindObjectOfType<WinManager>().gameMode.winCondition == GameMode.WinCondition.Defense)
+        if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
             scores[0].transform.parent.gameObject.SetActive(false);
         }
     }
 
-    void Update()
-    {
-
-    }
-
     public void UpdateScores()
     {
-        for (int i = 0; i < teams.teams.Count; i++)
+        for (int i = 0; i < scores.Length; i++)
         {
-            TextMeshProUGUI text = scores[i].GetComponent<TextMeshProUGUI>();
-            text.SetText(teams.GetScore(i).ToString());
+            var text = scores[i].GetComponent<TextMeshProUGUI>();
+            text.SetText(winManager.TeamKills[i].ToString());
         }
     }
 
@@ -41,17 +39,35 @@ public class UIManager : MonoBehaviour
         gameplay.SetActive(false);
         gameOver.SetActive(true);
         TextMeshProUGUI text = gameOver.GetComponentInChildren<TextMeshProUGUI>();
-        var winningTeam = teams.GetTeamName(FindObjectOfType<WinManager>().GetWinningTeam());
+        var winningTeam = FindObjectOfType<TeamManager>().GetTeamName(winManager.GetWinningTeam());
         text.SetText(winningTeam + " WON!");
     }
 
     public void GoToMenu()
     {
-        FindObjectOfType<GameStateManager>().GoToSelection();
+        FindObjectOfType<GameStateManager>().RestartMatchMaking();
     }
 
-    public void Restart()
+    public void ShowRoundMatchUi()
     {
-        FindObjectOfType<GameStateManager>().Restart();
+        roundTitle.SetText("Round " + winManager.GetCurrentRound() + " / " + winManager.RoundCount);
+        gameOver.SetActive(false);
+        roundOverview.SetActive(true);
+        var teamManager = FindObjectOfType<TeamManager>();
+        for (int i = 0; i < rounds.Length; i++)
+        {
+            var text = rounds[i].GetComponentInChildren<TextMeshProUGUI>();
+            text.SetText(teamManager.GetTeamName(i));
+            var color = teamManager.GetColor(i);
+            var points = rounds[i].transform.GetChild(1);
+            var roundWins = winManager.TeamPoints[i];
+            for (int j = 0; j < roundWins; j++)
+            {
+                var point = Instantiate(pointPrefab, transform.position, Quaternion.identity).transform;
+                point.SetParent(points.transform);
+                point.GetComponent<Image>().color = color;
+                point.transform.localScale = Vector3.one;
+            }
+        }
     }
 }
