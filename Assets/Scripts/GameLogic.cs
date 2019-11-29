@@ -50,16 +50,23 @@ public class GameLogic : MonoBehaviour
             //if bigger than gamemode max then won
             if (winManager.OnTeamWon())
             {
-                roundRunning = false;
-
-                GameOver();
+                if (winManager.GetWinningTeam() == -1)
+                {
+                    RestartOver();
+                    FindObjectOfType<GameStateManager>().RestartMatch();
+                }
+                else
+                {
+                    roundRunning = false;
+                    GameOver();
+                }
             }
         }
     }
 
     public void setDeathEvent(Vector2 pos)
     {
-        if(roundRunning)
+        if (roundRunning)
             lastDeath = pos;
     }
 
@@ -73,7 +80,7 @@ public class GameLogic : MonoBehaviour
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
         // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().state == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
         {
             StartCoroutine(InitGameplay());
         }
@@ -135,7 +142,19 @@ public class GameLogic : MonoBehaviour
         uiManager.UpdateScores();
     }
 
-        public void GameOver()
+    public void RestartOver()
+    {
+        float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
+        StartCoroutine(RoundOverUi(dur));
+    }
+
+    // TODO: Create actual Ui
+    private IEnumerator RoundOverUi(float t)
+    {
+        yield return new WaitForSecondsRealtime(t);
+    }
+
+    public void GameOver()
     {
         float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
         StartCoroutine(ShowGameOverUi(dur));

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,9 +8,11 @@ using UnityEngine.UI;
 public class GameStateManager : MonoBehaviour
 {
     // SceneManager was already taken... (?) maybe MapManager, but should also do menu etc
-    public enum GameState { Menu, Selection, Ingame, Victory };
-    public GameState state = GameState.Selection;
+    public enum GameState { Menu, MatchMaking, Ingame, End };
+    private GameState state = GameState.MatchMaking;
     private TeamManager teams;
+
+    public GameState State => state;
 
     private void Awake()
     {
@@ -19,6 +21,11 @@ public class GameStateManager : MonoBehaviour
 
     public void Play(string map)
     {
+        if (State != GameState.MatchMaking)
+        {
+            Debug.Log("Invalid State Transition");
+            return;
+        }
         FindObjectOfType<UnityEngine.InputSystem.PlayerInputManager>().joinBehavior = UnityEngine.InputSystem.PlayerJoinBehavior.JoinPlayersManually;
         state = GameState.Ingame;
         SceneManager.LoadScene(map);
@@ -47,9 +54,12 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void Restart()
+    public void RestartMatch()
     {
-        BotTest[] bots = FindObjectsOfType<BotTest>();
+         foreach (var b in FindObjectsOfType<BotTest>())
+        {
+            DontDestroyOnLoad(b.gameObject);
+        }
 
         var winManager = FindObjectOfType<WinManager>();
         winManager.ResetRound();
@@ -60,19 +70,43 @@ public class GameStateManager : MonoBehaviour
         {
             winManager.InitDefenseBases();
         }
+        Time.timeScale = 1;
+    }
 
-        // keep bots (poor hack)
-        for (int i = 0; i < bots.Length; i++)
+    public void EndGame() {
+        if (State != GameState.Ingame)
         {
-            //teams.AddBot(i);
+            Debug.Log("Invalid State Transition");
+            return;
+        }
+        state = GameState.End;
+        var playerInput = FindObjectsOfType<PlayerInput>();
+        foreach (var p in playerInput)
+        {
+            p.SwitchCurrentActionMap("Menu");
+        }
+    }
 
-            GameObject bot = new GameObject("Empty Bot Cursor");
-            //AddToEmptyOrSmallestTeam(bot);
-            teams.GetTeams()[teams.FindPlayerTeam(bots[i].gameObject)].ReplacePlayer(bots[i].gameObject, bot);
+    IEnumerator LoadSceneAsync(string scene, IEnumerable<GameObject> gameObjects)
+    {
+        // Set the current Scene to be able to unload it later
+        Scene currentScene = SceneManager.GetActiveScene();
 
-            DontDestroyOnLoad(bot);
+        // The Application loads the Scene in the background at the same time as the current Scene.
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+
+        // Wait until the last operation fully loads to return anything
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
         }
 
-        Time.timeScale = 1;
+        // Move the GameObject (you attach this in the Inspector) to the newly loaded Scene
+        foreach (var o in gameObjects)
+        {
+            SceneManager.MoveGameObjectToScene(o, SceneManager.GetSceneByName(scene));
+        }
+        // Unload the previous Scene
+        SceneManager.UnloadSceneAsync(currentScene);
     }
 }

@@ -28,7 +28,7 @@ public class BotTest : MonoBehaviour
     [SerializeField] private float maxRandAimOffset;
     [Space]
 
-    [SerializeField] private Vector2 playerChaseOffsetMinMax = new Vector2(3,6);
+    [SerializeField] private Vector2 playerChaseOffsetMinMax = new Vector2(3, 6);
     //[SerializeField] private float playerChaseOffsetRnd = 0.5f;
     [SerializeField] private float playerChaseOffsetChangeSpd = 1f;
     [SerializeField] private float maxStrafe = 2f;
@@ -88,6 +88,10 @@ public class BotTest : MonoBehaviour
 
     void Update()
     {
+        if (gameObject == null)
+        {
+            return;
+        }
         currPlayerChaseOffset += playerChaseOffsetChangeSpd * ExtensionMethods.RandNegPos();
         currPlayerChaseOffset = Mathf.Clamp(currPlayerChaseOffset, playerChaseOffsetMinMax.x, playerChaseOffsetMinMax.y);
         currStrafe += strafeChangeSpd * ExtensionMethods.RandNegPos();
@@ -99,9 +103,13 @@ public class BotTest : MonoBehaviour
         moveObstAdjust = Mathf.Clamp(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust);
         // inverted, when big then small
         if (moveObstAdjust > 0)
+        {
             moveObstAdjust = possibleMaxAdjust - moveObstAdjust;
+        }
         if (moveObstAdjust < 0)
-            moveObstAdjust =-possibleMaxAdjust + moveObstAdjust;
+        {
+            moveObstAdjust = -possibleMaxAdjust + moveObstAdjust;
+        }
         moveObstAdjust = ExtensionMethods.Remap(moveObstAdjust, -possibleMaxAdjust, possibleMaxAdjust, -avoidObstacleStrength, avoidObstacleStrength);
 
 
@@ -131,8 +139,10 @@ public class BotTest : MonoBehaviour
                 if (wanderTend == WanderTendency.RandomEnemy)
                 {
                     var target = teams.GetRandomEnemy(gameObject);
-                    if(target)
+                    if (target)
+                    {
                         wanderGeneralDir = (target.transform.position - transform.position).normalized;
+                    }
                 }
 
 
@@ -158,13 +168,17 @@ public class BotTest : MonoBehaviour
         }
         else // Chase and shoot
         {
-            if(target && !target.GetComponent<PlayerMovement>().enabled)
+            if (target && !target.GetComponent<PlayerMovement>().enabled)
+            {
                 isChasing = false;
-            
-            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
-                gotHitAndNotInRange = false;
+            }
 
-            if (gotHitAndNotInRange ||(target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
+            if (gotHitAndNotInRange && (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
+            {
+                gotHitAndNotInRange = false;
+            }
+
+            if (gotHitAndNotInRange || (target && Vector2.Distance(target.position, transform.position) < stopChaseDist))
             {
                 // basically when chase try not to move to player but to point that is from player to bot, normalized n distance away... 
                 var targetPos = target.position;
@@ -203,7 +217,7 @@ public class BotTest : MonoBehaviour
     {
         Vector2 pointA = transform.position;
 
-        for(int i = -rays/2; i < rays/2; i++)
+        for (int i = -rays / 2; i < rays / 2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (lookAgroFoV / 2) / (rays / 2));
             float lookDist = lookAgroMaxDist - Mathf.Abs(i) * lookAgroFalloff;
@@ -237,7 +251,7 @@ public class BotTest : MonoBehaviour
         float steerDir = 0;
 
         Vector2 pointA = transform.position;
-        
+
         for (int i = -obstacleRays / 2; i < obstacleRays / 2; i++)
         {
             Vector2 rayDir = ExtensionMethods.RotatePointAroundPivot(lookDir, pointA, i * (obstaclelookAgroFoV / 2) / (obstacleRays / 2));

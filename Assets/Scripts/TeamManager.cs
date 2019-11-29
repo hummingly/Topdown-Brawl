@@ -202,6 +202,9 @@ public partial class TeamManager : MonoBehaviour
             if (!team.HasPlayer(player))
             {
                 List<GameObject> activePlayers = team.FilterPlayers(p => p.activeInHierarchy);
+                if (activePlayers.Count <= 0) {
+                    break;
+                }
                 int r = UnityEngine.Random.Range(0, activePlayers.Count);
                 return activePlayers[r];
             }

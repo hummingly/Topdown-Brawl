@@ -91,7 +91,7 @@ public partial class TeamManager
 
         public bool HasPlayer(GameObject player)
         {
-            return players.Contains(player);
+            return player != null && players.Contains(player);
         }
 
         public bool ExistsPlayer(Predicate<GameObject> predicate)

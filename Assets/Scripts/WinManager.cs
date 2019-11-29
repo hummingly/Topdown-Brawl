@@ -5,13 +5,16 @@ public class WinManager : MonoBehaviour
 {
     // TODO make private
     [SerializeField] private GameMode gameMode;
-    private int winningTeam = -1;
+    [SerializeField] private int winningTeam = -1;
+    [SerializeField] private int[] roundWinner = new int[2];
     // TODO: Also keep track for invidual players.
     private int[] killTeamScores = new int[2];
     private DestructibleBlock[] defenseBlocks = new DestructibleBlock[2];
 
     public int[] TeamKills => killTeamScores;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
+    private int MinRounds => gameMode.rounds / 2 + 1;
+    private bool roundRunning = true;
 
     public bool OnTeamWon()
     {
@@ -19,23 +22,40 @@ public class WinManager : MonoBehaviour
         {
             case GameMode.WinCondition.Kills:
                 var k = CheckScores();
+                if (!roundRunning) {
+                    return true;
+                }
                 if (k > -1)
                 {
-                    winningTeam = k;
-                    return true;
+                    roundRunning = false;
+                    Debug.Log("Score");
+                    roundWinner[k] += 1;
+                    return OnRoundWin();
                 }
                 return false;
             case GameMode.WinCondition.Defense:
                 var d = CheckDefenses();
                 if (d > -1)
                 {
-                    winningTeam = d;
-                    return true;
+                    roundRunning = false;
+                    roundWinner[d] += 1;
+                    return OnRoundWin();
                 }
                 return false;
             default:
                 return false;
         }
+    }
+
+    // Check if the match has finished yet.
+    private bool OnRoundWin() {
+        Debug.Log(MinRounds);
+        var team = Array.FindIndex(roundWinner, r => r >= MinRounds);
+        if (team > -1) {
+            winningTeam = team;
+            return true;
+        }
+        return !roundRunning;
     }
 
     public int GetWinningTeam()
@@ -84,8 +104,10 @@ public class WinManager : MonoBehaviour
 
     public void SetGameMode(GameMode mode)
     {
+        gameMode = mode;
         killTeamScores = new int[mode.maxTeams];
         defenseBlocks = new DestructibleBlock[mode.maxTeams];
+        roundWinner = new int[mode.maxTeams];
     }
 
     public void InitDefenseBases()
@@ -106,8 +128,14 @@ public class WinManager : MonoBehaviour
         }
     }
 
+    public void Reset() {
+        ResetRound();
+        Array.Clear(roundWinner, 0, roundWinner.Length);
+    }
+
     public void ResetRound()
     {
+        roundRunning = true;
         winningTeam = -1;
         Array.Clear(killTeamScores, 0, killTeamScores.Length);
         Array.Clear(defenseBlocks, 0, defenseBlocks.Length);

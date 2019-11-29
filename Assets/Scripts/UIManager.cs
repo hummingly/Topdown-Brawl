@@ -50,8 +50,8 @@ public class UIManager : MonoBehaviour
         FindObjectOfType<GameStateManager>().GoToSelection();
     }
 
-    public void Restart()
-    {
-        FindObjectOfType<GameStateManager>().Restart();
-    }
+    // public void Restart()
+    // {
+    //     FindObjectOfType<GameStateManager>().RestartMatch();
+    // }
 }
