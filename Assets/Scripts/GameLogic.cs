@@ -88,6 +88,8 @@ public class GameLogic : MonoBehaviour
                 p.enabled = false;
                 p.GetComponentInChildren<PlayerVisuals>().Hide(true);
             }
+            foreach (Skill s in FindObjectsOfType<Skill>())
+                s.enabled = false;
 
             if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
             {

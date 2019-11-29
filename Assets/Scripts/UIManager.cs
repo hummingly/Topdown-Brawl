@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
@@ -51,6 +52,12 @@ public class UIManager : MonoBehaviour
 
     public void Restart()
     {
-        FindObjectOfType<GameStateManager>().Restart();
+        gameOver.SetActive(false);
+
+        var dur = FindObjectOfType<EffectManager>().Restart();
+
+        Sequence seqCam = DOTween.Sequence();
+        seqCam.AppendInterval(dur);
+        seqCam.AppendCallback(() => FindObjectOfType<GameStateManager>().Restart());
     }
 }

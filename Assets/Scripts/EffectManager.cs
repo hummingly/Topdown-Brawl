@@ -132,6 +132,25 @@ public class EffectManager : MonoBehaviour
         //TODO: add easing       
     }
 
+
+    public float Restart()
+    {
+        var digital = Camera.main.GetComponent<DigitalGlitch>();
+
+        FindObjectOfType<CinemachineVirtualCamera>().enabled = false;
+
+        //go to clear dark and more glitch
+        Sequence seqFillFade = DOTween.Sequence();
+        //seqFillFade.AppendInterval(0.25f);
+        seqFillFade.AppendCallback(() => FindObjectOfType<SoundEffects>().restart());
+        seqFillFade.Append(screenFill.DOFade(1, 1.5f).SetEase(Ease.OutSine));//OutCubic
+        seqFillFade.Join(DOTween.To(() => digital.intensity, x => digital.intensity = x, 0.5f, 1.5f).SetEase(Ease.OutCubic));
+        seqFillFade.Join(Camera.main.DOOrthoSize(2, 1.5f).SetEase(Ease.InSine));
+
+
+        return 1.5f;//2;
+    }
+
     public void startSequence()
     {
         var digital = Camera.main.GetComponent<DigitalGlitch>();
@@ -143,7 +162,10 @@ public class EffectManager : MonoBehaviour
         digital.intensity = 0.2f;
 
 
-        float mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
+        //float mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x * 10;
+        //float mapSize = GameObject.FindGameObjectWithTag("CamBounds").transform.localScale.y;//x * 0.5f;
+        //mapSize -= 0.05;//hardcoded account for players not spawning really at the edges, so camera snaps
+        float mapSize = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_MaximumOrthoSize / 2;//nvm it depends on vcam max ortho scale
         FindObjectOfType<CinemachineVirtualCamera>().enabled = false;
 
         //go to clear color and less glitch
@@ -156,8 +178,10 @@ public class EffectManager : MonoBehaviour
 
         //TODO: replace fade with ZAP animation? and do coutndown, then "GO"
 
+        FindObjectOfType<PlayerSpawner>().placeSpawnPlaceholders(2);
+
         Sequence seqCam = DOTween.Sequence();
-        seqCam.Append(Camera.main.DOOrthoSize(10 * mapSize, 1.75f).SetEase(Ease.OutCubic));
+        seqCam.Append(Camera.main.DOOrthoSize(mapSize, 1.5f).SetEase(Ease.OutCubic));
         seqCam.AppendCallback(() => FindObjectOfType<CinemachineVirtualCamera>().enabled = true);
 
     }
@@ -168,10 +192,18 @@ public class EffectManager : MonoBehaviour
         foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
         {
             p.enabled = true;
-
+            
             //place players at spawn pos again and do anim
             p.GetComponentInChildren<PlayerVisuals>().Hide(false);
             SquareParticle(p.transform.position);
+        }
+
+        foreach (Skill s in FindObjectsOfType<Skill>())
+            s.enabled = true;
+
+        foreach (PlayerInput p in FindObjectsOfType<PlayerInput>())
+        {
+            rumble((Gamepad)p.devices[0], 0.2f, 0.75f, 0.75f);
         }
     }
 

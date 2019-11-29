@@ -9430,7 +9430,7 @@ GameObject:
   - component: {fileID: 1097267977}
   m_Layer: 8
   m_Name: Camera Confiner
-  m_TagString: Untagged
+  m_TagString: CamBounds
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9460,10 +9460,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 18, y: 10}
-      - {x: -18, y: 10}
-      - {x: -18, y: -10}
-      - {x: 18, y: -10}
+    - - {x: 1, y: 1}
+      - {x: -1, y: 1}
+      - {x: -1, y: -1}
+      - {x: 1, y: -1}
 --- !u!4 &1097267978
 Transform:
   m_ObjectHideFlags: 0
@@ -9473,7 +9473,7 @@ Transform:
   m_GameObject: {fileID: 1097267976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.025, y: 1.05, z: 1}
+  m_LocalScale: {x: 18.66, y: 10.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5

@@ -211,4 +211,40 @@ public class PlayerSpawner : MonoBehaviour
         StopAllCoroutines();
         this.enabled = false;
     }
+
+
+    // fill every empty slot so that camera doesnt shake on initial spawn
+    public void placeSpawnPlaceholders(float destroyAfter)
+    {
+        /*
+        for (int t = 0; t < teams.GetTeams().Count; t++)
+        {
+            print("ye");
+            var timers = spawnPosTimers[t];
+
+            for (int i = 0; i < timers.Count; i++)
+            {
+                print(i);
+                if (timers[i] <= 0)
+                {
+                    print("ye");
+                    var placeholder = new GameObject().transform;
+                    placeholder.position = spawnAreas[t].GetChild(i).position;
+                    camTargetGroup.AddMember(placeholder, 1, playerCameraRadius);
+                    timers[i] = spawnPosBlockTime;
+                }
+            }
+        } */
+
+        for (int t = 0; t < spawnAreas.Length; t++)
+        {
+            for (int i = 0; i < spawnAreas[t].childCount; i++)
+            {
+                var placeholder = new GameObject().transform;
+                placeholder.position = spawnAreas[t].GetChild(i).position;
+                camTargetGroup.AddMember(placeholder, 1, playerCameraRadius);
+                Destroy(placeholder.gameObject, destroyAfter);
+            }
+        }
+    }
 }

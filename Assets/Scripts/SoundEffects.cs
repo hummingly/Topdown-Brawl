@@ -26,11 +26,29 @@ public class SoundEffects : MonoBehaviour
         
     }
 
+    public void restart()
+    {
+        //bigEvents.PlayOneShot(startLevelClip); start clip reversed
+        /*bigEvents.timeSamples = bigEvents.clip.samples - 1;
+        bigEvents.pitch = -1;
+        bigEvents.PlayOneShot(startLevelClip);*/
+
+        /*bigEvents.time = startLevelClip.length;
+        bigEvents.pitch = -1;
+        bigEvents.clip = startLevelClip;
+        bigEvents.Play();*/
+        bigEvents.loop = true; //weird workaround, setting time to 1 should work
+        bigEvents.pitch = -1;
+        bigEvents.clip = startLevelClip;
+        bigEvents.Play();
+    }
+
     public void gameOver()
     {
         bass.time = 0.1f;
         bass.Play();
         bigEvents.PlayOneShot(gameOverClip);
         FindObjectOfType<SoundManager>().slowDownThenFadeMusic();
+
     }
 }

@@ -11,6 +11,7 @@ TagManager:
   - DefenseBases
   - Restart Button
   - Menu Button
+  - CamBounds
   layers:
   - Default
   - TransparentFX
