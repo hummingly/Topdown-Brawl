@@ -59,12 +59,12 @@ public class GameStateManager : MonoBehaviour
         winManager.ResetRound();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        state = GameState.Ingame;
 
         if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
             winManager.InitDefenseBases();
         }
-        state = GameState.Ingame;
         Time.timeScale = 1;
         return true;
     }

@@ -8,9 +8,10 @@ TagManager:
   - BotLookThrough
   - Destruction Piece
   - Grid
+  - DefenseBases
   - Restart Button
   - Menu Button
-  - DefenseBases
+  - CamBounds
   layers:
   - Default
   - TransparentFX

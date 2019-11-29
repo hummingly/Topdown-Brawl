@@ -1,18 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] scores;
+    [SerializeField] private GameObject[] rounds;
     [SerializeField] private GameObject time;
     [SerializeField] private GameObject gameplay;
+    [SerializeField] private GameObject roundOverview;
     [SerializeField] private GameObject gameOver;
+    [SerializeField] private GameObject pointPrefab;
 
     private WinManager winManager;
 
-    void Start()
+    private void Start()
     {
         winManager = FindObjectOfType<WinManager>();
 
@@ -20,11 +22,6 @@ public class UIManager : MonoBehaviour
         {
             scores[0].transform.parent.gameObject.SetActive(false);
         }
-    }
-
-    void Update()
-    {
-
     }
 
     public void UpdateScores()
@@ -50,8 +47,25 @@ public class UIManager : MonoBehaviour
         FindObjectOfType<GameStateManager>().RestartMatchMaking();
     }
 
-    // public void Restart()
-    // {
-    //     FindObjectOfType<GameStateManager>().RestartMatch();
-    // }
+    public void ShowRoundMatchUi()
+    {
+        gameOver.SetActive(false);
+        roundOverview.SetActive(true);
+        var teamManager = FindObjectOfType<TeamManager>();
+        for (int i = 0; i < rounds.Length; i++)
+        {
+            var text = rounds[i].GetComponentInChildren<TextMeshProUGUI>();
+            text.SetText(teamManager.GetTeamName(i));
+            var color = teamManager.GetColor(i);
+            var points = rounds[i].transform.GetChild(1);
+            var roundWins = winManager.TeamPoints[i];
+            for (int j = 0; j < roundWins; j++)
+            {
+                var point = Instantiate(pointPrefab, transform.position, Quaternion.identity).transform;
+                point.SetParent(points.transform);
+                point.GetComponent<Image>().color = color;
+                point.transform.localScale = Vector3.one;
+            }
+        }
+    }
 }

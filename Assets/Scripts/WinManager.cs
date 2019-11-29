@@ -12,6 +12,7 @@ public class WinManager : MonoBehaviour
     private DestructibleBlock[] defenseBlocks = new DestructibleBlock[2];
 
     public int[] TeamKills => killTeamScores;
+    public int[] TeamPoints => roundWinner;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
     private int MinRounds => gameMode.rounds / 2 + 1;
     private bool roundFinished = false;
@@ -103,17 +104,19 @@ public class WinManager : MonoBehaviour
     {
         var parent = GameObject.FindGameObjectWithTag("DefenseBases");
         var blocks = parent.GetComponentsInChildren<DestructibleBlock>();
+        var sprites = parent.GetComponentsInChildren<SpriteRenderer>();
         var teamManager = FindObjectOfType<TeamManager>();
         var len = Math.Min(teamManager.Count, blocks.Length);
         for (int i = 0; i < len; i++)
         {
             // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
             defenseBlocks[i] = blocks[i];
-            var meshes = blocks[i].gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in meshes)
-            {
-                m.material.color = teamManager.GetColor(i);
-            }
+            sprites[i].color = teamManager.GetColor(i);;
+            // var meshes = blocks[i].gameObject.GetComponentsInChildren<MeshRenderer>();
+            // foreach (var m in meshes)
+            // {
+            //     m.material.color = teamManager.GetColor(i);
+            // }
         }
     }
 
@@ -124,7 +127,7 @@ public class WinManager : MonoBehaviour
 
     public void ResetRound()
     {
-        roundFinished = true;
+        roundFinished = false;
         winningTeam = -1;
         Array.Clear(killTeamScores, 0, killTeamScores.Length);
         Array.Clear(defenseBlocks, 0, defenseBlocks.Length);

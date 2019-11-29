@@ -122,6 +122,9 @@ MonoBehaviour:
   scores:
   - {fileID: 0}
   - {fileID: 0}
+  rounds:
+  - {fileID: 0}
+  - {fileID: 0}
   time: {fileID: 0}
   gameplay: {fileID: 0}
   gameOver: {fileID: 0}

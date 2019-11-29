@@ -113,7 +113,7 @@ public class PlayerSpawner : MonoBehaviour
         //camTargetGroup.RemoveMember(placeholder);
 
         SetPlayerActive(true, player);
-        player.IncreaseHealth(int.MaxValue);
+        player.IncreaseHealth(int.MaxValue, true);
         player.SetInvincible(spawnPos);
         SpawnPlayer(player.transform, spawnPos);
     }
@@ -192,5 +192,21 @@ public class PlayerSpawner : MonoBehaviour
     {
         StopAllCoroutines();
         this.enabled = false;
+    }
+
+
+    // fill every empty slot so that camera doesnt shake on initial spawn
+    public void PlaceSpawnPlaceholders(float destroyAfter)
+    {
+        for (int t = 0; t < spawnAreas.Length; t++)
+        {
+            for (int i = 0; i < spawnAreas[t].childCount; i++)
+            {
+                var placeholder = new GameObject().transform;
+                placeholder.position = spawnAreas[t].GetChild(i).position;
+                camTargetGroup.AddMember(placeholder, 1, playerCameraRadius);
+                Destroy(placeholder.gameObject, destroyAfter);
+            }
+        }
     }
 }

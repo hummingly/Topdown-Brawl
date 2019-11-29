@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Cinemachine;
+using Kino;
 
 public class EffectManager : MonoBehaviour
 {
@@ -61,7 +62,6 @@ public class EffectManager : MonoBehaviour
         _perlin = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         offset = FindObjectOfType<CinemachineCameraOffset>();
     }
-
 
     public void DoDash(Vector2 pos, Vector2 playerRot, Transform player)
     {
@@ -120,30 +120,91 @@ public class EffectManager : MonoBehaviour
         // don't start at max size
         exp.localScale = Vector2.one * maxSize * 0.5f;
 
+
         Sequence seq = DOTween.Sequence();
         seq.Append(exp.DORotate(new Vector3(0, 0, exp.eulerAngles.z * 3), 0.5f));
         seq.Join(exp.GetChild(0).DOScale(Vector2.one, 0.5f));
         seq.Join(exp.DOScale(Vector2.one * maxSize, 0.25f)); //TODO: add a lil overshoot
         seq.AppendCallback(() => Destroy(exp.gameObject));
 
+
         //TODO: add easing       
+    }
+
+    public float Restart()
+    {
+        var digital = Camera.main.GetComponent<DigitalGlitch>();
+
+        FindObjectOfType<CinemachineVirtualCamera>().enabled = false;
+
+        //go to clear dark and more glitch
+        Sequence seqFillFade = DOTween.Sequence();
+        //seqFillFade.AppendInterval(0.25f);
+        seqFillFade.AppendCallback(() => FindObjectOfType<SoundEffects>().Restart());
+        seqFillFade.Append(screenFill.DOFade(1, 1.5f).SetEase(Ease.OutSine));//OutCubic
+        seqFillFade.Join(DOTween.To(() => digital.intensity, x => digital.intensity = x, 0.5f, 1.5f).SetEase(Ease.OutCubic));
+        seqFillFade.Join(Camera.main.DOOrthoSize(2, 1.5f).SetEase(Ease.InSine));
+
+
+        return 1.5f;//2;
     }
 
     public void StartSequence()
     {
+        var digital = Camera.main.GetComponent<DigitalGlitch>();
+        var analog = Camera.main.GetComponent<AnalogGlitch>();
+
         //whole screen black
-        //start at much glitch
-        //go to clear color and less glitch
-        //also enable player movement
-
+        //start at much glitch (cant see bcz of black tho)
         screenFill.color = Color.black;
+        digital.intensity = 0.2f;
 
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(0.25f);
-        seq.Append(screenFill.DOFade(0, 2).SetEase(Ease.InCubic));//OutCubic
-        //seq.AppendCallback(() => Destroy(m.gameObject));
+
+        //float mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x * 10;
+        //float mapSize = GameObject.FindGameObjectWithTag("CamBounds").transform.localScale.y;//x * 0.5f;
+        //mapSize -= 0.05;//hardcoded account for players not spawning really at the edges, so camera snaps
+        float mapSize = FindObjectOfType<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_MaximumOrthoSize / 2;//nvm it depends on vcam max ortho scale
+        FindObjectOfType<CinemachineVirtualCamera>().enabled = false;
+
+        //go to clear color and less glitch
+        Sequence seqFillFade = DOTween.Sequence();
+        seqFillFade.AppendInterval(0.25f);
+        seqFillFade.Append(screenFill.DOFade(0, 1.5f).SetEase(Ease.InCubic));//OutCubic
+        seqFillFade.Join(DOTween.To(() => digital.intensity, x => digital.intensity = x, 0.001f, 2).SetEase(Ease.InCubic));
+        //seqFillFade.AppendCallback(() => playerMove());
+        seqFillFade.InsertCallback(1.5f, () => PlayerSpawn()); //synced do music delay (HARDCODED)
+
+        //TODO: replace fade with ZAP animation? and do coutndown, then "GO"
+
+        FindObjectOfType<PlayerSpawner>().PlaceSpawnPlaceholders(2);
+
+        Sequence seqCam = DOTween.Sequence();
+        seqCam.Append(Camera.main.DOOrthoSize(mapSize, 1.5f).SetEase(Ease.OutCubic));
+        seqCam.AppendCallback(() => FindObjectOfType<CinemachineVirtualCamera>().enabled = true);
+
     }
 
+    private void PlayerSpawn()
+    {
+        foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
+        {
+            p.enabled = true;
+
+            //place players at spawn pos again and do anim
+            p.GetComponentInChildren<PlayerVisuals>().Hide(false);
+            SquareParticle(p.transform.position);
+        }
+
+        foreach (Skill s in FindObjectsOfType<Skill>())
+        {
+            s.enabled = true;
+        }
+
+        foreach (PlayerInput p in FindObjectsOfType<PlayerInput>())
+        {
+            Rumble((Gamepad)p.devices[0], 0.2f, 0.75f, 0.75f);
+        }
+    }
 
     private IEnumerator ScreenBlink(Color col, int frames)
     {
@@ -187,42 +248,54 @@ public class EffectManager : MonoBehaviour
 
         var p = Instantiate(bigSparks, hitPos, Quaternion.Euler(0f, 0f, rot_z - 90));
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
+
+        //print(dmg);
+        if (dmg >= 25) //heavy hit: sniper long range or melee
+        {
+            //StartCoroutine(screenBlink(Color.white, 1));
+            AddShake(0.5f);
+            Stop(0.025f);
+
+            //TODO: rumble the damaged one
+        }
     }
 
-    public void GotDamaged(Transform player)
+    public void GotDamaged(PlayerVisuals player)
     {
         ShakeScale(player, 0.1f, 0.75f);
 
-        player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
-
-
-        //AddShake(0.3f);
+        player.blinkWhite(Color.white, 2);
     }
 
-    public void MeleeBlow(Transform owner)
+    public void MeleeBlow(PlayerVisuals player)
     {
-        ShakeScale(owner, 0.1f, 0.75f);
+        ShakeScale(player, 0.1f, 0.75f);
     }
 
-    public void SnipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
+    public void SnipeShot(Vector2 pos, Transform bullet, PlayerVisuals player, Gamepad gamepad = null)
     {
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
         Rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
-        ShakeScale(owner.transform, 0.1f, 0.75f);
+        ShakeScale(player, 0.2f, 1f);
     }
 
-    public void Muzzle(float dmg, Transform bullet, GameObject owner)
+    public void Muzzle(float dmg, Transform bullet, PlayerVisuals player, float spawnPosFromCenter)
     {
-        var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
+        //because always shoot in stick dir, not player look dir this looks weird
+        //var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
+        var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], player.transform.parent.position + player.transform.parent.up * spawnPosFromCenter, player.transform.parent.rotation).transform;
 
-        m.parent = owner.transform;
+        m.parent = player.transform.parent;
 
         foreach (SpriteRenderer spr in m.GetComponentsInChildren<SpriteRenderer>())
+        {
+            //spr.color = player.GetMainColor(); // or just use FF8D00 (orange) bcz looks realistic
             spr.DOFade(0, muzzleFlashDur);
-        // TODO: maybe also move individual muzzles in local up?
+            // TODO: maybe also move individual muzzles in local up?
+        }
 
         Sequence seq = DOTween.Sequence();
         seq.Append(m.DOPunchScale(Vector3.one * muzzleScale * bullet.localScale.y, muzzleFlashDur));
@@ -232,15 +305,15 @@ public class EffectManager : MonoBehaviour
         AddGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
 
 
-        ShakeScale(owner.transform, 0.05f, 0.5f);
+        ShakeScale(player, 0.05f, 0.5f);
     }
-
 
     public GameObject Invincible(Transform player, float dur)
     {
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
         p.transform.parent = player;
+
 
         Sequence seq = DOTween.Sequence();
         seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
@@ -261,9 +334,10 @@ public class EffectManager : MonoBehaviour
         seq.AppendCallback(() => Destroy(p.gameObject));
     }
 
-
     public float GameOver(Vector2 explosionPos)
     {
+        FindObjectOfType<SoundEffects>().gameOver();
+
         float dur = 2;
 
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
@@ -274,6 +348,7 @@ public class EffectManager : MonoBehaviour
         roundRunning = false;
         Time.timeScale = 0.1f;
 
+        // get normal speed again
         DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, dur).SetEase(Ease.InQuad).SetUpdate(true);
 
         var heavyPlaceholder = new GameObject("Zoom on dis").transform;
@@ -294,24 +369,34 @@ public class EffectManager : MonoBehaviour
         {
             b.enabled = false;
         }
+
+        foreach (PlayerInput p in FindObjectsOfType<PlayerInput>())
+        {
+            Rumble((Gamepad)p.devices[0], 0.3f, 1, 1);
+        }
+        StartCoroutine(ScreenBlink(Color.white, 4));
+        AddShake(2f);
+        Stop(0.2f);
+
         return dur;
     }
 
     // WILL ONLY WORK TO SCALE PLAYERS ATM
-    private void ShakeScale(Transform obj, float time, float strength)
+    private void ShakeScale(PlayerVisuals player, float time, float strength)
     {
-        obj.GetComponentInChildren<PlayerVisuals>().ShakeScale(time, strength);
+        player.ShakeScale(time, strength);
     }
 
-    public void AddShake(float strength, Vector2 dir = new Vector2(), float threshHold = 0)
+    public void AddShake(float strength, Vector2 dir = new Vector2(), float threshHold = 0) //dir only 1,0  0,-1  1,1  etc
     {
-        if (threshHold != 0) { return; } //nvm, still stacks very bad
+        //print(trauma); //only do small shake on shooting if no other shakes active
+        //if (threshHold != 0 && threshHold <= trauma.magnitude)
+        //    return;
+        if (threshHold != 0) return; //nvm, still stacks very bad
 
 
         if (dir == Vector2.zero)
-        {
             dir = Random.insideUnitCircle;
-        }
         //only 0/1 values since -1/1 is done below
         if (dir.x < 0) dir.x = -dir.x;
         if (dir.x > 0) dir.x = 1;
@@ -413,15 +498,14 @@ public class EffectManager : MonoBehaviour
     {
         paused = true;
         yield return new WaitForSecondsRealtime(duration);
-        if (roundRunning)
-        {
-            Time.timeScale = 1.0f;
-        }
+        if (roundRunning) Time.timeScale = 1.0f;
         paused = false;
     }
 
     private void Rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
     {
+        //Gamepad.all[device].SetMotorSpeeds(startLow, startHight);
+
         float amp = ExtensionMethods.getGamepadAmp(gamepad);
         StartCoroutine(RumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }

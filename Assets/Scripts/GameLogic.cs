@@ -9,10 +9,6 @@ public class GameLogic : MonoBehaviour
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
-    private float mapSize;
-
-    [SerializeField] private float startGameplayAnimDur = 1;
-    [SerializeField] private float spawnBeforeAnimDone = 0.2f;
 
     private bool roundRunning;
 
@@ -65,43 +61,44 @@ public class GameLogic : MonoBehaviour
     // changed from one scene to another
     private void SceneLoadeded(Scene scene, LoadSceneMode arg1)
     {
+        Debug.Log("Scene Loadeed!");
         // Regularly loaded into gameplay from character selection
-        if (FindObjectOfType<GameStateManager>().State == GameStateManager.GameState.Ingame) //(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MapNormal1")
+        if (FindObjectOfType<GameStateManager>().State != GameStateManager.GameState.Ingame)
         {
-            StartCoroutine(InitGameplay());
+            return;
         }
-    }
-
-    private IEnumerator InitGameplay()
-    {
-        if (winManager.WinCondition != GameMode.WinCondition.Defense)
-            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
 
         uiManager = FindObjectOfType<UIManager>();
 
-        mapSize = GameObject.FindGameObjectWithTag("MapBounds").transform.localScale.x;
-
-        if (!GetComponent<TeamManager>().debugFastJoin)
+        if (winManager.WinCondition != GameMode.WinCondition.Defense)
         {
-            FindObjectOfType<EffectManager>().StartSequence();
+            Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
         }
 
-        FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = false;
-        Camera.main.DOOrthoSize(10 * mapSize, startGameplayAnimDur).SetEase(Ease.OutCubic);
-
-        //TODO: Display a message like "GO" (and potentially a countdown?)
-
-        yield return new WaitForSeconds(startGameplayAnimDur - spawnBeforeAnimDone);
-
-        FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
-
         teamManager.InitPlayers();
+
+        foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
+        {
+            p.enabled = false;
+            p.GetComponentInChildren<PlayerVisuals>().Hide(true);
+        }
+        foreach (Skill s in FindObjectsOfType<Skill>())
+        {
+            s.enabled = false;
+        }
+
         if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
             winManager.InitDefenseBases();
         }
         teamManager.ColorSpawns();
+
         roundRunning = true;
+
+        if (!GetComponent<TeamManager>().debugFastJoin)
+        {
+            FindObjectOfType<EffectManager>().StartSequence();
+        }
     }
 
     public void IncreaseScore(GameObject player)
@@ -110,22 +107,31 @@ public class GameLogic : MonoBehaviour
         uiManager.UpdateScores();
     }
 
-    public void StartRoundEnd() {
+    public void StartRoundEnd()
+    {
         roundRunning = false;
         float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
-        if (winManager.GetWinningTeam() > -1) {
+        if (winManager.GetWinningTeam() > -1)
+        {
             StartCoroutine(GameOverUi(dur));
-        } else {
+        }
+        else
+        {
             StartCoroutine(RestartMatchUi(dur));
         }
     }
 
-    // TODO: Create actual Ui
     private IEnumerator RestartMatchUi(float t)
     {
         var seconds = Mathf.Max(t, 10.0f);
+        yield return new WaitForSecondsRealtime(0.5f);
+        uiManager.ShowRoundMatchUi();
         yield return new WaitForSecondsRealtime(seconds);
-        roundRunning = FindObjectOfType<GameStateManager>().Replay();
+
+        var dur = FindObjectOfType<EffectManager>().Restart();
+        Sequence seqCam = DOTween.Sequence();
+        seqCam.AppendInterval(dur);
+        seqCam.AppendCallback(() => FindObjectOfType<GameStateManager>().Replay());
     }
 
     private IEnumerator GameOverUi(float t)

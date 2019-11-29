@@ -159,6 +159,14 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    //private IEnumerator interpolate()
+    public void slowDownThenFadeMusic()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(music.DOPitch(0.5f, 2f));
+        seq.Append(music.DOFade(0, 1));
+        //either stop music, so effects stop too or just make it very quiet
+        seq.AppendCallback(() => music.Stop());
 
+        //TODO: use audio mixer to keep pitch while changing speed (https://answers.unity.com/questions/25139/how-i-can-change-the-speed-of-a-song-or-sound.html)
+    }
 }

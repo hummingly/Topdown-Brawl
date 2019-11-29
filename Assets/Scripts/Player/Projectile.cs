@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     private Rigidbody2D rb;
     private TrailCopyConstraint trail;
     private EffectManager effects;
+    private SoundsBullet sounds;
 
     //[ColorUsage(true, true)] public Color shouldbeHDR = Color.white;
 
@@ -52,6 +53,7 @@ public class Projectile : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         trail = GetComponentInChildren<TrailCopyConstraint>();
+        sounds = GetComponentInChildren<SoundsBullet>();
         effects = FindObjectOfType<EffectManager>();
         startPos = transform.position;
         startScale = transform.localScale;
@@ -59,6 +61,8 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
+        sounds.shot();
+
         teams = FindObjectOfType<TeamManager>();
         if (melee)
         {
@@ -75,6 +79,7 @@ public class Projectile : MonoBehaviour
             //seq.AppendCallback(() => Destroy(gameObject));
             seq.InsertCallback(disableAt, () => GetComponentInChildren<Collider2D>().enabled = false);
             seq.AppendCallback(() => Destroy(gameObject));
+            this.enabled = false;
 
             //TODO: add easing
 
@@ -104,12 +109,13 @@ public class Projectile : MonoBehaviour
                 s.DOFade(0, fadeSpd).SetEase(Ease.OutQuad);
             }
 
+
             Sequence seq = DOTween.Sequence();
             seq.AppendInterval(fadeSpd);
             seq.InsertCallback(fadeSpd / 4, () => GetComponentInChildren<Collider2D>().enabled = false);
             seq.InsertCallback(fadeSpd / 4, () => GetComponentInChildren<ParticleSystem>().Stop());
             seq.AppendCallback(() => Destroy(gameObject));
-
+            this.enabled = false;
 
             //Very similar to melee fade above...
         }
@@ -155,6 +161,9 @@ public class Projectile : MonoBehaviour
             //print(dist + " " + damage);
         }
 
+
+        var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
+
         // hit a piece of a destructible block, only one peice trigger per bullet tho so not too much dmg
         if (other.tag == "Destruction Piece" && this.enabled)
         {
@@ -165,12 +174,12 @@ public class Projectile : MonoBehaviour
 
             if (!isOwnBase)
             {
+                sounds.HitEnemy();
+                effects.DamagedEntity(hitPoint, -transform.up, damage);
                 damageAbleBase.ReduceHealth(damage, owner, transform.position, (Vector2)transform.position + rb.velocity * Time.deltaTime);
                 this.enabled = false;
             }
         }
-
-        var hitPoint = other.GetComponent<Collider2D>().bounds.ClosestPoint(transform.position);
 
         if (melee)
         {
@@ -186,6 +195,7 @@ public class Projectile : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.Append(GetComponentInChildren<SpriteRenderer>().DOFade(0, 0.1f));
             seq.AppendCallback(() => Destroy(gameObject));
+            this.enabled = false;
         }
         else
         {
@@ -213,15 +223,18 @@ public class Projectile : MonoBehaviour
                     damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
 
+                sounds.HitEnemy();
                 effects.DamagedEntity(hitPoint, -transform.up, damage);// (transform.position - hitPoint).normalized);
             }
             else
             {
+                sounds.HitNeutral();
                 effects.BulletDeathPartic(hitPoint, transform);
             }
         }
         else
         {
+            sounds.HitNeutral();
             effects.BulletDeathPartic(hitPoint, transform);
         }
 
