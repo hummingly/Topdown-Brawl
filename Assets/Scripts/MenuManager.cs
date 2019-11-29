@@ -238,6 +238,7 @@ public class MenuManager : MonoBehaviour
     private void UpdateGameModeUi()
     {
         gameModeText.SetText(SelectedGameMode.name);
+        FindObjectOfType<WinManager>().gameMode = SelectedGameMode;
     }
 
     public void UpdateMapUi()
