@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -51,9 +51,15 @@ public class GameStateManager : MonoBehaviour
     {
         BotTest[] bots = FindObjectsOfType<BotTest>();
 
-        teams.ResetPoints();
+        var winManager = FindObjectOfType<WinManager>();
+        winManager.ResetRound();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        if (winManager.WinCondition == GameMode.WinCondition.Defense)
+        {
+            winManager.InitDefenseBases();
+        }
 
         // keep bots (poor hack)
         for (int i = 0; i < bots.Length; i++)

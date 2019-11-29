@@ -2534,7 +2534,7 @@ MonoBehaviour:
   - {r: 0, g: 0.9450981, b: 1, a: 1}
   - {r: 0.24705884, g: 1, b: 0, a: 1}
   - {r: 1, g: 0.5529412, b: 0, a: 1}
-  colorStrings:
+  teamNames:
   - PURPLE
   - YELLOW
   - BLUE

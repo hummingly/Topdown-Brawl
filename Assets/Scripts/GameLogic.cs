@@ -48,7 +48,7 @@ public class GameLogic : MonoBehaviour
         if (roundRunning) // bases are initialized
         {
             //if bigger than gamemode max then won
-            if (winManager.OnTeamWon(teamManager.GetTeams()))
+            if (winManager.OnTeamWon())
             {
                 roundRunning = false;
 
@@ -81,7 +81,7 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator InitGameplay()
     {
-        if (winManager.gameMode.winCondition != GameMode.WinCondition.Defense)
+        if (winManager.WinCondition != GameMode.WinCondition.Defense)
             Destroy(GameObject.FindGameObjectWithTag("DefenseBases"));
 
         uiManager = FindObjectOfType<UIManager>();
@@ -120,10 +120,9 @@ public class GameLogic : MonoBehaviour
         FindObjectOfType<Cinemachine.CinemachineVirtualCamera>().enabled = true;
 
         teamManager.InitPlayers();
-        if (winManager.gameMode.winCondition == GameMode.WinCondition.Defense)
+        if (winManager.WinCondition == GameMode.WinCondition.Defense)
         {
-            GameObject defenseBasesParent = GameObject.FindGameObjectWithTag("DefenseBases");
-            teamManager.InitDefenseBases(defenseBasesParent);
+            winManager.InitDefenseBases();
         }
         teamManager.ColorSpawns();
         roundRunning = true;
@@ -131,7 +130,7 @@ public class GameLogic : MonoBehaviour
 
     public void IncreaseScore(GameObject player)
     {
-        teamManager.IncreaseScore(player);
+        winManager.IncreaseKillScore(teamManager.FindPlayerTeam(player));
         // display new score in UI
         uiManager.UpdateScores();
     }

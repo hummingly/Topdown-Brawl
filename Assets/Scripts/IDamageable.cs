@@ -23,6 +23,8 @@ public abstract class IDamageable : MonoBehaviour
     protected GameObject invincibleGO;
     protected Vector2 lastSpawnPos;
 
+    public bool IsDead => healthPoints <= 0;
+
     public virtual void Awake()
     {
         effects = FindObjectOfType<EffectManager>();

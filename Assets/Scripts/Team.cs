@@ -10,19 +10,11 @@ public partial class TeamManager
     {
         private readonly List<GameObject> players;
         public readonly int Capacity;
-        public int Points { get; set; }
-        public Color Color { get; set; }
 
-        private DestructibleBlock defenseBase;
-
-        public DestructibleBlock DefenseBase { get; set; }
-
-        public Team(int teamSize, Color color)
+        public Team(int teamSize)
         {
             Capacity = teamSize;
             players = new List<GameObject>(Capacity);
-            Points = 0;
-            Color = color;
         }
 
         public int Count => players.Count;

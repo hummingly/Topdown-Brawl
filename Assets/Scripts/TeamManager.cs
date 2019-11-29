@@ -8,9 +8,9 @@ public partial class TeamManager : MonoBehaviour
 {
     private MenuManager menu;
     private PlayerSpawner spawner;
-    public List<Team> teams = new List<Team>();
+    internal List<Team> teams = new List<Team>();
     [SerializeField] private Color[] teamColors;
-    [SerializeField] private string[] colorStrings;
+    [SerializeField] private string[] teamNames;
     public bool debugFastJoin;
 
     // Actual players
@@ -18,19 +18,20 @@ public partial class TeamManager : MonoBehaviour
     public List<InputDevice> playerDevices = new List<InputDevice>();
     public List<Character> playerChars = new List<Character>();
 
+    public int Count => teams.Count;
+
     private void Awake()
     {
         menu = FindObjectOfType<MenuManager>();
         int seed = UnityEngine.Random.Range(0, 1000);
         teamColors = (Color[])ExtensionMethods.Shuffle(teamColors, seed);
-        colorStrings = (string[])ExtensionMethods.Shuffle(colorStrings, seed);
+        teamNames = (string[])ExtensionMethods.Shuffle(teamNames, seed);
 
-        // TODO: remove public field reference
-        GameMode gameMode = GetComponent<WinManager>().gameMode;
+        var gameMode = menu.SelectedGameMode;
         teams = new List<Team>(gameMode.maxTeams);
         for (int i = 0; i < gameMode.maxTeams; i++)
         {
-            teams.Add(new Team(gameMode.maxTeamSize, GetColor(i)));
+            teams.Add(new Team(gameMode.maxTeamSize));
         }
     }
 
@@ -80,20 +81,6 @@ public partial class TeamManager : MonoBehaviour
                 spawner.PlayerJoined(currentPlayer.transform);
                 currentPlayer.GetComponentInChildren<PlayerVisuals>().InitColor(GetColorOf(currentPlayer));
                 FindObjectOfType<EffectManager>().AddGridLigth(0.1f, 3.5f, currentPlayer.GetComponentInChildren<SpriteRenderer>(), currentPlayer.transform);
-            }
-        }
-    }
-
-    public void InitDefenseBases(GameObject parent)
-    {
-        for (int i = 0; i < teams.Count; i++)
-        {
-            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
-            teams[i].DefenseBase = parent.transform.GetChild(i).gameObject.GetComponent<DestructibleBlock>();
-            MeshRenderer[] meshes = parent.transform.GetChild(i).gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (var m in meshes)
-            {
-                m.material.color = teams[i].Color;
             }
         }
     }
@@ -263,39 +250,26 @@ public partial class TeamManager : MonoBehaviour
         }
     }
 
-    public Color GetColor(int index)
+    public Color GetColorOf(GameObject player)
     {
-        if (index > -1)
+        return GetColor(FindPlayerTeam(player));
+    }
+
+    public Color GetColor(int team)
+    {
+        if (team > -1)
         {
-            return teamColors[index];
+            return teamColors[team];
         }
         return new Color(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    public Color GetColorOf(GameObject player)
+    public string GetTeamName(int team)
     {
-        return teams[FindPlayerTeam(player)].Color;
-    }
-
-    public string GetTeamName(Team team)
-    {
-        var index = teams.FindIndex(t => t == team);
-        return colorStrings[index];
-    }
-
-    public void IncreaseScore(GameObject player)
-    {
-        int team = FindPlayerTeam(player);
-        if (team <= -1)
-        {
-            throw new System.Exception("Score can be only increased in a match with a player on one team!");
+        if (team > -1) {
+            return teamNames[team];
         }
-        teams[team].Points++;
-    }
-
-    public int GetScore(int team)
-    {
-        return teams[team].Points;
+        return "TEAM NOT FOUND";
     }
 
     public List<Team> GetTeams()
@@ -303,41 +277,20 @@ public partial class TeamManager : MonoBehaviour
         return teams;
     }
 
-    public bool IsBaseOf(DestructibleBlock _base, GameObject player)
-    {
-        int teamId = FindPlayerTeam(player);
-
-        if (teams[teamId].DefenseBase == _base)
-            return true;
-
-        return false;
-    }
-
     public void ColorSpawns()
     {
         for (int t = 0; t < teams.Count; t++)
         {
             var spawnArea = spawner.getSpawnArea(t);
-            spawnArea.GetComponent<SpriteRenderer>().color = ExtensionMethods.turnTeamColorDark(teams[t].Color, 0.5f);
+            spawnArea.GetComponent<SpriteRenderer>().color = ExtensionMethods.turnTeamColorDark(GetColor(t), 0.5f);
         }
     }
 
     public void Wipe()
     {
-        //teams.Clear();
-        teams = new List<Team>(2);
-        for (int i = 0; i < 2; i++)
-            teams.Add(new Team(2, GetColor(i)));
-
-
+        teams = new List<Team>(new Team[2]);
         playerNrs.Clear();
         playerDevices.Clear();
         playerChars.Clear();
-    }
-
-    public void ResetPoints()
-    {
-        for (int t = 0; t < teams.Count; t++)
-            teams[t].Points = 0;
     }
 }

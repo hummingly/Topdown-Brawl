@@ -33,7 +33,7 @@ public class PlayerSpawner : MonoBehaviour
         camTargetGroup = FindObjectOfType<CinemachineTargetGroup>();
 
 
-        for (int i = 0; i < teams.teams.Count; i++)
+        for (int i = 0; i < teams.Count; i++)
         {
             var list = new List<float>(new float[teams.teams[i].Count]);
             spawnPosTimers.Add(list);

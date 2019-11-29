@@ -25,8 +25,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Image mapImg;
     [SerializeField] private TextMeshProUGUI gameModeText;
 
-    private string SelectedMap => maps[currentMapIndex];
-    private GameMode SelectedGameMode => gameModes[currentGameModeIndex];
+    public string SelectedMap => maps[currentMapIndex];
+    public GameMode SelectedGameMode => gameModes[currentGameModeIndex];
 
     void Awake()
     {
@@ -101,7 +101,7 @@ public class MenuManager : MonoBehaviour
             slot.botDeleteCounter++;
 
             // Already max team, so remove instead (after cycle through all colors)
-            if (slot.botDeleteCounter >= teams.teams.Count)//(teams.getTeamOf(bot) + 1 >= teams.teams.Count)
+            if (slot.botDeleteCounter >= teams.Count)//(teams.getTeamOf(bot) + 1 >= teams.teams.Count)
             {
                 teams.Remove(bot);//remove bot cursor in team list
 
@@ -238,7 +238,7 @@ public class MenuManager : MonoBehaviour
     private void UpdateGameModeUi()
     {
         gameModeText.SetText(SelectedGameMode.name);
-        FindObjectOfType<WinManager>().gameMode = SelectedGameMode;
+        FindObjectOfType<WinManager>().SetGameMode(SelectedGameMode);
     }
 
     public void UpdateMapUi()

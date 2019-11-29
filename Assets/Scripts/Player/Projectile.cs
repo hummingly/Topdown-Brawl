@@ -159,7 +159,9 @@ public class Projectile : MonoBehaviour
         if (other.tag == "Destruction Piece" && this.enabled)
         {
             var damageAbleBase = other.transform.parent.GetComponent<IDamageable>();
-            var isOwnBase = teams.IsBaseOf(damageAbleBase.GetComponent<DestructibleBlock>(), owner);
+            // Blocks are assigned to teams based on their index in 'InitDefenseBases' method.
+            int team = teams.FindPlayerTeam(owner);
+            var isOwnBase = team == damageAbleBase.GetComponent<DestructibleBlock>().gameObject.transform.GetSiblingIndex();
 
             if (!isOwnBase)
             {

@@ -1,79 +1,115 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static TeamManager;
 
 public class WinManager : MonoBehaviour
 {
     // TODO make private
-    [SerializeField] public GameMode gameMode;
-    private Team winningTeam;
+    [SerializeField] private GameMode gameMode;
+    private int winningTeam = -1;
+    // TODO: Also keep track for invidual players.
+    private int[] killTeamScores = new int[2];
+    private DestructibleBlock[] defenseBlocks = new DestructibleBlock[2];
 
-    public bool OnTeamWon(List<Team> teams)
+    public int[] TeamKills => killTeamScores;
+    public GameMode.WinCondition WinCondition => gameMode.winCondition;
+
+    public bool OnTeamWon()
     {
-        switch (gameMode.winCondition)
+        switch (WinCondition)
         {
             case GameMode.WinCondition.Kills:
-                return CheckScores(teams);
+                var k = CheckScores();
+                if (k > -1)
+                {
+                    winningTeam = k;
+                    return true;
+                }
+                return false;
             case GameMode.WinCondition.Defense:
-                return CheckDefenses(teams);
+                var d = CheckDefenses();
+                if (d > -1)
+                {
+                    winningTeam = d;
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
-
     }
 
-    public Team GetWinningTeam()
+    public int GetWinningTeam()
     {
         return winningTeam;
     }
 
-    private bool CheckDefenses(List<Team> teams)
+    private int CheckDefenses()
     {
-        //print("checking defenses:");
-        // (!checks for a team that lost)
-        // start checking when teams are set
-        if (teams != null)
+        var livingTeams = 0;
+        var lastIndex = 0;
+        for (int i = 0; i < defenseBlocks.Length; i++)
         {
-            int aliveTeams = 0;
-            foreach (Team t in teams)
+            if (defenseBlocks[i].IsDead)
             {
-                if (t.DefenseBase.GetHealth() <= 0)
-                {
-                    //print(t.Color);
-                    t.DefenseBase = null;
-                }
-                else
-                {
-                    aliveTeams++;
-                }
+                DestroyTeamDefense(i);
             }
-            if (aliveTeams == 1)
+            else
             {
-                int index = teams.FindIndex(t => t.DefenseBase != null);
-                winningTeam = teams[index];
-                return true;
+                livingTeams++;
+                lastIndex = i;
             }
-
-            return false;
         }
-        //print("returned false without checking");
-        return false;
+        if (livingTeams == 1)
+        {
+            return lastIndex;
+        }
+        return -1;
     }
 
-    public bool CheckScores(List<Team> teams)
+    public int CheckScores()
     {
-        // checks for a team that won
-        //return teams.Exists(t => t.Points >= gameMode.pointsToWin);
-        int index = teams.FindIndex(t => t.Points >= gameMode.pointsToWin);
-        if (index != -1)
-        {
-            winningTeam = teams[index];
-            return true;
-        }
-        return false;
+        return Array.FindIndex(killTeamScores, t => t >= gameMode.pointsToWin);
     }
 
+    // Later we could track deaths and assists too.
+    public void IncreaseKillScore(int team)
+    {
+        killTeamScores[team] += 1;
+    }
+
+    private void DestroyTeamDefense(int team)
+    {
+        defenseBlocks[team] = null;
+    }
+
+    public void SetGameMode(GameMode mode)
+    {
+        killTeamScores = new int[mode.maxTeams];
+        defenseBlocks = new DestructibleBlock[mode.maxTeams];
+    }
+
+    public void InitDefenseBases()
+    {
+        var parent = GameObject.FindGameObjectWithTag("DefenseBases");
+        var blocks = parent.GetComponentsInChildren<DestructibleBlock>();
+        var teamManager = FindObjectOfType<TeamManager>();
+        var len = Math.Min(teamManager.Count, blocks.Length);
+        for (int i = 0; i < len; i++)
+        {
+            // the order of the destructible team blocks (in the parent) has to be the same as for the spawn areas!
+            defenseBlocks[i] = blocks[i];
+            var meshes = blocks[i].gameObject.GetComponentsInChildren<MeshRenderer>();
+            foreach (var m in meshes)
+            {
+                m.material.color = teamManager.GetColor(i);
+            }
+        }
+    }
+
+    public void ResetRound()
+    {
+        winningTeam = -1;
+        Array.Clear(killTeamScores, 0, killTeamScores.Length);
+        Array.Clear(defenseBlocks, 0, defenseBlocks.Length);
+    }
 }
