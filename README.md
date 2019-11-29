@@ -18,6 +18,8 @@
 - by clicking on the arrows you can change your class
 - by clicking on the picture of the map you can change the map
 - click on the game mode to toggle the game mode, suitable maps will automatically be selected
+- pressing the X button/south button on your controller will bring you back to the selection
+- ATTENTION: There is no quit yet. You have to use other means. We apologize.
 
 ### Controls
 
