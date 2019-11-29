@@ -127,7 +127,7 @@ public class EffectManager : MonoBehaviour
         seq.Join(exp.DOScale(Vector2.one * maxSize, 0.25f)); //TODO: add a lil overshoot
         seq.AppendCallback(() => Destroy(exp.gameObject));
 
-        shakeScale(player, 1f, 0.75f);
+        ShakeScale(player, 1f, 0.75f);
 
         //TODO: add easing       
     }
