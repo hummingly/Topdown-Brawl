@@ -22,6 +22,7 @@ public abstract class IDamageable : MonoBehaviour
     protected EffectManager effects;
     protected GameObject invincibleGO;
     protected Vector2 lastSpawnPos;
+    private bool alive = true;
 
     public virtual void Awake()
     {
@@ -45,8 +46,9 @@ public abstract class IDamageable : MonoBehaviour
             }
     }
 
-    internal void IncreaseHealth(int amount)
+    internal void IncreaseHealth(int amount, bool revive = false)
     {
+        if (revive) alive = true;
         healthPoints = Mathf.Min(maxHealthPoints, healthPoints + amount);
         healthSlider.value = healthPoints;
     }
@@ -64,8 +66,11 @@ public abstract class IDamageable : MonoBehaviour
         healthPoints = Mathf.Max(0, healthPoints - amount);
         healthSlider.value = healthPoints;
 
-        if (healthPoints <= 0)
+        if (healthPoints <= 0 && alive)
+        {
+            alive = false;
             OnDeath();
+        }
 
         OnReduceHealth(amount, projectilePos, nextProjectilePos);
 

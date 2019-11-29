@@ -132,7 +132,7 @@ public class PlayerSpawner : MonoBehaviour
         //camTargetGroup.RemoveMember(placeholder);
 
         SetPlayerActive(true, player);
-        player.IncreaseHealth(int.MaxValue);
+        player.IncreaseHealth(int.MaxValue, true);
         player.SetInvincible(spawnPos);
         SpawnPlayer(player.transform, spawnPos);
     }

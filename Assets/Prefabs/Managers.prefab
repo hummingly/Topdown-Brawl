@@ -107,6 +107,8 @@ MonoBehaviour:
   traumaFallOff: 3.333
   powerOfAllShakes: 2
   frequency: 10
+  useTweening: 0
+  useParticles: 0
 --- !u!114 &1629654588299491853
 MonoBehaviour:
   m_ObjectHideFlags: 0

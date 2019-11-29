@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 
 public static class ExtensionMethods
 {
+    //public static bool useTweening = true;
+    //public static bool useParticles = false;
+
+    //public static bool doShoot = true;
+    //public static bool getDamaged = true;
+
     public static int bulletLayerIgnored = ~(1 << LayerMask.NameToLayer("Ignore Bullets"));
 
     public static float Remap(float value, float low1, float high1, float low2, float high2)

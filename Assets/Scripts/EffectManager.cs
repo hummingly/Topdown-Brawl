@@ -121,11 +121,13 @@ public class EffectManager : MonoBehaviour
         // don't start at max size
         exp.localScale = Vector2.one * maxSize * 0.5f;
 
+
         Sequence seq = DOTween.Sequence();
         seq.Append(exp.DORotate(new Vector3(0, 0, exp.eulerAngles.z * 3), 0.5f));
         seq.Join(exp.GetChild(0).DOScale(Vector2.one, 0.5f));
         seq.Join(exp.DOScale(Vector2.one * maxSize, 0.25f)); //TODO: add a lil overshoot
         seq.AppendCallback(() => Destroy(exp.gameObject));
+
 
         //TODO: add easing       
     }
@@ -221,11 +223,11 @@ public class EffectManager : MonoBehaviour
         p.transform.localScale *= ExtensionMethods.Remap(dmg, 10, 50, 0.25f, 1.5f); //not working because particle system scale not changing
     }
 
-    public void gotDamaged(Transform player)
+    public void gotDamaged(PlayerVisuals player)
     {
         shakeScale(player, 0.1f, 0.75f);
 
-        player.GetComponentInChildren<PlayerVisuals>().blinkWhite(Color.white, 1);
+        player.blinkWhite(Color.white, 1);
 
 
         //AddShake(0.3f);
@@ -233,30 +235,31 @@ public class EffectManager : MonoBehaviour
 
 
 
-    public void meleeBlow(Transform owner)
+    public void meleeBlow(PlayerVisuals player)
     {
-        shakeScale(owner, 0.1f, 0.75f);
+        shakeScale(player, 0.1f, 0.75f);
     }
 
-    public void snipeShot(Vector2 pos, Transform bullet, GameObject owner, Gamepad gamepad = null)
+    public void snipeShot(Vector2 pos, Transform bullet, PlayerVisuals player, Gamepad gamepad = null)
     {
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
         rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
-        shakeScale(owner.transform, 0.2f, 1f);
+        shakeScale(player, 0.2f, 1f);
     }
 
-    public void muzzle(float dmg, Transform bullet, GameObject owner)
+    public void muzzle(float dmg, Transform bullet, PlayerVisuals player)
     {
         var m = Instantiate(muzzleFlashes[Random.Range(0, muzzleFlashes.Length)], bullet.transform.position, Quaternion.Euler(0, 0, bullet.rotation.eulerAngles.z)).transform;
 
-        m.parent = owner.transform;
+        m.parent = player.transform;
 
         foreach (SpriteRenderer spr in m.GetComponentsInChildren<SpriteRenderer>())
             spr.DOFade(0, muzzleFlashDur);
         // TODO: maybe also move individual muzzles in local up?
+
 
         Sequence seq = DOTween.Sequence();
         seq.Append(m.DOPunchScale(Vector3.one * muzzleScale * bullet.localScale.y, muzzleFlashDur));
@@ -266,7 +269,7 @@ public class EffectManager : MonoBehaviour
         addGridLigth(dmg * 0.05f, 2f, m.GetComponentInChildren<SpriteRenderer>(), m); //TODO: muzzle transform not rly centerd...
 
 
-        shakeScale(owner.transform, 0.05f, 0.5f);
+        shakeScale(player, 0.05f, 0.5f);
     }
 
 
@@ -275,6 +278,7 @@ public class EffectManager : MonoBehaviour
         var p = Instantiate(spawnProtection, player.transform.position, Quaternion.identity);
         //fix it to them, and make it transparent
         p.transform.parent = player;
+
 
         Sequence seq = DOTween.Sequence();
         seq.Append(p.transform.DOScale(Vector3.one * 2, dur / 4));
@@ -297,6 +301,8 @@ public class EffectManager : MonoBehaviour
 
     public float gameOver(Vector2 explosionPos)
     {
+        FindObjectOfType<SoundEffects>().gameOver();
+
         float dur = 2;
 
         Instantiate(bigSparks, explosionPos, Quaternion.Euler(0f, 0f, 90));
@@ -333,14 +339,15 @@ public class EffectManager : MonoBehaviour
 
 
     // WILL ONLY WORK TO SCALE PLAYERS ATM
-    private void shakeScale(Transform obj, float time, float strength)
+    private void shakeScale(PlayerVisuals player, float time, float strength)
     {
         /*obj.DOKill(); //prevent overlap or staying deformation
         Sequence seq = DOTween.Sequence();
         seq.Append(obj.DOShakeScale(time, strength));
         seq.AppendCallback(() => obj.DOKill()); //prevent overlap or staying deformation*/
 
-        obj.GetComponentInChildren<PlayerVisuals>().ShakeScale(time, strength);
+        player.ShakeScale(time, strength);
+
         /*
         //obj.DOKill();
         //obj.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one;

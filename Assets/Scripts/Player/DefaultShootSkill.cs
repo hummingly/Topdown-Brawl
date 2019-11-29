@@ -48,17 +48,17 @@ public class DefaultShootSkill : Skill
         {
             float dmg = damage;
             if (dmg == 0) dmg = 75;
-            effects.muzzle(dmg, p.transform, gameObject);
+            effects.muzzle(dmg, p.transform, visuals);
             effects.AddShake(0.3f, shootDir, 0.25f);
 
             if (p.GetComponent<Projectile>().sniperShot)
             {
-                effects.snipeShot(spawnPos, p.transform, gameObject, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+                effects.snipeShot(spawnPos, p.transform, visuals, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
                 effects.AddShake(0.5f, shootDir);
             }
         }
         else
-            effects.meleeBlow(transform);
+            effects.meleeBlow(visuals);
     }
 
   
