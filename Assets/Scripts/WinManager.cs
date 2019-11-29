@@ -14,48 +14,37 @@ public class WinManager : MonoBehaviour
     public int[] TeamKills => killTeamScores;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
     private int MinRounds => gameMode.rounds / 2 + 1;
-    private bool roundRunning = true;
+    private bool roundFinished = false;
 
     public bool OnTeamWon()
     {
+        if (roundFinished) {
+            return true;
+        }
+        var winner = -1;
         switch (WinCondition)
         {
             case GameMode.WinCondition.Kills:
-                var k = CheckScores();
-                if (!roundRunning) {
-                    return true;
-                }
-                if (k > -1)
-                {
-                    roundRunning = false;
-                    Debug.Log("Score");
-                    roundWinner[k] += 1;
-                    return OnRoundWin();
-                }
-                return false;
+                winner = CheckScores();
+                break;
             case GameMode.WinCondition.Defense:
-                var d = CheckDefenses();
-                if (d > -1)
-                {
-                    roundRunning = false;
-                    roundWinner[d] += 1;
-                    return OnRoundWin();
-                }
-                return false;
-            default:
-                return false;
+                winner = CheckDefenses();
+                break;
         }
+        if (winner > -1) {
+            roundFinished = true;
+            roundWinner[winner] += 1;
+            SearchWinningTeam();
+        }
+        return roundFinished;
     }
 
     // Check if the match has finished yet.
-    private bool OnRoundWin() {
-        Debug.Log(MinRounds);
+    private void SearchWinningTeam() {
         var team = Array.FindIndex(roundWinner, r => r >= MinRounds);
         if (team > -1) {
             winningTeam = team;
-            return true;
         }
-        return !roundRunning;
     }
 
     public int GetWinningTeam()
@@ -135,7 +124,7 @@ public class WinManager : MonoBehaviour
 
     public void ResetRound()
     {
-        roundRunning = true;
+        roundFinished = true;
         winningTeam = -1;
         Array.Clear(killTeamScores, 0, killTeamScores.Length);
         Array.Clear(defenseBlocks, 0, defenseBlocks.Length);

@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
 
     public void GoToMenu()
     {
-        FindObjectOfType<GameStateManager>().GoToSelection();
+        FindObjectOfType<GameStateManager>().RestartMatchMaking();
     }
 
     // public void Restart()

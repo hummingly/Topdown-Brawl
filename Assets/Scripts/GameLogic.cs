@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class GameLogic : MonoBehaviour
 {
-    //private static GameLogic instance;
-    //public static GameLogic Instance { get { return instance; } }
-
     private UIManager uiManager;
     private TeamManager teamManager;
     private WinManager winManager;
-
     private float mapSize;
 
     [SerializeField] private float startGameplayAnimDur = 1;
@@ -44,21 +39,11 @@ public class GameLogic : MonoBehaviour
 
     void Update()
     {
-        if (roundRunning) // bases are initialized
+        if (roundRunning)
         {
-            //if bigger than gamemode max then won
             if (winManager.OnTeamWon())
             {
-                if (winManager.GetWinningTeam() == -1)
-                {
-                    RestartOver();
-                    FindObjectOfType<GameStateManager>().RestartMatch();
-                }
-                else
-                {
-                    roundRunning = false;
-                    GameOver();
-                }
+                StartRoundEnd();
             }
         }
     }
@@ -66,7 +51,9 @@ public class GameLogic : MonoBehaviour
     public void SetDeathEvent(Vector2 pos)
     {
         if (roundRunning)
+        {
             lastDeath = pos;
+        }
     }
 
     public void Kill()
@@ -120,32 +107,30 @@ public class GameLogic : MonoBehaviour
     public void IncreaseScore(GameObject player)
     {
         winManager.IncreaseKillScore(teamManager.FindPlayerTeam(player));
-        // display new score in UI
         uiManager.UpdateScores();
     }
 
-    public void RestartOver()
-    {
+    public void StartRoundEnd() {
+        roundRunning = false;
         float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
-        StartCoroutine(RoundOverUi(dur));
+        if (winManager.GetWinningTeam() > -1) {
+            StartCoroutine(GameOverUi(dur));
+        } else {
+            StartCoroutine(RestartMatchUi(dur));
+        }
     }
 
     // TODO: Create actual Ui
-    private IEnumerator RoundOverUi(float t)
+    private IEnumerator RestartMatchUi(float t)
     {
-        yield return new WaitForSecondsRealtime(t);
+        var seconds = Mathf.Max(t, 10.0f);
+        yield return new WaitForSecondsRealtime(seconds);
+        roundRunning = FindObjectOfType<GameStateManager>().Replay();
     }
 
-    public void GameOver()
-    {
-        float dur = FindObjectOfType<EffectManager>().GameOver(lastDeath);
-        StartCoroutine(ShowGameOverUi(dur));
-    }
-
-    private IEnumerator ShowGameOverUi(float t)
+    private IEnumerator GameOverUi(float t)
     {
         yield return new WaitForSecondsRealtime(t);
-
         uiManager.SetGameOverUI();
     }
 }

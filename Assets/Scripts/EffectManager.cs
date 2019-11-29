@@ -156,7 +156,7 @@ public class EffectManager : MonoBehaviour
         screenFill.color = Color.clear;
     }
 
-    public void playerDeath(Vector2 pos, Gamepad gamepad = null)// int deviceId)
+    public void PlayerDeath(Vector2 pos, Gamepad gamepad = null)// int deviceId)
     {
         var e = Instantiate(deathExplosion, pos, Quaternion.identity).transform;
         //e.gameObject.AddComponent<GridLightAddon>().set(0.2f, 2f);
@@ -422,8 +422,6 @@ public class EffectManager : MonoBehaviour
 
     private void Rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
     {
-        //Gamepad.all[device].SetMotorSpeeds(startLow, startHight);
-
         float amp = ExtensionMethods.getGamepadAmp(gamepad);
         StartCoroutine(RumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }

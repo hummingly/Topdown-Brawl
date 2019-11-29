@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GameStateManager : MonoBehaviour
 {
     // SceneManager was already taken... (?) maybe MapManager, but should also do menu etc
-    public enum GameState { Menu, MatchMaking, Ingame, End };
+    public enum GameState { Start, MatchMaking, Ingame, Replay, End };
     private GameState state = GameState.MatchMaking;
     private TeamManager teams;
 
@@ -31,21 +31,9 @@ public class GameStateManager : MonoBehaviour
         SceneManager.LoadScene(map);
     }
 
-    public void GoToSelection()
+    public void RestartMatchMaking()
     {
         //keeping players from gameplay to menu won't work atm because static scripts etc
-
-
-        /*state = GameState.Selection;
-
-        SceneManager.LoadScene("Selection");
-
-        FindObjectOfType<PlayerInputManager>().joinBehavior = PlayerJoinBehavior.JoinPlayersWhenButtonIsPressed;
-        FindObjectOfType<PlayerInputManager>().playerPrefab = playerCursorPrefab;
-        teams.Wipe();
-
-        Time.timeScale = 1;*/
-
 
         FindObjectOfType<GameLogic>().Kill();
 
@@ -54,8 +42,14 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void RestartMatch()
+    public bool Replay()
     {
+        if (State != GameState.Ingame)
+        {
+            Debug.Log("Invalid State Transition");
+            return false;
+        }
+        state = GameState.Replay;
          foreach (var b in FindObjectsOfType<BotTest>())
         {
             DontDestroyOnLoad(b.gameObject);
@@ -70,7 +64,9 @@ public class GameStateManager : MonoBehaviour
         {
             winManager.InitDefenseBases();
         }
+        state = GameState.Ingame;
         Time.timeScale = 1;
+        return true;
     }
 
     public void EndGame() {

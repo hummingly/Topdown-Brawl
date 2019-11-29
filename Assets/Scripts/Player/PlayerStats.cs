@@ -28,7 +28,7 @@ public class PlayerStats : IDamageable
             GetComponent<BotTest>().StopChasing();
         }
 
-        effects.playerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
+        effects.PlayerDeath(transform.position, GetComponent<PlayerInput>() == null ? null : (Gamepad)GetComponent<PlayerInput>().devices[0]);
 
         foreach (DefaultShootSkill d in GetComponents<DefaultShootSkill>())
         {
