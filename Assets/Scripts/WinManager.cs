@@ -14,6 +14,7 @@ public class WinManager : MonoBehaviour
     public int[] TeamKills => killTeamScores;
     public int[] TeamPoints => roundWinner;
     public GameMode.WinCondition WinCondition => gameMode.winCondition;
+    public int RoundCount => gameMode.rounds;
     private int MinRounds => gameMode.rounds / 2 + 1;
     private bool roundFinished = false;
 
@@ -51,6 +52,15 @@ public class WinManager : MonoBehaviour
     public int GetWinningTeam()
     {
         return winningTeam;
+    }
+
+    // Only call on round end!
+    public int GetCurrentRound() {
+        var rounds = 0;
+        foreach (var i in roundWinner) {
+            rounds += i;
+        }
+        return rounds;
     }
 
     private int CheckDefenses()

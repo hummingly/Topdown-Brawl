@@ -123,7 +123,7 @@ public class GameLogic : MonoBehaviour
 
     private IEnumerator RestartMatchUi(float t)
     {
-        var seconds = Mathf.Max(t, 10.0f);
+        var seconds = Mathf.Max(t, 8.5f);
         yield return new WaitForSecondsRealtime(0.5f);
         uiManager.ShowRoundMatchUi();
         yield return new WaitForSecondsRealtime(seconds);
@@ -137,6 +137,7 @@ public class GameLogic : MonoBehaviour
     private IEnumerator GameOverUi(float t)
     {
         yield return new WaitForSecondsRealtime(t);
+        FindObjectOfType<GameStateManager>().EndGame();
         uiManager.SetGameOverUI();
     }
 }

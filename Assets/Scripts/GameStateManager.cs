@@ -33,12 +33,14 @@ public class GameStateManager : MonoBehaviour
 
     public void RestartMatchMaking()
     {
+        if (State != GameState.End) {
+            Debug.Log("Invalid State Transition");
+            return;
+        }
+        state = GameState.MatchMaking;
         //keeping players from gameplay to menu won't work atm because static scripts etc
-
         FindObjectOfType<GameLogic>().Kill();
-
         SceneManager.LoadScene("Selection");
-
         Time.timeScale = 1;
     }
 

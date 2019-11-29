@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject roundOverview;
     [SerializeField] private GameObject gameOver;
     [SerializeField] private GameObject pointPrefab;
+    [SerializeField] private TextMeshProUGUI roundTitle;
 
     private WinManager winManager;
 
@@ -49,6 +50,7 @@ public class UIManager : MonoBehaviour
 
     public void ShowRoundMatchUi()
     {
+        roundTitle.SetText("Round " + winManager.GetCurrentRound() + " / " + winManager.RoundCount);
         gameOver.SetActive(false);
         roundOverview.SetActive(true);
         var teamManager = FindObjectOfType<TeamManager>();

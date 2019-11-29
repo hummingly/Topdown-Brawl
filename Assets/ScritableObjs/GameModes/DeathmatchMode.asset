@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Death Match
   description: Most kills wins
   rounds: 3
-  pointsToWin: 1
+  pointsToWin: 3
   stockCount: 0
   maxTeams: 2
   maxTeamSize: 3

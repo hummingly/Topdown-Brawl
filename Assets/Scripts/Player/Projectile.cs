@@ -220,7 +220,7 @@ public class Projectile : MonoBehaviour
 
                 if (melee)
                 {
-                    damageAble.GetComponent<PlayerMovement>().tookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
+                    damageAble.GetComponent<PlayerMovement>().TookMeleeDmg(owner, dmgOnCollAfterKnockFor, extraDmgOnWallHit, extraDmgVelThresh, extraDmgMaxAngle);
                 }
 
                 sounds.HitEnemy();

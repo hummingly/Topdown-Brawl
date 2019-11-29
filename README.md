@@ -5,7 +5,7 @@
 - top down 2D battle game
 - two teams fight against each other on the same map (screen/device)
 - teams are equal in size and can consist of 1 to 3 players
-- as placeholder bots can be added to the game
+- bots can be added as placeholders to the game
 - each player can choose a role (normal shooter, sniper, melee, bouncer)
 - there are two game modes: death match and defense
 - there are three maps available (large, medium and small)
@@ -31,11 +31,12 @@
 
 ### Game Modes
 
-- in deatchmatch mode you have to kill as much enemies as possible
-- the team that has reached a certain amount of kills, wins the round
+- every mode has 3 rounds where two round wins are needed to be the total winner
+- in death match mode you have to kill as much enemies as possible
+- the team that has reached a certain amount of kills, wins one round
 - in defense mode you have to defend your base which is a block near your spawn area
 - at the same time you have to destroy the block of the enemy team
-- the team that destroys the other team's block first wins
+- the team that destroys the other team's block first wins one round
 - the block actually crumbles uppon taking damage
 
 ### Classes
@@ -44,10 +45,6 @@
 - Sniper: shooting skill with short range, bad accuracy, low damage + snipe skill with high speed, high damage, long range, the longer the shot the higher the damage
 - Melee: a tough and slightly faster class with a melee attack that knockbacks back others (and does additional damage on pushing into walls)
 - (beta ;) Bouncer: shooting skill with a shorter range but bouncing bullets, going further each bounce
-
-## Game Mechanics
-
--
 
 ## Game Art
 
