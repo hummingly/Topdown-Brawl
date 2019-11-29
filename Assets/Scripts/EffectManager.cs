@@ -78,7 +78,7 @@ public class EffectManager : MonoBehaviour
     }
 
     // for now on spawn, but maybe rather an explosion on kill? or big dmg  !!!!!!!!!!
-    public void SquareParticle(Vector2 pos)
+    public void SquareParticle(Vector2 pos, PlayerVisuals player)
     {
         // a circle that (almost) starts at max size, is rotated and has a color, then a mask that is rotated starts in middle and gets bigger until the whole thing is a hole, then delete
 
@@ -128,6 +128,7 @@ public class EffectManager : MonoBehaviour
         seq.Join(exp.DOScale(Vector2.one * maxSize, 0.25f)); //TODO: add a lil overshoot
         seq.AppendCallback(() => Destroy(exp.gameObject));
 
+        shakeScale(player, 1f, 0.75f);
 
         //TODO: add easing       
     }
@@ -192,10 +193,13 @@ public class EffectManager : MonoBehaviour
         foreach (PlayerMovement p in FindObjectsOfType<PlayerMovement>())
         {
             p.enabled = true;
-            
+
             //place players at spawn pos again and do anim
-            p.GetComponentInChildren<PlayerVisuals>().Hide(false);
-            SquareParticle(p.transform.position);
+            var vis = p.GetComponentInChildren<PlayerVisuals>();
+            vis.Hide(false);
+            SquareParticle(p.transform.position, vis);
+
+            p.GetComponentInChildren<SoundsPlayer>().respawn();
         }
 
         foreach (Skill s in FindObjectsOfType<Skill>())

@@ -8,18 +8,24 @@ public class SoundsBullet : MonoBehaviour
     public AudioSource hitNeutralClip;
     public AudioSource hitEnemyClip;
 
+    public GameObject bullet;
+
     void Start()
     {
+        bullet = transform.parent.gameObject;
 
+        GetComponentInChildren<SoundsBullet>().transform.parent = null; //un-parent so sound doesnt stop if bullet destroyed, can be done here already cause no 3D sound?
     }
 
     void Update()
     {
-
+        if (!bullet && !shotClip.isPlaying && !hitNeutralClip.isPlaying && !hitEnemyClip.isPlaying)
+            Destroy(gameObject);
     }
 
     public void shot()
     {
+        //print("shot");
         shotClip.Play();
     }
 
@@ -31,7 +37,7 @@ public class SoundsBullet : MonoBehaviour
 
     public void hitEnemy()
     {
-        //print("e");
+        //print("enemy");
         hitEnemyClip.Play();
     }
 }

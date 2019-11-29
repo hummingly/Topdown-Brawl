@@ -49,6 +49,7 @@ MonoBehaviour:
   shotClip: {fileID: 8878995069980212505}
   hitNeutralClip: {fileID: 2869675669405943391}
   hitEnemyClip: {fileID: 2909490634900847516}
+  bullet: {fileID: 0}
 --- !u!82 &8878995069980212505
 AudioSource:
   m_ObjectHideFlags: 0
@@ -61,7 +62,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 36b745b8403b0634d9e999eb8bc2b250, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -155,7 +156,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ac9cb00a74d7cc64ca92819113f9d3bd, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ccca66d50ad6aa94185fa837dddce071, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -251,7 +252,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 30eaa5bf00201124bb723af1ffaed503, type: 3}
+  m_audioClip: {fileID: 8300000, guid: ac9cb00a74d7cc64ca92819113f9d3bd, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

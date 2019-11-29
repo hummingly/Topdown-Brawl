@@ -82,7 +82,7 @@ public class PlayerSpawner : MonoBehaviour
     // For normal debug playign from gameplay scene
     public void PlayerJoined(Transform player)//void OnPlayerJoined(PlayerInput player)
     {
-        SpawnPlayer(player.transform);
+        SpawnPlayer(player.transform, true);
     }
 
     
@@ -134,20 +134,22 @@ public class PlayerSpawner : MonoBehaviour
         SetPlayerActive(true, player);
         player.IncreaseHealth(int.MaxValue, true);
         player.SetInvincible(spawnPos);
-        SpawnPlayer(player.transform, spawnPos);
+        SpawnPlayer(player.transform, spawnPos, false);
     }
 
-    private void SpawnPlayer(Transform player)
+    private void SpawnPlayer(Transform player, bool firstSpawn)
     {
-        SpawnPlayer(player, GetSpawnArea(player));
+        SpawnPlayer(player, GetSpawnArea(player), firstSpawn);
     }
 
-    private void SpawnPlayer(Transform player, Vector2 pos)
+    private void SpawnPlayer(Transform player, Vector2 pos, bool firstSpawn)
     {
         player.position = pos;
         camTargetGroup.AddMember(player.transform, 1, playerCameraRadius);
 
-        effectManager.SquareParticle(player.position);
+        if(!firstSpawn)
+            player.GetComponentInChildren<SoundsPlayer>().respawn();
+        effectManager.SquareParticle(player.position, player.GetComponentInChildren<PlayerVisuals>());
     }
 
     private void SetPlayerActive(bool b, PlayerStats player)
