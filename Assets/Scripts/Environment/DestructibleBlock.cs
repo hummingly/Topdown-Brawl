@@ -24,17 +24,17 @@ public class DestructibleBlock : IDamageable //TODO: add option to own a block b
         }
     }
 
-
     public override void OnDeath()
     {
         if (destruct && destruct.enabled)
             destruct.destroy();
 
-        FindObjectOfType<GameLogic>().setDeathEvent(transform.position);
+        FindObjectOfType<GameLogic>().SetDeathEvent(transform.position);
 
-        StartCoroutine(destroyAfterFrame());
+        StartCoroutine(DestroyAfterFrame());
     }
-    private IEnumerator destroyAfterFrame()
+
+    private IEnumerator DestroyAfterFrame()
     {
         yield return new WaitForEndOfFrame();
         Destroy(gameObject);

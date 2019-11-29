@@ -39,7 +39,7 @@ public class PlayerStats : IDamageable
         {
             logic.IncreaseScore(damagedLastBy);
         }
-        logic.setDeathEvent(transform.position);
+        logic.SetDeathEvent(transform.position);
 
         playerSpawner.PlayerDied(this);
     }

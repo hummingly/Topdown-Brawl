@@ -167,7 +167,7 @@ public class EffectManager : MonoBehaviour
             //rumble(gamepad, 0.2f, 0, 0.5f); //good for ps4 controller
             //rumble(gamepad, 0.2f, 0.5f, 0.5f); // just set both ? well still differences in controllers... maybe third party has only one motor so its just more vibration?
 
-            rumble(gamepad, 0.2f, 0.75f, 0.75f);
+            Rumble(gamepad, 0.2f, 0.75f, 0.75f);
         }
 
         StartCoroutine(ScreenBlink(Color.white, 2));
@@ -209,7 +209,7 @@ public class EffectManager : MonoBehaviour
         var p = Instantiate(bulletCrumblePartic, pos, Quaternion.Euler(bullet.rotation.eulerAngles.z - 90, -90, 0)); //look in shot dir
         p.transform.localScale *= 4;
 
-        rumble(gamepad, 0.1f, 0.2f, 0.2f);
+        Rumble(gamepad, 0.1f, 0.2f, 0.2f);
 
         ShakeScale(owner.transform, 0.1f, 0.75f);
     }
@@ -274,12 +274,8 @@ public class EffectManager : MonoBehaviour
         roundRunning = false;
         Time.timeScale = 0.1f;
 
-        // get normal speed again
-        //StartCoroutine(speedUpTime());
         DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 1, dur).SetEase(Ease.InQuad).SetUpdate(true);
 
-        //TODO: also zoom in on position
-        //FindObjectOfType<Cinemachine.CinemachineTargetGroup>().RemoveMember();
         var heavyPlaceholder = new GameObject("Zoom on dis").transform;
         heavyPlaceholder.position = explosionPos;
         FindObjectOfType<Cinemachine.CinemachineTargetGroup>().AddMember(heavyPlaceholder, 10, 5);
@@ -287,51 +283,35 @@ public class EffectManager : MonoBehaviour
         //either go to timescale 0 again, or disable all input
         FindObjectOfType<PlayerSpawner>().Disable();
         foreach (BotTest b in FindObjectsOfType<BotTest>())
+        {
             b.enabled = false;
+        }
         foreach (PlayerMovement b in FindObjectsOfType<PlayerMovement>())
+        {
             b.enabled = false;
+        }
         foreach (Skill b in FindObjectsOfType<Skill>())
+        {
             b.enabled = false;
-
+        }
         return dur;
     }
-
-
-
 
     // WILL ONLY WORK TO SCALE PLAYERS ATM
     private void ShakeScale(Transform obj, float time, float strength)
     {
-        /*obj.DOKill(); //prevent overlap or staying deformation
-        Sequence seq = DOTween.Sequence();
-        seq.Append(obj.DOShakeScale(time, strength));
-        seq.AppendCallback(() => obj.DOKill()); //prevent overlap or staying deformation*/
-
         obj.GetComponentInChildren<PlayerVisuals>().ShakeScale(time, strength);
-        /*
-        //obj.DOKill();
-        //obj.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one;
-        Sequence seq = DOTween.Sequence();
-        seq.Append(obj.GetComponentInChildren<PlayerVisuals>().transform.DOShakeScale(time, strength));
-       // seq.AppendCallback(() => obj.localScale = obj.GetComponent<PlayerMovement>().orgScale); //optimize this
-        seq.AppendCallback(() => obj.GetComponentInChildren<PlayerVisuals>().transform.localScale = Vector3.one); //optimize this
-        */
     }
 
-
-
-
-
-    public void AddShake(float strength, Vector2 dir = new Vector2(), float threshHold = 0) //dir only 1,0  0,-1  1,1  etc
+    public void AddShake(float strength, Vector2 dir = new Vector2(), float threshHold = 0)
     {
-        //print(trauma); //only do small shake on shooting if no other shakes active
-        //if (threshHold != 0 && threshHold <= trauma.magnitude)
-        //    return;
-        if (threshHold != 0) return; //nvm, still stacks very bad
+        if (threshHold != 0) { return; } //nvm, still stacks very bad
 
 
         if (dir == Vector2.zero)
+        {
             dir = Random.insideUnitCircle;
+        }
         //only 0/1 values since -1/1 is done below
         if (dir.x < 0) dir.x = -dir.x;
         if (dir.x > 0) dir.x = 1;
@@ -364,9 +344,6 @@ public class EffectManager : MonoBehaviour
         // -> cinemachine noise didn't seem to give enough control, overlapping shakes etc dunno
 
         offset.m_Offset = camOffset;
-        //print(offset.m_Offset + " " + camOffset);
-
-
 
         // Light on grid (TODO: actualy do real shadows with rays)
         for (var i = gridLights.Count - 1; i > -1; i--)
@@ -418,43 +395,6 @@ public class EffectManager : MonoBehaviour
         return l;
     }
 
-    /*
-    public void playerShotShake()
-    {
-        StartCoroutine(ShakeCamera(1, 1, 0.1f));
-    }
-
-    public void playerHitShake()
-    {
-        StartCoroutine(ShakeCamera(2, 2, 0.2f));
-    }
-
-    public void playerDeathShake()
-    {
-        StartCoroutine(ShakeCamera(10,10,0.25f));
-    }
-
-    public void gameOverShake()
-    {
-        StartCoroutine(ShakeCamera(20,20,0.5f));
-    }
-
-    private IEnumerator ShakeCamera(float amp, float freq, float time)
-    {
-        _perlin.m_AmplitudeGain = amp;
-        _perlin.m_FrequencyGain = freq;
-        yield return new WaitForSeconds(time);
-        CameraReset();
-        //TODO: if not smooth enough reset, use trauma ... NVM need it anway to stack shakes
-    }
-
-    private void CameraReset()
-    {
-        _perlin.m_AmplitudeGain = 0;
-        _perlin.m_FrequencyGain = 0;
-    }*/
-
-
     public void Stop(float duration)
     {
         Stop(duration, 0.0f);
@@ -480,17 +420,15 @@ public class EffectManager : MonoBehaviour
         paused = false;
     }
 
-
-
-    private void rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
+    private void Rumble(Gamepad gamepad, float fallOfDur, float startLow = 0, float startHigh = 0)
     {
         //Gamepad.all[device].SetMotorSpeeds(startLow, startHight);
 
         float amp = ExtensionMethods.getGamepadAmp(gamepad);
-        StartCoroutine(rumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
+        StartCoroutine(RumbleFor(gamepad, fallOfDur, startLow * amp, startHigh * amp));
     }
 
-    private IEnumerator rumbleFor(Gamepad gamepad, float fallOfDur, float startLow, float startHigh)
+    private IEnumerator RumbleFor(Gamepad gamepad, float fallOfDur, float startLow, float startHigh)
     {
         // TODO: maybe set less rumble over time? currently on/off
 
